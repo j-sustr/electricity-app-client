@@ -138,7 +138,7 @@ export class GroupsClient implements IGroupsClient {
 }
 
 export interface IPowerFactorClient {
-    getOverview(intervals: (Interval | undefined)[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
+    getOverview(intervals: (Interval | null)[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
 }
 
 @Injectable({
@@ -154,7 +154,7 @@ export class PowerFactorClient implements IPowerFactorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(intervals: (Interval | undefined)[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
+    getOverview(intervals: (Interval | null)[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/overview?";
         if (intervals !== undefined && intervals !== null)
             intervals && intervals.forEach((item, index) => {
@@ -371,7 +371,7 @@ export class SeriesClient implements ISeriesClient {
 }
 
 export class UserGroupsDto implements IUserGroupsDto {
-    groups?: GroupDto[] | undefined;
+    groups?: GroupDto[] | null;
 
     constructor(data?: IUserGroupsDto) {
         if (data) {
@@ -411,12 +411,12 @@ export class UserGroupsDto implements IUserGroupsDto {
 }
 
 export interface IUserGroupsDto {
-    groups?: GroupDto[] | undefined;
+    groups?: GroupDto[] | null;
 }
 
 export class GroupDto implements IGroupDto {
     id?: string;
-    name?: string | undefined;
+    name?: string | null;
 
     constructor(data?: IGroupDto) {
         if (data) {
@@ -429,8 +429,8 @@ export class GroupDto implements IGroupDto {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
         }
     }
 
@@ -443,20 +443,20 @@ export class GroupDto implements IGroupDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
         return data; 
     }
 }
 
 export interface IGroupDto {
     id?: string;
-    name?: string | undefined;
+    name?: string | null;
 }
 
 export class GroupTreeNodeDto implements IGroupTreeNodeDto {
-    group?: GroupDto | undefined;
-    nodes?: GroupTreeNodeDto[] | undefined;
+    group?: GroupDto | null;
+    nodes?: GroupTreeNodeDto[] | null;
 
     constructor(data?: IGroupTreeNodeDto) {
         if (data) {
@@ -469,7 +469,7 @@ export class GroupTreeNodeDto implements IGroupTreeNodeDto {
 
     init(_data?: any) {
         if (_data) {
-            this.group = _data["group"] ? GroupDto.fromJS(_data["group"]) : <any>undefined;
+            this.group = _data["group"] ? GroupDto.fromJS(_data["group"]) : <any>null;
             if (Array.isArray(_data["nodes"])) {
                 this.nodes = [] as any;
                 for (let item of _data["nodes"])
@@ -487,7 +487,7 @@ export class GroupTreeNodeDto implements IGroupTreeNodeDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["group"] = this.group ? this.group.toJSON() : <any>undefined;
+        data["group"] = this.group ? this.group.toJSON() : <any>null;
         if (Array.isArray(this.nodes)) {
             data["nodes"] = [];
             for (let item of this.nodes)
@@ -498,12 +498,12 @@ export class GroupTreeNodeDto implements IGroupTreeNodeDto {
 }
 
 export interface IGroupTreeNodeDto {
-    group?: GroupDto | undefined;
-    nodes?: GroupTreeNodeDto[] | undefined;
+    group?: GroupDto | null;
+    nodes?: GroupTreeNodeDto[] | null;
 }
 
 export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
-    data?: PowerFactorOverviewIntervalData[] | undefined;
+    data?: PowerFactorOverviewIntervalData[] | null;
 
     constructor(data?: IPowerFactorOverviewDto) {
         if (data) {
@@ -543,12 +543,12 @@ export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
 }
 
 export interface IPowerFactorOverviewDto {
-    data?: PowerFactorOverviewIntervalData[] | undefined;
+    data?: PowerFactorOverviewIntervalData[] | null;
 }
 
 export class PowerFactorOverviewIntervalData implements IPowerFactorOverviewIntervalData {
-    interval?: Interval | undefined;
-    items?: PowerFactorOverviewItem[] | undefined;
+    interval?: Interval | null;
+    items?: PowerFactorOverviewItem[] | null;
 
     constructor(data?: IPowerFactorOverviewIntervalData) {
         if (data) {
@@ -561,7 +561,7 @@ export class PowerFactorOverviewIntervalData implements IPowerFactorOverviewInte
 
     init(_data?: any) {
         if (_data) {
-            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>undefined;
+            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>null;
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
@@ -579,7 +579,7 @@ export class PowerFactorOverviewIntervalData implements IPowerFactorOverviewInte
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["interval"] = this.interval ? this.interval.toJSON() : <any>undefined;
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
@@ -590,8 +590,8 @@ export class PowerFactorOverviewIntervalData implements IPowerFactorOverviewInte
 }
 
 export interface IPowerFactorOverviewIntervalData {
-    interval?: Interval | undefined;
-    items?: PowerFactorOverviewItem[] | undefined;
+    interval?: Interval | null;
+    items?: PowerFactorOverviewItem[] | null;
 }
 
 export class Interval implements IInterval {
@@ -609,8 +609,8 @@ export class Interval implements IInterval {
 
     init(_data?: any) {
         if (_data) {
-            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>undefined;
-            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>undefined;
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
         }
     }
 
@@ -623,8 +623,8 @@ export class Interval implements IInterval {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["start"] = this.start ? this.start.toISOString() : <any>undefined;
-        data["end"] = this.end ? this.end.toISOString() : <any>undefined;
+        data["start"] = this.start ? this.start.toISOString() : <any>null;
+        data["end"] = this.end ? this.end.toISOString() : <any>null;
         return data; 
     }
 }
@@ -635,12 +635,12 @@ export interface IInterval {
 }
 
 export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
-    deviceName?: string | undefined;
+    deviceName?: string | null;
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
     tanFi?: number;
-    interval?: Interval | undefined;
+    interval?: Interval | null;
 
     constructor(data?: IPowerFactorOverviewItem) {
         if (data) {
@@ -653,12 +653,12 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
 
     init(_data?: any) {
         if (_data) {
-            this.deviceName = _data["deviceName"];
-            this.activeEnergy = _data["activeEnergy"];
-            this.reactiveEnergyL = _data["reactiveEnergyL"];
-            this.reactiveEnergyC = _data["reactiveEnergyC"];
-            this.tanFi = _data["tanFi"];
-            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>undefined;
+            this.deviceName = _data["deviceName"] !== undefined ? _data["deviceName"] : <any>null;
+            this.activeEnergy = _data["activeEnergy"] !== undefined ? _data["activeEnergy"] : <any>null;
+            this.reactiveEnergyL = _data["reactiveEnergyL"] !== undefined ? _data["reactiveEnergyL"] : <any>null;
+            this.reactiveEnergyC = _data["reactiveEnergyC"] !== undefined ? _data["reactiveEnergyC"] : <any>null;
+            this.tanFi = _data["tanFi"] !== undefined ? _data["tanFi"] : <any>null;
+            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>null;
         }
     }
 
@@ -671,27 +671,27 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["deviceName"] = this.deviceName;
-        data["activeEnergy"] = this.activeEnergy;
-        data["reactiveEnergyL"] = this.reactiveEnergyL;
-        data["reactiveEnergyC"] = this.reactiveEnergyC;
-        data["tanFi"] = this.tanFi;
-        data["interval"] = this.interval ? this.interval.toJSON() : <any>undefined;
+        data["deviceName"] = this.deviceName !== undefined ? this.deviceName : <any>null;
+        data["activeEnergy"] = this.activeEnergy !== undefined ? this.activeEnergy : <any>null;
+        data["reactiveEnergyL"] = this.reactiveEnergyL !== undefined ? this.reactiveEnergyL : <any>null;
+        data["reactiveEnergyC"] = this.reactiveEnergyC !== undefined ? this.reactiveEnergyC : <any>null;
+        data["tanFi"] = this.tanFi !== undefined ? this.tanFi : <any>null;
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface IPowerFactorOverviewItem {
-    deviceName?: string | undefined;
+    deviceName?: string | null;
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
     tanFi?: number;
-    interval?: Interval | undefined;
+    interval?: Interval | null;
 }
 
 export class QuantitiesDto implements IQuantitiesDto {
-    list?: QuantityDto[] | undefined;
+    list?: QuantityDto[] | null;
 
     constructor(data?: IQuantitiesDto) {
         if (data) {
@@ -731,15 +731,15 @@ export class QuantitiesDto implements IQuantitiesDto {
 }
 
 export interface IQuantitiesDto {
-    list?: QuantityDto[] | undefined;
+    list?: QuantityDto[] | null;
 }
 
 export class QuantityDto implements IQuantityDto {
-    propName?: string | undefined;
-    unit?: string | undefined;
-    returnType?: string | undefined;
-    prop?: string | undefined;
-    value?: any | undefined;
+    propName?: string | null;
+    unit?: string | null;
+    returnType?: string | null;
+    prop?: string | null;
+    value?: any | null;
 
     constructor(data?: IQuantityDto) {
         if (data) {
@@ -752,11 +752,11 @@ export class QuantityDto implements IQuantityDto {
 
     init(_data?: any) {
         if (_data) {
-            this.propName = _data["propName"];
-            this.unit = _data["unit"];
-            this.returnType = _data["returnType"];
-            this.prop = _data["prop"];
-            this.value = _data["value"];
+            this.propName = _data["propName"] !== undefined ? _data["propName"] : <any>null;
+            this.unit = _data["unit"] !== undefined ? _data["unit"] : <any>null;
+            this.returnType = _data["returnType"] !== undefined ? _data["returnType"] : <any>null;
+            this.prop = _data["prop"] !== undefined ? _data["prop"] : <any>null;
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
         }
     }
 
@@ -769,25 +769,25 @@ export class QuantityDto implements IQuantityDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["propName"] = this.propName;
-        data["unit"] = this.unit;
-        data["returnType"] = this.returnType;
-        data["prop"] = this.prop;
-        data["value"] = this.value;
+        data["propName"] = this.propName !== undefined ? this.propName : <any>null;
+        data["unit"] = this.unit !== undefined ? this.unit : <any>null;
+        data["returnType"] = this.returnType !== undefined ? this.returnType : <any>null;
+        data["prop"] = this.prop !== undefined ? this.prop : <any>null;
+        data["value"] = this.value !== undefined ? this.value : <any>null;
         return data; 
     }
 }
 
 export interface IQuantityDto {
-    propName?: string | undefined;
-    unit?: string | undefined;
-    returnType?: string | undefined;
-    prop?: string | undefined;
-    value?: any | undefined;
+    propName?: string | null;
+    unit?: string | null;
+    returnType?: string | null;
+    prop?: string | null;
+    value?: any | null;
 }
 
 export class TimeSeriesDtoOfSingle implements ITimeSeriesDtoOfSingle {
-    entries?: TupleOfDateTimeAndSingle[] | undefined;
+    entries?: TupleOfDateTimeAndSingle[] | null;
 
     constructor(data?: ITimeSeriesDtoOfSingle) {
         if (data) {
@@ -827,7 +827,7 @@ export class TimeSeriesDtoOfSingle implements ITimeSeriesDtoOfSingle {
 }
 
 export interface ITimeSeriesDtoOfSingle {
-    entries?: TupleOfDateTimeAndSingle[] | undefined;
+    entries?: TupleOfDateTimeAndSingle[] | null;
 }
 
 export class TupleOfDateTimeAndSingle implements ITupleOfDateTimeAndSingle {
@@ -845,8 +845,8 @@ export class TupleOfDateTimeAndSingle implements ITupleOfDateTimeAndSingle {
 
     init(_data?: any) {
         if (_data) {
-            this.item1 = _data["item1"] ? new Date(_data["item1"].toString()) : <any>undefined;
-            this.item2 = _data["item2"];
+            this.item1 = _data["item1"] ? new Date(_data["item1"].toString()) : <any>null;
+            this.item2 = _data["item2"] !== undefined ? _data["item2"] : <any>null;
         }
     }
 
@@ -859,8 +859,8 @@ export class TupleOfDateTimeAndSingle implements ITupleOfDateTimeAndSingle {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["item1"] = this.item1 ? this.item1.toISOString() : <any>undefined;
-        data["item2"] = this.item2;
+        data["item1"] = this.item1 ? this.item1.toISOString() : <any>null;
+        data["item2"] = this.item2 !== undefined ? this.item2 : <any>null;
         return data; 
     }
 }
