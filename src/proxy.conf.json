@@ -1,6 +1,6 @@
 {
-  "/": {
-    "target": "https://localhost:44373/",
-    "secure": false
-  }
+    "/": {
+        "target": "https://localhost:44312/",
+        "secure": false
+    }
 }
