@@ -138,7 +138,7 @@ export class GroupsClient implements IGroupsClient {
 }
 
 export interface IPowerFactorClient {
-    getOverview(interval1_Item1: Date | undefined, interval1_Item2: Date | undefined, interval2_Item1: Date | undefined, interval2_Item2: Date | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
+    getOverview(intervals: (Interval | undefined)[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
 }
 
 @Injectable({
@@ -154,24 +154,15 @@ export class PowerFactorClient implements IPowerFactorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(interval1_Item1: Date | undefined, interval1_Item2: Date | undefined, interval2_Item1: Date | undefined, interval2_Item2: Date | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
+    getOverview(intervals: (Interval | undefined)[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/overview?";
-        if (interval1_Item1 === null)
-            throw new Error("The parameter 'interval1_Item1' cannot be null.");
-        else if (interval1_Item1 !== undefined)
-            url_ += "Interval1.Item1=" + encodeURIComponent(interval1_Item1 ? "" + interval1_Item1.toJSON() : "") + "&";
-        if (interval1_Item2 === null)
-            throw new Error("The parameter 'interval1_Item2' cannot be null.");
-        else if (interval1_Item2 !== undefined)
-            url_ += "Interval1.Item2=" + encodeURIComponent(interval1_Item2 ? "" + interval1_Item2.toJSON() : "") + "&";
-        if (interval2_Item1 === null)
-            throw new Error("The parameter 'interval2_Item1' cannot be null.");
-        else if (interval2_Item1 !== undefined)
-            url_ += "Interval2.Item1=" + encodeURIComponent(interval2_Item1 ? "" + interval2_Item1.toJSON() : "") + "&";
-        if (interval2_Item2 === null)
-            throw new Error("The parameter 'interval2_Item2' cannot be null.");
-        else if (interval2_Item2 !== undefined)
-            url_ += "Interval2.Item2=" + encodeURIComponent(interval2_Item2 ? "" + interval2_Item2.toJSON() : "") + "&";
+        if (intervals !== undefined && intervals !== null)
+            intervals && intervals.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "Intervals[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
         if (groupIds !== undefined && groupIds !== null)
             groupIds && groupIds.forEach(item => { url_ += "GroupIds=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
@@ -512,8 +503,7 @@ export interface IGroupTreeNodeDto {
 }
 
 export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
-    interval1Items?: PowerFactorOverviewItemDto[] | undefined;
-    interval2Items?: PowerFactorOverviewItemDto[] | undefined;
+    data?: PowerFactorOverviewIntervalData[] | undefined;
 
     constructor(data?: IPowerFactorOverviewDto) {
         if (data) {
@@ -526,15 +516,10 @@ export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["interval1Items"])) {
-                this.interval1Items = [] as any;
-                for (let item of _data["interval1Items"])
-                    this.interval1Items!.push(PowerFactorOverviewItemDto.fromJS(item));
-            }
-            if (Array.isArray(_data["interval2Items"])) {
-                this.interval2Items = [] as any;
-                for (let item of _data["interval2Items"])
-                    this.interval2Items!.push(PowerFactorOverviewItemDto.fromJS(item));
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(PowerFactorOverviewIntervalData.fromJS(item));
             }
         }
     }
@@ -548,34 +533,116 @@ export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.interval1Items)) {
-            data["interval1Items"] = [];
-            for (let item of this.interval1Items)
-                data["interval1Items"].push(item.toJSON());
-        }
-        if (Array.isArray(this.interval2Items)) {
-            data["interval2Items"] = [];
-            for (let item of this.interval2Items)
-                data["interval2Items"].push(item.toJSON());
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
         }
         return data; 
     }
 }
 
 export interface IPowerFactorOverviewDto {
-    interval1Items?: PowerFactorOverviewItemDto[] | undefined;
-    interval2Items?: PowerFactorOverviewItemDto[] | undefined;
+    data?: PowerFactorOverviewIntervalData[] | undefined;
 }
 
-export class PowerFactorOverviewItemDto implements IPowerFactorOverviewItemDto {
+export class PowerFactorOverviewIntervalData implements IPowerFactorOverviewIntervalData {
+    interval?: Interval | undefined;
+    items?: PowerFactorOverviewItem[] | undefined;
+
+    constructor(data?: IPowerFactorOverviewIntervalData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>undefined;
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(PowerFactorOverviewItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PowerFactorOverviewIntervalData {
+        data = typeof data === 'object' ? data : {};
+        let result = new PowerFactorOverviewIntervalData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>undefined;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPowerFactorOverviewIntervalData {
+    interval?: Interval | undefined;
+    items?: PowerFactorOverviewItem[] | undefined;
+}
+
+export class Interval implements IInterval {
+    start?: Date;
+    end?: Date;
+
+    constructor(data?: IInterval) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>undefined;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Interval {
+        data = typeof data === 'object' ? data : {};
+        let result = new Interval();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start ? this.start.toISOString() : <any>undefined;
+        data["end"] = this.end ? this.end.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IInterval {
+    start?: Date;
+    end?: Date;
+}
+
+export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
     deviceName?: string | undefined;
-    interval?: number;
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
     tanFi?: number;
+    interval?: Interval | undefined;
 
-    constructor(data?: IPowerFactorOverviewItemDto) {
+    constructor(data?: IPowerFactorOverviewItem) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -587,17 +654,17 @@ export class PowerFactorOverviewItemDto implements IPowerFactorOverviewItemDto {
     init(_data?: any) {
         if (_data) {
             this.deviceName = _data["deviceName"];
-            this.interval = _data["interval"];
             this.activeEnergy = _data["activeEnergy"];
             this.reactiveEnergyL = _data["reactiveEnergyL"];
             this.reactiveEnergyC = _data["reactiveEnergyC"];
             this.tanFi = _data["tanFi"];
+            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): PowerFactorOverviewItemDto {
+    static fromJS(data: any): PowerFactorOverviewItem {
         data = typeof data === 'object' ? data : {};
-        let result = new PowerFactorOverviewItemDto();
+        let result = new PowerFactorOverviewItem();
         result.init(data);
         return result;
     }
@@ -605,22 +672,22 @@ export class PowerFactorOverviewItemDto implements IPowerFactorOverviewItemDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["deviceName"] = this.deviceName;
-        data["interval"] = this.interval;
         data["activeEnergy"] = this.activeEnergy;
         data["reactiveEnergyL"] = this.reactiveEnergyL;
         data["reactiveEnergyC"] = this.reactiveEnergyC;
         data["tanFi"] = this.tanFi;
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>undefined;
         return data; 
     }
 }
 
-export interface IPowerFactorOverviewItemDto {
+export interface IPowerFactorOverviewItem {
     deviceName?: string | undefined;
-    interval?: number;
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
     tanFi?: number;
+    interval?: Interval | undefined;
 }
 
 export class QuantitiesDto implements IQuantitiesDto {
