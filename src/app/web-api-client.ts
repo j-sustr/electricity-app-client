@@ -138,8 +138,7 @@ export class GroupsClient implements IGroupsClient {
 }
 
 export interface IPowerFactorClient {
-    getOverview(intervals: Interval[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
-    getIntervalTest(intervals: BoundedInterval[] | null | undefined): Observable<BoundedInterval[]>;
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
 }
 
 @Injectable({
@@ -155,15 +154,16 @@ export class PowerFactorClient implements IPowerFactorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(intervals: Interval[] | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/overview?";
-        if (intervals !== undefined && intervals !== null)
-            intervals && intervals.forEach((item, index) => {
-                for (let attr in item)
-        			if (item.hasOwnProperty(attr)) {
-        				url_ += "Intervals[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
-        			}
-            });
+        if (interval1_Start !== undefined && interval1_Start !== null)
+            url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
+        if (interval1_End !== undefined && interval1_End !== null)
+            url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval2_Start !== undefined && interval2_Start !== null)
+            url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
+        if (interval2_End !== undefined && interval2_End !== null)
+            url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (groupIds !== undefined && groupIds !== null)
             groupIds && groupIds.forEach(item => { url_ += "GroupIds=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
@@ -210,65 +210,6 @@ export class PowerFactorClient implements IPowerFactorClient {
             }));
         }
         return _observableOf<PowerFactorOverviewDto>(<any>null);
-    }
-
-    getIntervalTest(intervals: BoundedInterval[] | null | undefined): Observable<BoundedInterval[]> {
-        let url_ = this.baseUrl + "/api/PowerFactor/interval-test?";
-        if (intervals !== undefined && intervals !== null)
-            intervals && intervals.forEach((item, index) => {
-                for (let attr in item)
-        			if (item.hasOwnProperty(attr)) {
-        				url_ += "intervals[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
-        			}
-            });
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetIntervalTest(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetIntervalTest(<any>response_);
-                } catch (e) {
-                    return <Observable<BoundedInterval[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<BoundedInterval[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetIntervalTest(response: HttpResponseBase): Observable<BoundedInterval[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(BoundedInterval.fromJS(item));
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<BoundedInterval[]>(<any>null);
     }
 }
 
@@ -748,46 +689,6 @@ export interface IPowerFactorOverviewItem {
     reactiveEnergyC?: number;
     tanFi?: number;
     interval?: Interval | null;
-}
-
-export class BoundedInterval implements IBoundedInterval {
-    start!: Date;
-    end!: Date;
-
-    constructor(data?: IBoundedInterval) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
-            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
-        }
-    }
-
-    static fromJS(data: any): BoundedInterval {
-        data = typeof data === 'object' ? data : {};
-        let result = new BoundedInterval();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["start"] = this.start ? this.start.toISOString() : <any>null;
-        data["end"] = this.end ? this.end.toISOString() : <any>null;
-        return data; 
-    }
-}
-
-export interface IBoundedInterval {
-    start: Date;
-    end: Date;
 }
 
 export class QuantitiesDto implements IQuantitiesDto {
