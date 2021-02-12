@@ -1,0 +1,35 @@
+$container-padding: 0 8px;
+
+$value-label-margin: 0 32px 0 24px;
+$button-icon-size: 28px;
+
+:host {
+    display: block;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: $container-padding;
+    flex-wrap: wrap-reverse;
+    width: 100%;
+}
+
+.value-label {
+    margin: $value-label-margin;
+}
+
+.range-actions {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    width: $button-icon-size;
+    fill: currentColor;
+
+    [dir='rtl'] & {
+        transform: rotate(180deg);
+    }
+}

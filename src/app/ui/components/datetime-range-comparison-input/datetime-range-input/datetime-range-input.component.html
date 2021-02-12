@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="value-label">{{valueLabel}}</div>
+
+    <div class="range-actions">
+        <button
+            mat-icon-button
+            type="button"
+            class="navigation-previous"
+            (click)="previousInterval()"
+            [disabled]="_previousButtonsDisabled()"
+        >
+            <svg class="icon" viewBox="0 0 24 24" focusable="false">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+        </button>
+        <button
+            mat-icon-button
+            type="button"
+            class="navigation-next"
+            (click)="nextInterval()"
+            [disabled]="_nextButtonsDisabled()"
+        >
+            <svg class="icon" viewBox="0 0 24 24" focusable="false">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </button>
+    </div>
+</div>
