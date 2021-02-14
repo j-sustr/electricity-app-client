@@ -9,6 +9,10 @@ import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.co
     styleUrls: ['./datetime-range-input.component.scss']
 })
 export class DatetimeRangeInputComponent {
+    get opened(): boolean {
+        return this._rangePicker?.opened ?? false;
+    }
+
     _closedSubscription = Subscription.EMPTY;
 
     _disabled = false;
@@ -18,9 +22,6 @@ export class DatetimeRangeInputComponent {
         return this._rangePicker;
     }
     set rangePicker(rangePicker: DatetimeRangePickerComponent | undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (window as any).rangePicker = rangePicker;
-        console.dir(rangePicker);
         if (rangePicker) {
             this._model = rangePicker.registerInput(this);
             this._rangePicker = rangePicker;

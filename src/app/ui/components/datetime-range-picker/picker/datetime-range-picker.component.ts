@@ -14,6 +14,7 @@ import {
     Inject,
     isDevMode,
     NgZone,
+    OnDestroy,
     Optional,
     ViewContainerRef
 } from '@angular/core';
@@ -33,7 +34,7 @@ let datetimeRangePickerUid = 0;
     template: '',
     providers: [DATETIME_RANGE_SELECTION_MODEL_PROVIDER]
 })
-export class DatetimeRangePickerComponent {
+export class DatetimeRangePickerComponent implements OnDestroy {
     private _inputStateChanges = Subscription.EMPTY;
 
     disabled = false;
@@ -42,6 +43,12 @@ export class DatetimeRangePickerComponent {
 
     closedStream: EventEmitter<void> = new EventEmitter<void>();
 
+    get opened(): boolean {
+        return this._opened;
+    }
+    set opened(value: boolean) {
+        value ? this.open() : this.close();
+    }
     private _opened = false;
 
     id = `datetime-range-picker-${datetimeRangePickerUid++}`;
@@ -67,6 +74,13 @@ export class DatetimeRangePickerComponent {
         @Optional() private _dir: Directionality,
         @Optional() @Inject(DOCUMENT) private _document?: Document
     ) {}
+
+    ngOnDestroy(): void {
+        this._destroyPopup();
+        this.close();
+        this._inputStateChanges.unsubscribe();
+        this.stateChanges.complete();
+    }
 
     registerInput(
         input: DatetimeRangeInputComponent
@@ -120,11 +134,12 @@ export class DatetimeRangePickerComponent {
             return;
         }
         if (this._popupComponentRef && this._popupRef) {
-            const instance = this._popupComponentRef.instance;
-            instance._startExitAnimation();
-            instance._animationDone
-                .pipe(take(1))
-                .subscribe(() => this._destroyPopup());
+            // const instance = this._popupComponentRef.instance;
+            // instance._startExitAnimation();
+            // instance._animationDone
+            //     .pipe(take(1))
+            //     .subscribe(() => this._destroyPopup());
+            this._destroyPopup();
         }
 
         const completeClose = () => {
@@ -177,7 +192,7 @@ export class DatetimeRangePickerComponent {
             .flexibleConnectedTo(
                 this.daterangeInput.getConnectedOverlayOrigin()
             )
-            .withTransformOriginOn('.mat-datepicker-content')
+            .withTransformOriginOn('.datetime-range-picker-content')
             .withFlexibleDimensions(false)
             .withViewportMargin(8)
             .withLockedPosition();
@@ -211,7 +226,6 @@ export class DatetimeRangePickerComponent {
         });
     }
 
-    /** Destroys the current popup overlay. */
     private _destroyPopup() {
         if (this._popupRef) {
             this._popupRef.dispose();
@@ -219,7 +233,6 @@ export class DatetimeRangePickerComponent {
         }
     }
 
-    /** Sets the positions of the datepicker in dropdown mode based on the current configuration. */
     private _setConnectedPositions(
         strategy: FlexibleConnectedPositionStrategy
     ) {
