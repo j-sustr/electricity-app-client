@@ -9,7 +9,9 @@ import { PowerFactorClient } from './web-api-client';
 export class AppComponent {
     title = 'angular-electricity-app';
 
+    items = ['hello', 'dafd', 'da'];
+
     constructor(private powerFactorClient: PowerFactorClient) {
-        (window as any).powerFactorClient = powerFactorClient;
+        // (window as any).powerFactorClient = powerFactorClient;
     }
 }
