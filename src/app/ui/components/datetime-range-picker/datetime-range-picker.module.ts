@@ -5,6 +5,7 @@ import { DatetimeRangeInputComponent } from './input/datetime-range-input.compon
 import { DatetimeRangePickerComponent } from './picker/datetime-range-picker.component';
 import { DatetimeRangeComparisonInputComponent } from './comparison/datetime-range-comparison-input.component';
 import { CommonModule } from '@angular/common';
+import { DatetimeRangePickerContentComponent } from './picker/datetime-range-picker-content.component';
 
 const CDK = [OverlayModule, PortalModule];
 
@@ -13,11 +14,13 @@ const CDK = [OverlayModule, PortalModule];
     exports: [
         DatetimeRangeComparisonInputComponent,
         DatetimeRangeInputComponent,
-        DatetimeRangePickerComponent
+        DatetimeRangePickerComponent,
+        DatetimeRangePickerContentComponent
     ],
     declarations: [
         DatetimeRangeComparisonInputComponent,
         DatetimeRangeInputComponent,
+        DatetimeRangePickerContentComponent,
         DatetimeRangePickerComponent
     ],
     providers: []
