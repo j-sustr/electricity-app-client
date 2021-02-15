@@ -22,6 +22,9 @@
     "@angular/router": "~11.0.5",
     "@ngrx/store": "^10.1.2",
     "date-fns": "^2.16.1",
+    "devextreme": "^20.2.4",
+    "devextreme-angular": "^20.2.4",
+    "devextreme-schematics": "^1.2.10",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
@@ -39,6 +42,8 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.3.0",
     "@typescript-eslint/parser": "4.3.0",
+    "devextreme-cli": "latest",
+    "devextreme-themebuilder": "^20.2.4",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "2.22.1",
