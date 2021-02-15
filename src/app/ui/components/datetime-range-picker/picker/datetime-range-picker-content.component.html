@@ -3,7 +3,7 @@
         <ng-container *ngSwitchCase="'select-target'">
             <ng-container *ngTemplateOutlet="targetStepTemplate"></ng-container>
         </ng-container>
-        <ng-container *ngSwitchCase="'select-value'">
+        <ng-container *ngSwitchCase="'select-range'">
             <ng-container *ngTemplateOutlet="valueStepTemplate"></ng-container>
         </ng-container>
         <ng-container *ngSwitchDefault>empty</ng-container>
@@ -22,9 +22,19 @@
             <button (click)="selectTarget('day')">Day</button>
         </li>
         <li>
-            <button (click)="selectTarget('hour')">Hour</button>
+            <button (click)="selectTarget('hour')" disabled>Hour</button>
         </li>
     </ul>
 </ng-template>
 
-<ng-template #valueStepTemplate> value step </ng-template>
+<ng-template #valueStepTemplate>
+    <dx-calendar
+        [zoomLevel]="zoomLevel"
+        (onValueChanged)="handleCalendarValueChanged($event)"
+        (onOptionChanged)="handleCalendarOptionChanged($event)"
+        [firstDayOfWeek]="1"
+        [min]="$any(min)"
+        [max]="$any(max)"
+    >
+    </dx-calendar>
+</ng-template>

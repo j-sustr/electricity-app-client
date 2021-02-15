@@ -6,11 +6,13 @@ import { DatetimeRangePickerComponent } from './picker/datetime-range-picker.com
 import { DatetimeRangeComparisonInputComponent } from './comparison/datetime-range-comparison-input.component';
 import { CommonModule } from '@angular/common';
 import { DatetimeRangePickerContentComponent } from './picker/datetime-range-picker-content.component';
+import { DxCalendarModule } from 'devextreme-angular/ui/calendar';
 
+const DX = [DxCalendarModule];
 const CDK = [OverlayModule, PortalModule];
 
 @NgModule({
-    imports: [CommonModule, ...CDK],
+    imports: [CommonModule, ...CDK, ...DX],
     exports: [
         DatetimeRangeComparisonInputComponent,
         DatetimeRangeInputComponent,
