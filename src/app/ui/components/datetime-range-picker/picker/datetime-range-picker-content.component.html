@@ -33,8 +33,8 @@
         (onValueChanged)="handleCalendarValueChanged($event)"
         (onOptionChanged)="handleCalendarOptionChanged($event)"
         [firstDayOfWeek]="1"
-        [min]="$any(min)"
-        [max]="$any(max)"
+        [min]="$any(picker?.getMinDate())"
+        [max]="$any(picker?.getMaxDate())"
     >
     </dx-calendar>
 </ng-template>

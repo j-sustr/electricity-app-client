@@ -98,12 +98,12 @@ export class DatetimeRangePickerComponent implements OnDestroy {
         return this._model;
     }
 
-    _getMinDate(): Date | null {
+    getMinDate(): Date | null {
         return this.daterangeInput && this.daterangeInput.min;
     }
 
     /** The maximum selectable date. */
-    _getMaxDate(): Date | null {
+    getMaxDate(): Date | null {
         return this.daterangeInput && this.daterangeInput.max;
     }
 

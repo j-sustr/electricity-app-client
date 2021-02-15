@@ -11,6 +11,9 @@ export class AppComponent {
 
     items = ['hello', 'dafd', 'da'];
 
+    min = new Date(2021, 0, 1);
+    max = new Date(2021, 2, 2);
+
     constructor(private powerFactorClient: PowerFactorClient) {
         // (window as any).powerFactorClient = powerFactorClient;
     }

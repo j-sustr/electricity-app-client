@@ -41,9 +41,6 @@ export class DatetimeRangePickerContentComponent {
 
     target: DatetimeRangePickerTarget | null = null;
 
-    min?: Date;
-    max?: Date;
-
     zoomLevel: CalendarZoomLevel = 'month';
 
     constructor(private _model: DatetimeRangeSelectionModel) {}
