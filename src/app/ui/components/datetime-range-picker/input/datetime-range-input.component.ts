@@ -28,6 +28,7 @@ export class DatetimeRangeInputComponent {
             this._closedSubscription.unsubscribe();
             this._closedSubscription = rangePicker.closedStream.subscribe(
                 () => {
+                    console.log('selection', this._model?.selection);
                     console.log('closed');
                 }
             );

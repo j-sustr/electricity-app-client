@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
+import { startAndDurationToInterval } from 'src/app/common/temporal/temporal-utils';
 import {
     DatetimeRange,
     DatetimeRangeSelectionModel
@@ -56,7 +57,8 @@ export class DatetimeRangePickerContentComponent {
     }
 
     handleCalendarValueChanged(event: { value: Date }): void {
-        console.log('valueChanged', event);
+        this._currentDate = event.value;
+        this._handleUserSelection();
     }
 
     handleCalendarOptionChanged(event: { name: string; value: unknown }): void {
@@ -66,10 +68,21 @@ export class DatetimeRangePickerContentComponent {
             const zoomLevel = event.value as CalendarZoomLevel;
             this.zoomLevel = zoomLevel;
             if (this._targetZoomLevel === this.zoomLevel) {
-                const duration = this._getSelectedDuration();
-                console.log(event.value);
+                this._handleUserSelection();
             }
         }
+    }
+
+    private _handleUserSelection() {
+        if (!this._currentDate) {
+            throw new Error('currentDate is not set');
+        }
+        const interval = startAndDurationToInterval(
+            this._currentDate,
+            this._getSelectedDuration()
+        );
+        this._model.updateSelection(DatetimeRange.fromInterval(interval), this);
+        this.picker?.close();
     }
 
     private _setTargetValue(target: DatetimeRangePickerTarget) {
@@ -78,29 +91,35 @@ export class DatetimeRangePickerContentComponent {
         this.step = 'select-range';
         switch (target) {
             case 'year':
-                this._targetZoomLevel = 'decade';
-                break;
-            case 'month':
                 this._targetZoomLevel = 'year';
                 break;
-            case 'day':
+            case 'month':
                 this._targetZoomLevel = 'month';
+                break;
+            case 'day':
+                this._targetZoomLevel = undefined;
                 break;
             default:
                 break;
         }
     }
 
-    private _getSelectedDuration() {
+    private _getSelectedDuration(): Duration {
         switch (this.target) {
             case 'year':
-                break;
+                return {
+                    years: 1
+                };
             case 'month':
-                break;
+                return {
+                    months: 1
+                };
             case 'day':
-                break;
+                return {
+                    days: 1
+                };
             default:
-                break;
+                throw new Error('no duration selected');
         }
     }
 }

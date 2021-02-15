@@ -3,6 +3,16 @@ import { Observable, Subject } from 'rxjs';
 
 export class DatetimeRange {
     constructor(readonly start: Date | null, readonly end: Date | null) {}
+
+    static fromInterval(interval: Interval): DatetimeRange {
+        if (!(interval.start instanceof Date)) {
+            throw new Error('start must be Date');
+        }
+        if (!(interval.end instanceof Date)) {
+            throw new Error('end must be Date');
+        }
+        return new DatetimeRange(interval.start, interval.end);
+    }
 }
 
 export interface DatetimeRangeSelectionModelChange {
@@ -36,8 +46,5 @@ export class DatetimeRangeSelectionModel implements OnDestroy {
 export const DATETIME_RANGE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
     provide: DatetimeRangeSelectionModel,
     useFactory: () =>
-        new DatetimeRangeSelectionModel({
-            start: null,
-            end: null
-        })
+        new DatetimeRangeSelectionModel(new DatetimeRange(null, null))
 };
