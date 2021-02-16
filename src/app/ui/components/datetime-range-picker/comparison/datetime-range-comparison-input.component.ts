@@ -1,8 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import {
-    DatetimeRangeComparison,
-    DatetimeRangeComparisonSelectionModel
-} from './datetime-range-comparison-selection-model';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-datetime-range-comparison-input',
@@ -10,10 +6,6 @@ import {
     styleUrls: ['./datetime-range-comparison-input.component.scss']
 })
 export class DatetimeRangeComparisonInputComponent {
-    get value(): DatetimeRangeComparison | null {
-        return this._model ? this._model.selection : null;
-    }
-
     @Input()
     get min(): Date | null {
         return this._min;
@@ -34,7 +26,7 @@ export class DatetimeRangeComparisonInputComponent {
 
     ranges = [];
 
-    constructor(private _model: DatetimeRangeComparisonSelectionModel) {}
+    constructor() {}
 
     addRange() {}
 
