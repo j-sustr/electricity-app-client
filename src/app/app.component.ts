@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { PowerFactorClient } from './web-api-client';
+import { Component, Inject } from '@angular/core';
+import { IPowerFactorClient, PowerFactorClient } from './web-api-client';
+import { POWER_FACTOR_CLIENT } from './web-api-client-di';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,10 @@ export class AppComponent {
     min = new Date(2021, 0, 1);
     max = new Date(2021, 2, 2);
 
-    constructor(private powerFactorClient: PowerFactorClient) {
-        // (window as any).powerFactorClient = powerFactorClient;
+    constructor(
+        @Inject(POWER_FACTOR_CLIENT)
+        private powerFactorClient: IPowerFactorClient
+    ) {
+        (window as any).powerFactorClient = powerFactorClient;
     }
 }

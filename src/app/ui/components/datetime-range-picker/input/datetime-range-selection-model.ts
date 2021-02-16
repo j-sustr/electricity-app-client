@@ -1,4 +1,4 @@
-import { Directive, FactoryProvider, OnDestroy } from '@angular/core';
+import { FactoryProvider, Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 export class DatetimeRange {
@@ -21,8 +21,7 @@ export interface DatetimeRangeSelectionModelChange {
     source: unknown;
 }
 
-@Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
+@Injectable()
 export class DatetimeRangeSelectionModel implements OnDestroy {
     private _selectionChanged = new Subject<DatetimeRangeSelectionModelChange>();
 
