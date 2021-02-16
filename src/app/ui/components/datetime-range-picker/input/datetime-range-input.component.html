@@ -1,29 +1,20 @@
 <div class="container">
-    <div class="icon" (click)="open($event)">...</div>
+    <dx-button icon="more" [disabled]="false" (onClick)="open($event)">
+    </dx-button>
     <div class="value-label">{{valueLabel}}</div>
 
     <div class="range-actions">
-        <button
-            mat-icon-button
-            type="button"
-            class="navigation-previous"
-            (click)="previousInterval()"
-            [disabled]="_previousButtonsDisabled()"
+        <dx-button
+            icon="chevronleft"
+            (onClick)="selectPreviousInterval()"
+            [disabled]="_previousButtonDisabled()"
         >
-            <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-            </svg>
-        </button>
-        <button
-            mat-icon-button
-            type="button"
-            class="navigation-next"
-            (click)="nextInterval()"
-            [disabled]="_nextButtonsDisabled()"
+        </dx-button>
+        <dx-button
+            icon="chevronright"
+            (onClick)="selectNextInterval()"
+            [disabled]="_nextButtonDisabled()"
         >
-            <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-            </svg>
-        </button>
+        </dx-button>
     </div>
 </div>

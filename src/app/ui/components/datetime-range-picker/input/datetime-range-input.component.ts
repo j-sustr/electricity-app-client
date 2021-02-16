@@ -71,10 +71,9 @@ export class DatetimeRangeInputComponent {
         private _elementRef: ElementRef<HTMLElement>
     ) {}
 
-    open(event: Event): void {
+    open(): void {
         if (this._rangePicker && !this._disabled) {
             this._rangePicker?.open();
-            event.stopPropagation();
         }
     }
 
@@ -82,11 +81,11 @@ export class DatetimeRangeInputComponent {
         return this._elementRef;
     }
 
-    nextInterval(): void {
+    selectNextInterval(): void {
         throw new Error('not implemented');
     }
 
-    previousInterval(): void {
+    selectPreviousInterval(): void {
         throw new Error('not implemented');
     }
 
@@ -98,11 +97,11 @@ export class DatetimeRangeInputComponent {
         return true;
     }
 
-    _nextButtonsDisabled(): boolean {
+    _nextButtonDisabled(): boolean {
         return this._disabled || !this.hasNextInterval();
     }
 
-    _previousButtonsDisabled(): boolean {
+    _previousButtonDisabled(): boolean {
         return this._disabled || !this.hasPreviousInterval();
     }
 }

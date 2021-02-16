@@ -1,7 +1,6 @@
 $container-padding: 0 8px;
 
 $value-label-margin: 0 32px 0 24px;
-$button-icon-size: 28px;
 
 :host {
     display: block;
@@ -23,13 +22,4 @@ $button-icon-size: 28px;
 .range-actions {
     display: flex;
     align-items: center;
-}
-
-.icon {
-    width: $button-icon-size;
-    fill: currentColor;
-
-    [dir='rtl'] & {
-        transform: rotate(180deg);
-    }
 }

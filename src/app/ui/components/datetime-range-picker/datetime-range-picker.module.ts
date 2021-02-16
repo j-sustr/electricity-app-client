@@ -7,8 +7,9 @@ import { DatetimeRangeComparisonInputComponent } from './comparison/datetime-ran
 import { CommonModule } from '@angular/common';
 import { DatetimeRangePickerContentComponent } from './picker/datetime-range-picker-content.component';
 import { DxCalendarModule } from 'devextreme-angular/ui/calendar';
+import { DxButtonModule } from 'devextreme-angular/ui/button';
 
-const DX = [DxCalendarModule];
+const DX = [DxCalendarModule, DxButtonModule];
 const CDK = [OverlayModule, PortalModule];
 
 @NgModule({
