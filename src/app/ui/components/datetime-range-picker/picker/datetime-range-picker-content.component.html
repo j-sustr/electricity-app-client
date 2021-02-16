@@ -11,20 +11,20 @@
 </div>
 
 <ng-template #targetStepTemplate>
-    <ul class="target-options">
-        <li>
-            <button (click)="selectTarget('year')">Year</button>
-        </li>
-        <li>
-            <button (click)="selectTarget('month')">Month</button>
-        </li>
-        <li>
-            <button (click)="selectTarget('day')">Day</button>
-        </li>
-        <li>
-            <button (click)="selectTarget('hour')" disabled>Hour</button>
-        </li>
-    </ul>
+    <div class="buttons-column">
+        <div class="column-header">Pick Range</div>
+
+        <div><dx-button (onClick)="selectTarget('year')">Year</dx-button></div>
+        <div>
+            <dx-button (onClick)="selectTarget('month')">Month</dx-button>
+        </div>
+        <div><dx-button (onClick)="selectTarget('day')">Day</dx-button></div>
+        <div>
+            <dx-button (onClick)="selectTarget('hour')" disabled
+                >Hour</dx-button
+            >
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #valueStepTemplate>
