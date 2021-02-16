@@ -5,6 +5,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DatetimeRangePickerModule } from './ui/components/datetime-range-picker/datetime-range-picker.module';
+import { PowerFactorClient } from './web-api-client';
+import { POWER_FACTOR_CLIENT } from './web-api-client-di';
 
 @NgModule({
     declarations: [AppComponent],
@@ -15,7 +17,12 @@ import { DatetimeRangePickerModule } from './ui/components/datetime-range-picker
         FormsModule,
         DatetimeRangePickerModule
     ],
-    providers: [],
+    providers: [
+        {
+            provide: POWER_FACTOR_CLIENT,
+            useClass: PowerFactorClient
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
