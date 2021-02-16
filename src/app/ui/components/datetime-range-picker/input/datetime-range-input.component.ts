@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, Input } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { DatetimeRangeSelectionModel } from './datetime-range-selection-model';
 import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.component';
+import { formatInterval } from 'src/app/common/temporal/format-interval';
 
 @Component({
     selector: 'app-datetime-range-input',
@@ -57,9 +58,10 @@ export class DatetimeRangeInputComponent {
     private _max: Date | null = null;
 
     get valueLabel(): string {
-        const a = this._model?.selection.start?.toISOString() ?? '';
-        const b = this._model?.selection.end?.toISOString() ?? '';
-        return `${a} - ${b}`;
+        if (this._model?.selection) {
+            return formatInterval(this._model.selection.toInterval());
+        }
+        return '(nothing)';
     }
 
     private _model?: DatetimeRangeSelectionModel;

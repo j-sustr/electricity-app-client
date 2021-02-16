@@ -20,6 +20,17 @@ describe('formatInterval()', () => {
 
         const result = formatInterval(interval);
 
-        expect(result).toBe('January 2021');
+        expect(result).toBe('January, 2021');
+    });
+
+    it('should format nice day', () => {
+        const interval: Interval = {
+            start: new Date(2021, 0, 1),
+            end: new Date(2021, 0, 2)
+        };
+
+        const result = formatInterval(interval);
+
+        expect(result).toBe('January 1, 2021');
     });
 });

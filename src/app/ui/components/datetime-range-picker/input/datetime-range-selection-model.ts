@@ -13,6 +13,13 @@ export class DatetimeRange {
         }
         return new DatetimeRange(interval.start, interval.end);
     }
+
+    toInterval(): Interval {
+        return {
+            start: this.start ?? -Infinity,
+            end: this.end ?? Infinity
+        };
+    }
 }
 
 export interface DatetimeRangeSelectionModelChange {
