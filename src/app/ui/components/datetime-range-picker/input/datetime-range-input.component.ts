@@ -6,9 +6,16 @@ import {
     Input
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { DatetimeRangeSelectionModel } from './datetime-range-selection-model';
+import {
+    DatetimeRange,
+    DatetimeRangeSelectionModel
+} from './datetime-range-selection-model';
 import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.component';
 import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
+import {
+    getNextInterval,
+    getPreviousInterval
+} from 'src/app/common/temporal/interval/adjacent-interval';
 
 @Component({
     selector: 'app-datetime-range-input',
@@ -92,26 +99,48 @@ export class DatetimeRangeInputComponent {
     }
 
     selectNextInterval(): void {
-        throw new Error('not implemented');
+        const interval = this._model?.selection.toInterval();
+        if (!interval) {
+            return;
+        }
+        const nextInterval = getNextInterval(interval);
+        this._model?.updateSelection(
+            DatetimeRange.fromInterval(nextInterval),
+            this
+        );
     }
 
     selectPreviousInterval(): void {
-        throw new Error('not implemented');
-    }
-
-    hasNextInterval(): boolean {
-        return true;
-    }
-
-    hasPreviousInterval(): boolean {
-        return true;
+        const interval = this._model?.selection.toInterval();
+        if (!interval) {
+            return;
+        }
+        const previousInterval = getPreviousInterval(interval);
+        this._model?.updateSelection(
+            DatetimeRange.fromInterval(previousInterval),
+            this
+        );
     }
 
     _nextButtonDisabled(): boolean {
-        return this._disabled || !this.hasNextInterval();
+        return this._disabled || !this._hasNextInterval();
     }
 
     _previousButtonDisabled(): boolean {
-        return this._disabled || !this.hasPreviousInterval();
+        return this._disabled || !this._hasPreviousInterval();
+    }
+
+    _hasNextInterval(): boolean {
+        if (!this._max || !this._model?.selection.end) {
+            return true;
+        }
+        return this._model?.selection.end < this._max;
+    }
+
+    _hasPreviousInterval(): boolean {
+        if (!this._min || !this._model?.selection.start) {
+            return true;
+        }
+        return this._model?.selection.start < this._min;
     }
 }
