@@ -2,7 +2,7 @@ import differenceInMonths from 'date-fns/differenceInMonths';
 import differenceInYears from 'date-fns/differenceInYears';
 import toDate from 'date-fns/toDate';
 import { compareAsc, differenceInDays, differenceInHours } from 'date-fns';
-import { isYear, isMonth, isDay, isHour } from './temporal-utils';
+import { isYear, isMonth, isDay, isHour } from '../temporal-utils';
 
 export function isNiceInterval(value: Interval): boolean {
     const start = toDate(value.start);

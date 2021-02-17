@@ -3,11 +3,10 @@ import {
     format,
     getHours,
     intervalToDuration,
-    isValid,
     toDate
 } from 'date-fns';
+import { isDay, isHour, isMonth, isYear } from '../temporal-utils';
 import { isNiceInterval } from './is-nice-interval';
-import { isDay, isHour, isMonth, isYear } from './temporal-utils';
 
 export function formatInterval(interval: Interval): string {
     if (compareAsc(interval.start, interval.end) === 1) {

@@ -8,7 +8,7 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { DatetimeRangeSelectionModel } from './datetime-range-selection-model';
 import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.component';
-import { formatInterval } from 'src/app/common/temporal/format-interval';
+import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 
 @Component({
     selector: 'app-datetime-range-input',
