@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "check for errors",
+            "command": "tsc",
+            "type": "shell",
+            "args": ["-p", "."],
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$tsc"
+        }
+    ]
+}
