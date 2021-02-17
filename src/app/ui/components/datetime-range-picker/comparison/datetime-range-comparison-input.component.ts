@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-datetime-range-comparison-input',
     templateUrl: './datetime-range-comparison-input.component.html',
-    styleUrls: ['./datetime-range-comparison-input.component.scss']
+    styleUrls: ['./datetime-range-comparison-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class DatetimeRangeComparisonInputComponent {
     @Input()

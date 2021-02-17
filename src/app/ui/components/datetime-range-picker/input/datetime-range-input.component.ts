@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, Input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input
+} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { DatetimeRangeSelectionModel } from './datetime-range-selection-model';
 import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.component';
@@ -7,7 +13,8 @@ import { formatInterval } from 'src/app/common/temporal/format-interval';
 @Component({
     selector: 'app-datetime-range-input',
     templateUrl: './datetime-range-input.component.html',
-    styleUrls: ['./datetime-range-input.component.scss']
+    styleUrls: ['./datetime-range-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeRangeInputComponent {
     get opened(): boolean {
@@ -31,6 +38,7 @@ export class DatetimeRangeInputComponent {
                 () => {
                     console.log('selection', this._model?.selection);
                     console.log('closed');
+                    this._changeDetectorRef.markForCheck();
                 }
             );
         }

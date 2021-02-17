@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { startAndDurationToInterval } from 'src/app/common/temporal/temporal-utils';
 import {
@@ -26,7 +26,8 @@ type CalendarZoomLevel = 'month' | 'year' | 'decade' | 'century';
     // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: {
         class: 'datetime-range-picker-content'
-    }
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeRangePickerContentComponent {
     private _targetZoomLevel?: CalendarZoomLevel = 'month';
