@@ -1,24 +1,76 @@
-import { addMonths, getMonth, getYear } from 'date-fns';
+import { addMonths, getMonth, getYear, toDate } from 'date-fns';
 import intervalToDuration from 'date-fns/intervalToDuration';
+import * as d3 from 'd3-time';
 
-export function roundInterval(interval: Interval): Interval {
-    const d = intervalToDuration(interval);
-    const yStart = getYear(interval.start);
-    const yEnd = getYear(interval.end);
-    if (d.years) {
+type CountableIntervalType = 'years' | 'months' | 'days' | 'hours';
+
+export type RoundType = 'ceil' | 'floor' | 'round';
+
+export function roundInterval(
+    interval: Interval,
+    startRound: RoundType = 'round',
+    endRound: RoundType = 'round'
+): Interval {
+    const dur = intervalToDuration(interval);
+    const start = toDate(interval.start);
+    const end = toDate(interval.end);
+
+    if (dur.years && dur.years > 0) {
         return {
-            start: yStart,
-            end: yEnd
+            start: getRoundFn('years', startRound)(start),
+            end: getRoundFn('years', endRound)(end)
         };
     }
-    const mStart = getMonth(interval.start);
-    const mEnd = getMonth(interval.end);
-    if (d.months) {
+    if (dur.months && dur.months > 0) {
         return {
-            start: addMonths(new Date(yStart, 0, 0), mStart),
-            end: addMonths(new Date(yEnd, 0, 0), mEnd)
+            start: getRoundFn('months', startRound)(start),
+            end: getRoundFn('months', endRound)(end)
+        };
+    }
+    if (dur.days && dur.days > 0) {
+        return {
+            start: getRoundFn('days', startRound)(start),
+            end: getRoundFn('days', endRound)(end)
+        };
+    }
+    if (dur.hours && dur.hours > 0) {
+        return {
+            start: getRoundFn('hours', startRound)(start),
+            end: getRoundFn('hours', endRound)(end)
         };
     }
 
     throw Error('not implemented');
+}
+
+function getRoundFn(
+    interval: CountableIntervalType,
+    round: RoundType
+): (d: Date) => Date {
+    const ci = getCountableInterval(interval);
+    switch (round) {
+        case 'ceil':
+            return ci.ceil.bind(ci);
+        case 'floor':
+            return ci.floor.bind(ci);
+        case 'round':
+            return ci.round.bind(ci);
+    }
+    throw new Error('invalid round type');
+}
+
+function getCountableInterval(
+    interval: CountableIntervalType
+): d3.CountableTimeInterval {
+    switch (interval) {
+        case 'years':
+            return d3.timeYear;
+        case 'months':
+            return d3.timeMonth;
+        case 'days':
+            return d3.timeDay;
+        case 'hours':
+            return d3.timeHour;
+    }
+    throw new Error('invalid interval type');
 }
