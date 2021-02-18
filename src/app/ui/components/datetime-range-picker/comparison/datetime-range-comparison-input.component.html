@@ -1,20 +1,22 @@
-<div class="container">
-    <div class="ranges">
-        <div class="input" *ngFor="let range of ranges; let last = last">
+<div class="ranges">
+    <div class="range-item" *ngFor="let range of ranges; let last = last">
+        <div class="action-field">
             <dx-button
+                class="btn"
                 icon="close"
                 *ngIf="last && ranges.length > 1"
                 (onClick)="removeRange()"
             ></dx-button>
-            <app-datetime-range-input
-                [min]="range.min"
-                [max]="range.max"
-                [rangePicker]="rangePicker"
-            ></app-datetime-range-input>
-            <app-datetime-range-picker #rangePicker></app-datetime-range-picker>
         </div>
+        <app-datetime-range-input
+            class="range-input"
+            [min]="range.min"
+            [max]="range.max"
+            [rangePicker]="rangePicker"
+        ></app-datetime-range-input>
+        <app-datetime-range-picker #rangePicker></app-datetime-range-picker>
     </div>
-    <div class="actions">
-        <dx-button icon="plus" (onClick)="addRange()"></dx-button>
+    <div class="range-item actions" *ngIf="ranges.length < 2">
+        <dx-button class="btn" icon="plus" (onClick)="addRange()"></dx-button>
     </div>
 </div>

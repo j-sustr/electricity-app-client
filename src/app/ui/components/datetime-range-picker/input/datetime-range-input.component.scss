@@ -1,22 +1,9 @@
-$container-padding: 0 8px;
-
-$value-label-margin: 0 32px 0 24px;
-
 :host {
-    display: block;
-}
-
-.container {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: $container-padding;
-    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    flex-wrap: nowrap;
     width: 100%;
-}
-
-.value-label {
-    margin: $value-label-margin;
 }
 
 .range-actions {

@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+.ranges {
+    display: flex;
+    flex-direction: column;
+}
+
+.range-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    margin: 10px;
+
+    .action-field {
+        margin-left: 0;
+        margin-right: auto;
+        width: 50px;
+    }
+}
+
+.range-input {
+    margin-left: 10px;
+}
+
+.actions {
+    justify-content: flex-start;
+    padding-left: 50px;
+}

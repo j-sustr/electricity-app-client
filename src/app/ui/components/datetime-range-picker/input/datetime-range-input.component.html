@@ -1,19 +1,17 @@
-<div class="container">
-    <dx-button icon="more" [disabled]="false" (onClick)="open()"> </dx-button>
-    <div class="value-label">{{valueLabel}}</div>
+<dx-button icon="more" [disabled]="false" (onClick)="open()"> </dx-button>
+<div class="value-label">{{valueLabel}}</div>
 
-    <div class="range-actions">
-        <dx-button
-            icon="chevronleft"
-            (onClick)="selectPreviousInterval()"
-            [disabled]="_previousButtonDisabled()"
-        >
-        </dx-button>
-        <dx-button
-            icon="chevronright"
-            (onClick)="selectNextInterval()"
-            [disabled]="_nextButtonDisabled()"
-        >
-        </dx-button>
-    </div>
+<div class="range-actions">
+    <dx-button
+        icon="chevronleft"
+        (onClick)="selectPreviousInterval()"
+        [disabled]="_previousButtonDisabled()"
+    >
+    </dx-button>
+    <dx-button
+        icon="chevronright"
+        (onClick)="selectNextInterval()"
+        [disabled]="_nextButtonDisabled()"
+    >
+    </dx-button>
 </div>
