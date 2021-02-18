@@ -1,5 +1,10 @@
 <nav class="main-nav">
-    <a class="nav-item" *ngFor="let item of items" routerLink="/{{item.link}}">
+    <a
+        class="nav-item"
+        *ngFor="let item of items"
+        routerLink="/{{item.link}}"
+        routerLinkActive="active"
+    >
         <i class="{{item.icon}}"></i>
         <span>{{item.label}}</span>
     </a>
