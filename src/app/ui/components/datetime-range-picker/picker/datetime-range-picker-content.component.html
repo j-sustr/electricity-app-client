@@ -4,22 +4,22 @@
             <ng-container *ngTemplateOutlet="targetStepTemplate"></ng-container>
         </ng-container>
         <ng-container *ngSwitchCase="'select-range'">
-            <ng-container *ngTemplateOutlet="valueStepTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="rangeStepTemplate"></ng-container>
         </ng-container>
         <ng-container *ngSwitchDefault>empty</ng-container>
     </ng-container>
 </div>
 
 <ng-template #targetStepTemplate>
-    <div class="buttons-column">
-        <div class="column-header">Pick Range</div>
+    <div class="target-step">
+        <div class="header">Pick Range</div>
+        <div class="content">
+            <dx-button (onClick)="selectTarget('year')">Year</dx-button>
 
-        <div><dx-button (onClick)="selectTarget('year')">Year</dx-button></div>
-        <div>
             <dx-button (onClick)="selectTarget('month')">Month</dx-button>
-        </div>
-        <div><dx-button (onClick)="selectTarget('day')">Day</dx-button></div>
-        <div>
+
+            <dx-button (onClick)="selectTarget('day')">Day</dx-button>
+
             <dx-button (onClick)="selectTarget('hour')" [disabled]="true"
                 >Hour</dx-button
             >
@@ -27,14 +27,16 @@
     </div>
 </ng-template>
 
-<ng-template #valueStepTemplate>
-    <dx-calendar
-        [zoomLevel]="zoomLevel"
-        (onValueChanged)="handleCalendarValueChanged($event)"
-        (onOptionChanged)="handleCalendarOptionChanged($event)"
-        [firstDayOfWeek]="1"
-        [min]="$any(picker?.getMinDate())"
-        [max]="$any(picker?.getMaxDate())"
-    >
-    </dx-calendar>
+<ng-template #rangeStepTemplate>
+    <div class="range-step">
+        <dx-calendar
+            [zoomLevel]="zoomLevel"
+            (onValueChanged)="handleCalendarValueChanged($event)"
+            (onOptionChanged)="handleCalendarOptionChanged($event)"
+            [firstDayOfWeek]="1"
+            [min]="$any(picker?.getMinDate())"
+            [max]="$any(picker?.getMaxDate())"
+        >
+        </dx-calendar>
+    </div>
 </ng-template>

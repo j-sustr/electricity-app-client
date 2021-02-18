@@ -12,31 +12,23 @@
     align-items: center;
 
     width: 300px;
-    flex-wrap: nowrap;
 }
 
-.column-header {
-    flex-grow: 0;
-    width: 150px;
-    height: 35px;
-    font-size: 1.3em;
-    opacity: 0.6;
-    text-align: left;
-    padding-left: 15px;
-}
+.target-step {
+    width: 100%;
 
-.buttons-column {
-    width: 150px;
-    justify-content: center;
-
-    & > div {
-        width: 150px;
-        height: 50px;
-        text-align: center;
+    .header {
+        padding: 10px;
     }
-}
 
-dx-button {
-    width: 150px;
-    height: 30px;
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    dx-button {
+        width: 150px;
+        height: 30px;
+    }
 }
