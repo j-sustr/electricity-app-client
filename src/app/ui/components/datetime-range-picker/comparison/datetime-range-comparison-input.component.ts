@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnInit
+} from '@angular/core';
 
 export type RangeItem = {
     min: Date | null;
@@ -11,7 +17,7 @@ export type RangeItem = {
     styleUrls: ['./datetime-range-comparison-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatetimeRangeComparisonInputComponent {
+export class DatetimeRangeComparisonInputComponent implements OnInit {
     @Input()
     get min(): Date | null {
         return this._min;
@@ -30,11 +36,34 @@ export class DatetimeRangeComparisonInputComponent {
     }
     private _max: Date | null = null;
 
-    ranges = [];
+    ranges: RangeItem[] = [];
 
-    constructor() {}
+    constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
-    addRange() {}
+    ngOnInit(): void {
+        this.ranges.push({
+            min: null,
+            max: null
+        });
+        this._changeDetectorRef.markForCheck();
+    }
 
-    removeRange() {}
+    addRange(): void {
+        if (this.ranges.length > 1) {
+            return;
+        }
+        this.ranges.push({
+            min: null,
+            max: null
+        });
+        this._changeDetectorRef.markForCheck();
+    }
+
+    removeRange(): void {
+        if (this.ranges.length < 2) {
+            return;
+        }
+        this.ranges.pop();
+        this._changeDetectorRef.markForCheck();
+    }
 }

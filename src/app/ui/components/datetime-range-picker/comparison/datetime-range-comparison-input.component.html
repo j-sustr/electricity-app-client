@@ -4,6 +4,7 @@
             <dx-button
                 icon="close"
                 *ngIf="last && ranges.length > 1"
+                (onClick)="removeRange()"
             ></dx-button>
             <app-datetime-range-input
                 [min]="range.min"
@@ -14,6 +15,6 @@
         </div>
     </div>
     <div class="actions">
-        <dx-button icon="plus"></dx-button>
+        <dx-button icon="plus" (onClick)="addRange()"></dx-button>
     </div>
 </div>
