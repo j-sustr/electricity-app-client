@@ -1,0 +1,19 @@
+:host {
+    padding-left: 100px;
+}
+
+.main-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    height: 100%;
+
+    .nav-item {
+        padding: 10px;
+        min-width: 150px;
+        margin-right: 20px;
+
+        text-align: center;
+    }
+}
