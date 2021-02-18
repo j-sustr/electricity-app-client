@@ -1,10 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+export type RangeItem = {
+    min: Date | null;
+    max: Date | null;
+};
+
 @Component({
     selector: 'app-datetime-range-comparison-input',
     templateUrl: './datetime-range-comparison-input.component.html',
     styleUrls: ['./datetime-range-comparison-input.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeRangeComparisonInputComponent {
     @Input()
