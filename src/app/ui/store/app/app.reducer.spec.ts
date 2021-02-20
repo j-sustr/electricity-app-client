@@ -1,4 +1,4 @@
-import { INITIAL_STATE } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { actionSetInterval } from './app.actions';
 import { appReducer, AppState, initialState } from './app.reducer';
 
@@ -8,7 +8,7 @@ describe('AppReducer', () => {
     };
 
     it('should return the default state', () => {
-        const action = {} as any;
+        const action = {} as Action;
         const state = appReducer(undefined, action);
 
         expect(state).toBe(initialState);
