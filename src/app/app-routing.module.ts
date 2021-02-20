@@ -1,7 +1,17 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 const routes: Routes = [
+    {
+        path: '',
+        redirectTo: 'costs',
+        pathMatch: 'full'
+    },
+    {
+        path: 'costs',
+        loadChildren: () =>
+            import('./ui/pages/costs/costs.module').then((m) => m.CostsModule)
+    },
     {
         path: 'power-factor',
         loadChildren: () =>
@@ -16,7 +26,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [
+        RouterModule.forRoot(routes, {
+            scrollPositionRestoration: 'enabled',
+            preloadingStrategy: PreloadAllModules,
+            enableTracing: true
+        })
+    ],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}
