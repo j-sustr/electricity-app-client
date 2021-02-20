@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { areIntervalsOverlapping, Interval } from 'date-fns';
-import { actionSetInterval } from './app.actions';
+import { Interval } from 'date-fns';
+import { actionRemoveInterval, actionSetInterval } from './app.actions';
 
 export interface AppState {
     intervals: Array<Interval>;
@@ -22,9 +22,21 @@ const reducer = createReducer(
             ...state,
             intervals
         };
+    }),
+    on(actionRemoveInterval, (state) => {
+        if (state.intervals.length < 2) {
+            return state;
+        }
+        return {
+            ...state,
+            intervals: state.intervals.slice(0, state.intervals.length - 1)
+        };
     })
 );
 
-export function appReducer(state: AppState | undefined, action: Action) {
+export function appReducer(
+    state: AppState | undefined,
+    action: Action
+): AppState {
     return reducer(state, action);
 }

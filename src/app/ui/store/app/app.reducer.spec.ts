@@ -1,10 +1,28 @@
 import { Action } from '@ngrx/store';
-import { actionSetInterval } from './app.actions';
+import { actionRemoveInterval, actionSetInterval } from './app.actions';
 import { appReducer, AppState, initialState } from './app.reducer';
 
 describe('AppReducer', () => {
-    const TEST_INTITIAL_STATE: AppState = {
-        intervals: []
+    const TEST_INITIAL_STATE: AppState = {
+        intervals: [
+            {
+                start: -Infinity,
+                end: Infinity
+            }
+        ]
+    };
+
+    const TEST_INITIAL_STATE_2: AppState = {
+        intervals: [
+            {
+                start: -Infinity,
+                end: Infinity
+            },
+            {
+                start: -Infinity,
+                end: Infinity
+            }
+        ]
     };
 
     it('should return the default state', () => {
@@ -14,18 +32,31 @@ describe('AppReducer', () => {
         expect(state).toBe(initialState);
     });
 
-    it('should set the interval', () => {
+    it('should set an interval', () => {
         const action = actionSetInterval({
             index: 0,
             start: new Date(0),
             end: new Date(1000)
         });
 
-        const state = appReducer(TEST_INTITIAL_STATE, action);
+        const state = appReducer(TEST_INITIAL_STATE, action);
         expect(state.intervals).toEqual([
             {
                 start: action.start,
                 end: action.end
+            }
+        ]);
+    });
+
+    it('should remove an interval', () => {
+        const action = actionRemoveInterval();
+
+        const state = appReducer(TEST_INITIAL_STATE_2, action);
+
+        expect(state.intervals).toEqual([
+            {
+                start: -Infinity,
+                end: Infinity
             }
         ]);
     });
