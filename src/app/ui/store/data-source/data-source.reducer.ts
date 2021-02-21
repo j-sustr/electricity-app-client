@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Interval } from 'date-fns';
-import { actionRemoveInterval, actionSetInterval } from './app.actions';
+import { actionRemoveInterval, actionSetInterval } from './data-source.actions';
 
 export interface DataSourceState {
     intervals: Array<Interval>;

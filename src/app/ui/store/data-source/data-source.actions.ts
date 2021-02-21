@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 export const actionSetInterval = createAction(
-    '[App] Set Interval',
+    '[DataSource] Set Interval',
     props<{
         index: 0 | 1;
         start: Date | number;
@@ -9,4 +9,6 @@ export const actionSetInterval = createAction(
     }>()
 );
 
-export const actionRemoveInterval = createAction('[App] Remove Interval');
+export const actionRemoveInterval = createAction(
+    '[DataSource] Remove Interval'
+);
