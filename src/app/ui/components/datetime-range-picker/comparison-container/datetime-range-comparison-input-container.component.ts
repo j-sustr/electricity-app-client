@@ -34,8 +34,10 @@ export class DatetimeRangeComparisonInputContainerComponent
     ngAfterViewInit(): void {
         this.store
             .pipe(select(selectDataSourceIntervals), take(1))
-            .subscribe(() => {
-                this.input.ranges;
+            .subscribe((intervals) => {
+                if (intervals.length > 1) {
+                    this.input.addRange();
+                }
             });
 
         this.store
