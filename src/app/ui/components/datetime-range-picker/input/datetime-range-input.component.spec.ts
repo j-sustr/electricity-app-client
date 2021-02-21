@@ -37,29 +37,40 @@ describe('DatetimeRangeInputComponent', () => {
         fixture.detectChanges();
 
         let btn = document.querySelector<HTMLElement>(
-            '.datetime-range-picker-content .dx-button:nth-child(1)'
+            '.datetime-range-picker-content .dx-button:nth-child(2)'
         );
-        expect(btn?.innerText).toBe('Year');
+        expect(btn?.innerText).toBe('Month');
         btn?.dispatchEvent(new Event('click'));
         fixture.detectChanges();
 
         btn = document.querySelector<HTMLElement>(
             '.dx-calendar-cell:nth-child(1)'
         );
-        expect(btn?.innerText).toBe('2019');
-        btn?.dispatchEvent(new Event('click'));
-        flushMicrotasks();
-        flush();
-        fixture.detectChanges();
-
-        const label = (fixture.nativeElement as HTMLElement).querySelector(
-            'app-datetime-range-input .value-label'
-        );
-
-        expect(label?.innerHTML).toBe('2019');
     }));
 
-    it('should disable out of range values', () => {});
+    it('should handle value selection', fakeAsync(() => {
+        const fixture = createComponent(StandardDatetimeRangePickerComponent);
+        fixture.detectChanges();
+
+        fixture.componentInstance.rangeInput.open();
+        fixture.detectChanges();
+    }));
+
+    it('should disable out of range values', () => {
+        const fixture = createComponent(StandardDatetimeRangePickerComponent);
+        fixture.componentInstance.minDate = new Date(2021, 0, 1);
+        fixture.componentInstance.maxDate = new Date(2021, 1, 1);
+        fixture.detectChanges();
+
+        fixture.componentInstance.rangeInput.open();
+        fixture.detectChanges();
+
+        const btn = document.querySelector<HTMLElement>(
+            '.datetime-range-picker-content .dx-button:nth-child(1)'
+        );
+
+        expect(btn?.getAttribute('ng-reflect-disabled')).toBe('true');
+    });
 });
 
 @Component({
