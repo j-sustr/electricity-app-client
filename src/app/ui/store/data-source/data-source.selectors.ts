@@ -10,3 +10,8 @@ export const selectDataSourceIntervals = createSelector(
     selectDataSource,
     (state: DataSourceState) => state.intervals
 );
+
+export const selectDataSourceInfo = createSelector(
+    selectDataSource,
+    (state: DataSourceState) => state.info
+);

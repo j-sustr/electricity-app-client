@@ -1,9 +1,17 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { take } from 'rxjs/internal/operators/take';
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { AppState } from 'src/app/ui/store/app-store.state';
 import {
-    actionRemoveInterval,
-    actionSetInterval
+    actionDataSourceRemoveInterval,
+    actionDataSourceSetInterval
 } from 'src/app/ui/store/data-source/data-source.actions';
+import {
+    selectDataSourceInfo,
+    selectDataSourceIntervals
+} from 'src/app/ui/store/data-source/data-source.selectors';
 import {
     DatetimeRangeComparisonInputComponent,
     DatetimeRangeComparisonInputValueChange
@@ -15,31 +23,51 @@ import {
     styleUrls: ['./datetime-range-comparison-input-container.component.scss']
 })
 export class DatetimeRangeComparisonInputContainerComponent
-    implements AfterViewInit {
-    min = null;
-    max = null;
+    implements AfterViewInit, OnDestroy {
+    private destroy$ = new Subject();
 
     @ViewChild(DatetimeRangeComparisonInputComponent)
     input!: DatetimeRangeComparisonInputComponent;
 
-    constructor(private store: Store) {}
+    constructor(private store: Store<AppState>) {}
 
     ngAfterViewInit(): void {
-        this.input.valueChange.subscribe(
-            (event: DatetimeRangeComparisonInputValueChange) => {
+        this.store
+            .pipe(select(selectDataSourceIntervals), take(1))
+            .subscribe(() => {
+                this.input.ranges;
+            });
+
+        this.store
+            .pipe(select(selectDataSourceInfo), takeUntil(this.destroy$))
+            .subscribe((info) => {
+                if (info) {
+                    this.input.min = info.minDatetime;
+                    this.input.max = info.maxDatetime;
+                }
+            });
+
+        this.input.valueChange
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((event: DatetimeRangeComparisonInputValueChange) => {
                 const interval = event.value.toInterval();
                 this.store.dispatch(
-                    actionSetInterval({
+                    actionDataSourceSetInterval({
                         index: event.index === 0 ? 0 : 1,
                         start: interval.start,
                         end: interval.end
                     })
                 );
-            }
-        );
+            });
 
-        this.input.rangeRemoveChange.subscribe(() => {
-            this.store.dispatch(actionRemoveInterval());
-        });
+        this.input.rangeRemoveChange
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                this.store.dispatch(actionDataSourceRemoveInterval());
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
     }
 }

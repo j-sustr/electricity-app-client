@@ -1,5 +1,8 @@
 import { Action } from '@ngrx/store';
-import { actionRemoveInterval, actionSetInterval } from './data-source.actions';
+import {
+    actionDataSourceRemoveInterval,
+    actionDataSourceSetInterval
+} from './data-source.actions';
 import {
     dataSourceReducer,
     DataSourceState,
@@ -37,7 +40,7 @@ describe('AppReducer', () => {
     });
 
     it('should set an interval', () => {
-        const action = actionSetInterval({
+        const action = actionDataSourceSetInterval({
             index: 0,
             start: new Date(0),
             end: new Date(1000)
@@ -53,7 +56,7 @@ describe('AppReducer', () => {
     });
 
     it('should remove an interval', () => {
-        const action = actionRemoveInterval();
+        const action = actionDataSourceRemoveInterval();
 
         const state = dataSourceReducer(TEST_INITIAL_STATE_2, action);
 
