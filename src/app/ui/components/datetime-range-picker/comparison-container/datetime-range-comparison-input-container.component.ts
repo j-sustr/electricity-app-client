@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import {
     actionRemoveInterval,
     actionSetInterval
-} from 'src/app/ui/store/app/data-source.actions';
+} from 'src/app/ui/store/data-source/data-source.actions';
 import {
     DatetimeRangeComparisonInputComponent,
     DatetimeRangeComparisonInputValueChange
