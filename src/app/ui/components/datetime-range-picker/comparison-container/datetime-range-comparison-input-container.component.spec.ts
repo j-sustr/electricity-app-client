@@ -4,6 +4,7 @@ import {
     selectDataSourceInfo,
     selectDataSourceIntervals
 } from 'src/app/ui/store/data-source/data-source.selectors';
+import { DatetimeRangePickerModule } from '../datetime-range-picker.module';
 
 import { DatetimeRangeComparisonInputContainerComponent } from './datetime-range-comparison-input-container.component';
 
@@ -14,6 +15,7 @@ describe('DatetimeRangeComparisonInputContainerComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [DatetimeRangePickerModule],
             declarations: [DatetimeRangeComparisonInputContainerComponent],
             providers: [provideMockStore()]
         }).compileComponents();
