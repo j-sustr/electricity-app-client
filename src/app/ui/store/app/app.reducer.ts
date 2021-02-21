@@ -2,17 +2,18 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { Interval } from 'date-fns';
 import { actionRemoveInterval, actionSetInterval } from './app.actions';
 
-export interface AppState {
+export interface DataSourceState {
     intervals: Array<Interval>;
 }
 
-export const initialState: AppState = {
+export const initialState: DataSourceState = {
     intervals: []
 };
 
 const reducer = createReducer(
     initialState,
     on(actionSetInterval, (state, action) => {
+        console.log('actionSetInterval', action);
         const intervals = [...state.intervals];
         intervals[action.index] = {
             start: action.start,
@@ -24,6 +25,7 @@ const reducer = createReducer(
         };
     }),
     on(actionRemoveInterval, (state) => {
+        console.log('actionRemoveInterval');
         if (state.intervals.length < 2) {
             return state;
         }
@@ -34,9 +36,9 @@ const reducer = createReducer(
     })
 );
 
-export function appReducer(
-    state: AppState | undefined,
+export function dataSourceReducer(
+    state: DataSourceState | undefined,
     action: Action
-): AppState {
+): DataSourceState {
     return reducer(state, action);
 }

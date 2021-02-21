@@ -2,14 +2,17 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    EventEmitter,
     Input,
-    OnInit
+    OnInit,
+    Output
 } from '@angular/core';
+import { DatetimeRange } from '../input/datetime-range-selection-model';
 
-export type RangeItem = {
-    min: Date | null;
-    max: Date | null;
-};
+export interface DatetimeRangeComparisonInputValueChange {
+    index: number;
+    value: DatetimeRange;
+}
 
 @Component({
     selector: 'app-datetime-range-comparison-input',
@@ -36,27 +39,37 @@ export class DatetimeRangeComparisonInputComponent implements OnInit {
     }
     private _max: Date | null = null;
 
-    ranges: RangeItem[] = [];
+    ranges: null[] = [];
+
+    @Output()
+    valueChange = new EventEmitter<DatetimeRangeComparisonInputValueChange>();
+
+    @Output() rangeRemoveChange = new EventEmitter<void>();
 
     constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-        this.ranges.push({
-            min: null,
-            max: null
-        });
+        this.ranges.push(null);
         this._changeDetectorRef.markForCheck();
+    }
+
+    _handleRangeSelected(index: number, value: DatetimeRange): void {
+        this.valueChange.next({
+            index: index,
+            value: value
+        });
     }
 
     addRange(): void {
         if (this.ranges.length > 1) {
             return;
         }
-        this.ranges.push({
-            min: null,
-            max: null
-        });
+        this.ranges.push(null);
         this._changeDetectorRef.markForCheck();
+        this.valueChange.next({
+            index: this.ranges.length - 1,
+            value: new DatetimeRange(null, null)
+        });
     }
 
     removeRange(): void {
@@ -65,5 +78,6 @@ export class DatetimeRangeComparisonInputComponent implements OnInit {
         }
         this.ranges.pop();
         this._changeDetectorRef.markForCheck();
+        this.rangeRemoveChange.next();
     }
 }

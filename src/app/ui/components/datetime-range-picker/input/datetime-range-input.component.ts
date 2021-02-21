@@ -3,7 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Input
+    EventEmitter,
+    Input,
+    Output
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import {
@@ -43,11 +45,12 @@ export class DatetimeRangeInputComponent {
             this._closedSubscription.unsubscribe();
             this._closedSubscription = rangePicker.closedStream.subscribe(
                 () => {
-                    console.log('selection', this._model?.selection);
-                    console.log('closed');
                     this._changeDetectorRef.markForCheck();
                 }
             );
+            this._model.selectionChanged.subscribe(() => {
+                this.rangeSelected.next(this._model?.selection);
+            });
         }
     }
     private _rangePicker?: DatetimeRangePickerComponent;
@@ -72,6 +75,9 @@ export class DatetimeRangeInputComponent {
     }
     private _max: Date | null = null;
 
+    @Output()
+    readonly rangeSelected: EventEmitter<DatetimeRange> = new EventEmitter<DatetimeRange>();
+
     get valueLabel(): string {
         if (this._model?.selection) {
             return formatInterval(this._model.selection.toInterval());
@@ -81,7 +87,7 @@ export class DatetimeRangeInputComponent {
 
     private _model?: DatetimeRangeSelectionModel;
 
-    stateChanges = new Subject<void>();
+    readonly stateChanges = new Subject<void>();
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,

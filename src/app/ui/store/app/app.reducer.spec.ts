@@ -1,9 +1,13 @@
 import { Action } from '@ngrx/store';
 import { actionRemoveInterval, actionSetInterval } from './app.actions';
-import { appReducer, AppState, initialState } from './app.reducer';
+import {
+    dataSourceReducer,
+    DataSourceState,
+    initialState
+} from './app.reducer';
 
 describe('AppReducer', () => {
-    const TEST_INITIAL_STATE: AppState = {
+    const TEST_INITIAL_STATE: DataSourceState = {
         intervals: [
             {
                 start: -Infinity,
@@ -12,7 +16,7 @@ describe('AppReducer', () => {
         ]
     };
 
-    const TEST_INITIAL_STATE_2: AppState = {
+    const TEST_INITIAL_STATE_2: DataSourceState = {
         intervals: [
             {
                 start: -Infinity,
@@ -27,7 +31,7 @@ describe('AppReducer', () => {
 
     it('should return the default state', () => {
         const action = {} as Action;
-        const state = appReducer(undefined, action);
+        const state = dataSourceReducer(undefined, action);
 
         expect(state).toBe(initialState);
     });
@@ -39,7 +43,7 @@ describe('AppReducer', () => {
             end: new Date(1000)
         });
 
-        const state = appReducer(TEST_INITIAL_STATE, action);
+        const state = dataSourceReducer(TEST_INITIAL_STATE, action);
         expect(state.intervals).toEqual([
             {
                 start: action.start,
@@ -51,7 +55,7 @@ describe('AppReducer', () => {
     it('should remove an interval', () => {
         const action = actionRemoveInterval();
 
-        const state = appReducer(TEST_INITIAL_STATE_2, action);
+        const state = dataSourceReducer(TEST_INITIAL_STATE_2, action);
 
         expect(state.intervals).toEqual([
             {
