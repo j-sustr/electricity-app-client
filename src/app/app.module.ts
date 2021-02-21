@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { StoreModule } from '@ngrx/store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppBarComponent } from './ui/components/app-bar/app-bar.component';
@@ -10,13 +9,7 @@ import { POWER_FACTOR_CLIENT } from './web-api-client-di';
 
 @NgModule({
     declarations: [AppComponent, AppBarComponent],
-    imports: [
-        BrowserModule,
-        AppStoreModule,
-        StoreModule.forRoot({}),
-        // EffectsModule.forRoot([]),
-        AppRoutingModule
-    ],
+    imports: [BrowserModule, AppStoreModule, AppRoutingModule],
     providers: [
         {
             provide: POWER_FACTOR_CLIENT,
