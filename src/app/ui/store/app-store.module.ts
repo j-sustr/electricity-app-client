@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ActionReducerMap, StoreModule } from '@ngrx/store';
-import { dataSourceReducer, DataSourceState } from './app/app.reducer';
+import { dataSourceReducer, DataSourceState } from './app/data-source.reducer';
 
 export interface ApplicationState {
     dataSource: DataSourceState;

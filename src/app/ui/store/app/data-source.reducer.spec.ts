@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
-import { actionRemoveInterval, actionSetInterval } from './app.actions';
+import { actionRemoveInterval, actionSetInterval } from './data-source.actions';
 import {
     dataSourceReducer,
     DataSourceState,
     initialState
-} from './app.reducer';
+} from './data-source.reducer';
 
 describe('AppReducer', () => {
     const TEST_INITIAL_STATE: DataSourceState = {
