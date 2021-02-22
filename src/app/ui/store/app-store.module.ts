@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { PowerFactorClient } from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { reducers } from './app-store.state';
+import { DataSourceEffects } from './data-source/data-source.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
 
 @NgModule({
@@ -13,7 +14,7 @@ import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor
         CommonModule,
         HttpClientModule,
         StoreModule.forRoot(reducers),
-        EffectsModule.forRoot([PowerFactorOverviewEffects])
+        EffectsModule.forRoot([DataSourceEffects, PowerFactorOverviewEffects])
     ],
     exports: [StoreModule],
     providers: [

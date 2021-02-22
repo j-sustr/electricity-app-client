@@ -35,9 +35,11 @@ export class DatetimeRangeComparisonInputContainerComponent
         this.store
             .pipe(select(selectDataSourceIntervals), take(1))
             .subscribe((intervals) => {
-                if (intervals.length > 1) {
-                    this.input.addRange();
-                }
+                setTimeout(() => {
+                    if (intervals.length > 1) {
+                        this.input.addRange();
+                    }
+                }, 0);
             });
 
         this.store

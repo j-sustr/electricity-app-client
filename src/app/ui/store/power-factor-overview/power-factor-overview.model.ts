@@ -1,24 +1,14 @@
-export interface PowerFactorOverviewItem {
-    deviceName?: string | null;
-    activeEnergy?: number;
-    reactiveEnergyL?: number;
-    reactiveEnergyC?: number;
-    tanFi?: number;
-    interval?: Interval | null;
-}
+import { HttpErrorResponse } from '@angular/common/http';
+import { PowerFactorOverviewItem } from 'src/app/web-api-client';
+import { SeriesParams } from '../models';
 
 export interface PowerFactorOverviewState {
     viewType: 'table' | 'chart';
     showEnergy: boolean;
     view: {
-        data: PowerFactorOverviewItem[];
-        series: {
-            name: string;
-            valueField: string;
-            unit: string;
-            // filter: string;
-        }[];
+        items: PowerFactorOverviewItem[] | null;
+        series: SeriesParams[] | null;
+        loading: boolean;
+        error?: HttpErrorResponse | null;
     };
-    loading: boolean;
-    error: boolean;
 }

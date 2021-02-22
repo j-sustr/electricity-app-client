@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 import { PowerFactorOverviewDto } from 'src/app/web-api-client';
 
@@ -10,17 +11,16 @@ export const actionPFOverviewToggleEnergy = createAction(
     '[Power Factor Overview] Toggle Energy'
 );
 
-export const actionGetPowerFactorOverviewData = createAction(
-    '[Power Factor Overview] Get Data',
-    props<{ interval1: Interval; interval2: Interval }>()
+export const actionPowerFactorOverviewGetData = createAction(
+    '[Power Factor Overview] Get Data'
 );
 
-export const actionGetPowerFactorOverviewDataSuccess = createAction(
+export const actionPowerFactorOverviewGetDataSuccess = createAction(
     '[Power Factor Overview] Get Data Success',
     props<{ dto: PowerFactorOverviewDto }>()
 );
 
-export const actionGetPowerFactorOverviewDataError = createAction(
+export const actionPowerFactorOverviewGetDataError = createAction(
     '[Power Factor Overview] Get Data Error',
-    props<{ error: unknown }>()
+    props<{ error: HttpErrorResponse }>()
 );

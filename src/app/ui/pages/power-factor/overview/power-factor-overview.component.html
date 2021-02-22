@@ -1,1 +1,5 @@
 <app-datetime-range-comparison-input-container></app-datetime-range-comparison-input-container>
+
+<ul>
+    <li *ngFor="let item of items$ | async as list">{{item | json}}</li>
+</ul>

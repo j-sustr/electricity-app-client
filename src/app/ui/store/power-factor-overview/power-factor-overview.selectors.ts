@@ -16,3 +16,18 @@ export const selectPFOverviewShowEnergy = createSelector(
     selectPowerFactorOverview,
     (state: PowerFactorOverviewState) => state.showEnergy
 );
+
+export const selectPFOverviewViewItems = createSelector(
+    selectPowerFactorOverview,
+    (state: PowerFactorOverviewState) => state.view.items
+);
+
+export const selectPFOverviewViewSeries = createSelector(
+    selectPowerFactorOverview,
+    (state: PowerFactorOverviewState) => state.view.series
+);
+
+export const selectPFOverviewViewLoading = createSelector(
+    selectPowerFactorOverview,
+    (state: PowerFactorOverviewState) => state.view.loading
+);
