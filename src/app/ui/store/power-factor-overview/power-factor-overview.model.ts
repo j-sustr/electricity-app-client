@@ -19,4 +19,6 @@ export interface PowerFactorOverviewState {
             // filter: string;
         }[];
     };
+    loading: boolean;
+    error: boolean;
 }

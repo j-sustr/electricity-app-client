@@ -11,7 +11,9 @@ export const initialState: PowerFactorOverviewState = {
     view: {
         data: [],
         series: []
-    }
+    },
+    loading: false,
+    error: false
 };
 
 const reducer = createReducer(
