@@ -8,7 +8,10 @@ const selectDataSource = createFeatureSelector<AppState, DataSourceState>(
 
 export const selectDataSourceIntervals = createSelector(
     selectDataSource,
-    (state: DataSourceState) => state.intervals
+    (state: DataSourceState) => ({
+        interval1: state.interval1,
+        interval2: state.interval2
+    })
 );
 
 export const selectDataSourceInfo = createSelector(

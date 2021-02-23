@@ -1,13 +1,14 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Interval } from 'date-fns';
+import { isEqual } from 'lodash';
 import {
-    actionDataSourceRemoveInterval,
     actionDataSourceSetInfo,
-    actionDataSourceSetInterval
+    actionDataSourceSetIntervals
 } from './data-source.actions';
 
 export interface DataSourceState {
-    intervals: Array<Interval>;
+    interval1: Interval;
+    interval2?: Interval;
     info?: {
         minDatetime: Date;
         maxDatetime: Date;
@@ -15,32 +16,25 @@ export interface DataSourceState {
 }
 
 export const initialState: DataSourceState = {
-    intervals: [],
-    info: undefined
+    interval1: {
+        start: -Infinity,
+        end: Infinity
+    }
 };
 
 const reducer = createReducer(
     initialState,
-    on(actionDataSourceSetInterval, (state, action) => {
-        console.log('actionSetInterval', action);
-        const intervals = [...state.intervals];
-        intervals[action.index] = {
-            start: action.start,
-            end: action.end
-        };
+    on(actionDataSourceSetIntervals, (state, action) => {
+        const interval1 = isEqual(state.interval1, action.interval1)
+            ? state.interval1
+            : action.interval1;
+        const interval2 = isEqual(state.interval2, action.interval2)
+            ? state.interval2
+            : action.interval2;
         return {
             ...state,
-            intervals
-        };
-    }),
-    on(actionDataSourceRemoveInterval, (state) => {
-        console.log('actionRemoveInterval');
-        if (state.intervals.length < 2) {
-            return state;
-        }
-        return {
-            ...state,
-            intervals: state.intervals.slice(0, state.intervals.length - 1)
+            interval1,
+            interval2
         };
     }),
     on(actionDataSourceSetInfo, (state, action) => {

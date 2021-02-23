@@ -21,13 +21,13 @@ export class PowerFactorOverviewEffects {
         return this.actions$.pipe(
             ofType(actionPowerFactorOverviewGetData),
             withLatestFrom(this.store.pipe(select(selectDataSourceIntervals))),
-            switchMap(([, intervals]) =>
+            switchMap(([, { interval1, interval2 }]) =>
                 this.client
                     .getOverview(
-                        toDateDto(intervals[0]?.start),
-                        toDateDto(intervals[0]?.end),
-                        toDateDto(intervals[1]?.start),
-                        toDateDto(intervals[1]?.end),
+                        toDateDto(interval1?.start),
+                        toDateDto(interval1?.end),
+                        toDateDto(interval2?.start),
+                        toDateDto(interval2?.end),
                         null
                     )
                     .pipe(

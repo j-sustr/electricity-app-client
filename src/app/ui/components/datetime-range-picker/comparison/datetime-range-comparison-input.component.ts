@@ -28,9 +28,17 @@ export class DatetimeRangeComparisonInputComponent {
     get value1(): DatetimeRange {
         return this.picker1.selectedValue;
     }
+    set value1(value: DatetimeRange) {
+        this.picker1.selectedValue = value;
+    }
 
     get value2(): DatetimeRange | undefined {
         return this.picker2?.selectedValue;
+    }
+    set value2(value: DatetimeRange | undefined) {
+        if (this.picker2 && value) {
+            this.picker2.selectedValue = value;
+        }
     }
 
     _lastValue1?: DatetimeRange | null;
@@ -74,12 +82,12 @@ export class DatetimeRangeComparisonInputComponent {
         this._changeDetectorRef.markForCheck();
     }
 
-    addRange(): void {
+    addRange(value?: DatetimeRange): void {
         this._secondRangeEnabled = true;
         this._changeDetectorRef.markForCheck();
         setTimeout(() => {
             if (this.picker2) {
-                this.picker2.selectedValue = this.picker1.selectedValue;
+                this.value2 = value ? value : this.value1;
                 this.valueChange.next({
                     range1: this.value1,
                     range2: this.value2

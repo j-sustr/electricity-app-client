@@ -4,16 +4,15 @@ import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../app-store.state';
 import { actionPowerFactorOverviewGetData } from '../power-factor-overview/power-factor-overview.actions';
-import { actionDataSourceSetInterval } from './data-source.actions';
+import { actionDataSourceSetIntervals } from './data-source.actions';
 
 @Injectable()
 export class DataSourceEffects {
     effectName$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(actionDataSourceSetInterval),
+                ofType(actionDataSourceSetIntervals),
                 tap(() => {
-                    console.log('hello');
                     this.store.dispatch(actionPowerFactorOverviewGetData());
                 })
             );

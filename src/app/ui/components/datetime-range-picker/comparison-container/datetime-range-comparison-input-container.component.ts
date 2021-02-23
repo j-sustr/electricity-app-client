@@ -13,6 +13,7 @@ import {
     DatetimeRangeComparisonInputComponent,
     DatetimeRangeComparisonInputValueChange
 } from '../comparison/datetime-range-comparison-input.component';
+import { DatetimeRange } from '../input/datetime-range-selection-model';
 
 @Component({
     selector: 'app-datetime-range-comparison-input-container',
@@ -31,10 +32,13 @@ export class DatetimeRangeComparisonInputContainerComponent
     ngAfterViewInit(): void {
         this.store
             .pipe(select(selectDataSourceIntervals), take(1))
-            .subscribe((intervals) => {
+            .subscribe(({ interval1, interval2 }) => {
                 setTimeout(() => {
-                    if (intervals.length > 1) {
-                        this.input.addRange();
+                    this.input.value1 = DatetimeRange.fromInterval(interval1);
+                    if (interval2) {
+                        this.input.addRange(
+                            DatetimeRange.fromInterval(interval2)
+                        );
                     }
                 }, 0);
             });
