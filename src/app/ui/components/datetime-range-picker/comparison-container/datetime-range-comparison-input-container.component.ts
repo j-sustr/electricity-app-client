@@ -4,10 +4,7 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/internal/operators/take';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { AppState } from 'src/app/ui/store/app-store.state';
-import {
-    actionDataSourceRemoveInterval,
-    actionDataSourceSetInterval
-} from 'src/app/ui/store/data-source/data-source.actions';
+import { actionDataSourceSetIntervals } from 'src/app/ui/store/data-source/data-source.actions';
 import {
     selectDataSourceInfo,
     selectDataSourceIntervals
@@ -54,20 +51,12 @@ export class DatetimeRangeComparisonInputContainerComponent
         this.input.valueChange
             .pipe(takeUntil(this.destroy$))
             .subscribe((event: DatetimeRangeComparisonInputValueChange) => {
-                const interval = event.value.toInterval();
                 this.store.dispatch(
-                    actionDataSourceSetInterval({
-                        index: event.index === 0 ? 0 : 1,
-                        start: interval.start,
-                        end: interval.end
+                    actionDataSourceSetIntervals({
+                        interval1: event.range1.toInterval(),
+                        interval2: event.range2?.toInterval()
                     })
                 );
-            });
-
-        this.input.rangeRemoveChange
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(() => {
-                this.store.dispatch(actionDataSourceRemoveInterval());
             });
     }
 

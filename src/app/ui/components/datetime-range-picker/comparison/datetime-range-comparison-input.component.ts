@@ -4,15 +4,16 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnInit,
-    Output
+    Output,
+    ViewChild
 } from '@angular/core';
 import { DatetimeRange } from '../input/datetime-range-selection-model';
 import { DatetimeRangePickerTarget } from '../picker/datetime-range-picker-content.component';
+import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.component';
 
 export interface DatetimeRangeComparisonInputValueChange {
-    index: number;
-    value: DatetimeRange;
+    range1: DatetimeRange;
+    range2?: DatetimeRange;
 }
 
 @Component({
@@ -22,6 +23,14 @@ export interface DatetimeRangeComparisonInputValueChange {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeRangeComparisonInputComponent {
+    get value1(): DatetimeRange {
+        return this.picker1.selectedValue;
+    }
+
+    get value2(): DatetimeRange | undefined {
+        return this.picker2?.selectedValue;
+    }
+
     @Input()
     min: Date | null = null;
 
@@ -37,15 +46,17 @@ export class DatetimeRangeComparisonInputComponent {
     @Output()
     valueChange = new EventEmitter<DatetimeRangeComparisonInputValueChange>();
 
-    @Output() rangeRemoveChange = new EventEmitter<void>();
+    @ViewChild('rangePicker1') picker1!: DatetimeRangePickerComponent;
+
+    @ViewChild('rangePicker2') picker2?: DatetimeRangePickerComponent;
 
     constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
     _handleRangeSelected(r: 1 | 2, value: DatetimeRange): void {
         this._addRangeDisabled = false;
         this.valueChange.next({
-            index: r - 1,
-            value: value
+            range1: r === 1 ? value : this.value1,
+            range2: r === 2 ? value : this.value2
         });
         this._changeDetectorRef.markForCheck();
     }
@@ -53,15 +64,22 @@ export class DatetimeRangeComparisonInputComponent {
     addRange(): void {
         this._secondRangeEnabled = true;
         this._changeDetectorRef.markForCheck();
-        this.valueChange.next({
-            index: 1,
-            value: new DatetimeRange(null, null)
-        });
+        setTimeout(() => {
+            if (this.picker2) {
+                this.picker2.selectedValue = this.picker1.selectedValue;
+                this.valueChange.next({
+                    range1: this.value1,
+                    range2: this.value2
+                });
+            }
+        }, 0);
     }
 
     removeRange(): void {
         this._secondRangeEnabled = false;
         this._changeDetectorRef.markForCheck();
-        this.rangeRemoveChange.next();
+        this.valueChange.next({
+            range1: this.value1
+        });
     }
 }

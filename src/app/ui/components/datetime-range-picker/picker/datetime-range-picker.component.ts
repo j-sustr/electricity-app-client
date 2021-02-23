@@ -24,6 +24,7 @@ import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DatetimeRangeInputComponent } from '../input/datetime-range-input.component';
 import {
+    DatetimeRange,
     DatetimeRangeSelectionModel,
     DATETIME_RANGE_SELECTION_MODEL_PROVIDER
 } from '../input/datetime-range-selection-model';
@@ -43,6 +44,13 @@ export class DatetimeRangePickerComponent implements OnDestroy {
     private _inputStateChanges = Subscription.EMPTY;
 
     disabled = false;
+
+    get selectedValue(): DatetimeRange {
+        return this._model.selection;
+    }
+    set selectedValue(value: DatetimeRange) {
+        this._model.updateSelection(value, this);
+    }
 
     @Input()
     target: DatetimeRangePickerTarget | null = null;
