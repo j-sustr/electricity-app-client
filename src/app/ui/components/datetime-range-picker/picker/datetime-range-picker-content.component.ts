@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { startAndDurationToInterval } from 'src/app/common/temporal/temporal-utils';
 import {
@@ -29,7 +29,7 @@ type CalendarZoomLevel = 'month' | 'year' | 'decade' | 'century';
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatetimeRangePickerContentComponent {
+export class DatetimeRangePickerContentComponent implements OnInit {
     private _targetZoomLevel?: CalendarZoomLevel = 'month';
 
     private _currentDate?: Date;
@@ -40,11 +40,17 @@ export class DatetimeRangePickerContentComponent {
 
     step: DatetimeRangePickerStep = 'select-target';
 
-    target: DatetimeRangePickerTarget | null = null;
+    _target: DatetimeRangePickerTarget | null = null;
 
     zoomLevel: CalendarZoomLevel = 'month';
 
     constructor(private _model: DatetimeRangeSelectionModel) {}
+
+    ngOnInit(): void {
+        if (this.picker && this.picker.target !== null) {
+            this._setTargetValue(this.picker.target);
+        }
+    }
 
     _startExitAnimation() {
         throw Error('not implemented');
@@ -52,6 +58,7 @@ export class DatetimeRangePickerContentComponent {
 
     selectTarget(value: DatetimeRangePickerTarget): void {
         this._setTargetValue(value);
+        this.picker?.targetSelected.emit(value);
     }
 
     handleCalendarValueChanged(event: { value: Date }): void {
@@ -85,7 +92,7 @@ export class DatetimeRangePickerContentComponent {
 
     private _setTargetValue(target: DatetimeRangePickerTarget) {
         this.zoomLevel = 'decade';
-        this.target = target;
+        this._target = target;
         this.step = 'select-range';
         switch (target) {
             case 'year':
@@ -103,7 +110,7 @@ export class DatetimeRangePickerContentComponent {
     }
 
     private _getSelectedDuration(): Duration {
-        switch (this.target) {
+        switch (this._target) {
             case 'year':
                 return {
                     years: 1

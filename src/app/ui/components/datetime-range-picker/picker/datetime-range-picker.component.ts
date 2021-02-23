@@ -12,10 +12,12 @@ import {
     ComponentRef,
     EventEmitter,
     Inject,
+    Input,
     isDevMode,
     NgZone,
     OnDestroy,
     Optional,
+    Output,
     ViewContainerRef
 } from '@angular/core';
 import { merge, Subject, Subscription } from 'rxjs';
@@ -25,7 +27,10 @@ import {
     DatetimeRangeSelectionModel,
     DATETIME_RANGE_SELECTION_MODEL_PROVIDER
 } from '../input/datetime-range-selection-model';
-import { DatetimeRangePickerContentComponent } from './datetime-range-picker-content.component';
+import {
+    DatetimeRangePickerContentComponent,
+    DatetimeRangePickerTarget
+} from './datetime-range-picker-content.component';
 
 let datetimeRangePickerUid = 0;
 
@@ -39,17 +44,16 @@ export class DatetimeRangePickerComponent implements OnDestroy {
 
     disabled = false;
 
+    @Input()
+    target: DatetimeRangePickerTarget | null = null;
+
     private _restoreFocus = true;
 
     closedStream: EventEmitter<void> = new EventEmitter<void>();
 
-    get opened(): boolean {
-        return this._opened;
-    }
-    set opened(value: boolean) {
-        value ? this.open() : this.close();
-    }
     private _opened = false;
+
+    @Output() targetSelected = new EventEmitter<DatetimeRangePickerTarget>();
 
     id = `datetime-range-picker-${datetimeRangePickerUid++}`;
 
