@@ -26,10 +26,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeRangeInputComponent {
-    get opened(): boolean {
-        return this._rangePicker?.opened ?? false;
-    }
-
     _closedSubscription = Subscription.EMPTY;
 
     _disabled = false;
