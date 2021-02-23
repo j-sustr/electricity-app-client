@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {
-    DxBulletModule,
-    DxDataGridModule,
-    DxTemplateModule
-} from 'devextreme-angular';
+import { DxTemplateModule } from 'devextreme-angular/core';
+import { DxBulletModule } from 'devextreme-angular/ui/bullet';
+import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DatetimeRangePickerModule } from '../../components/datetime-range-picker/datetime-range-picker.module';
 import { PowerFactorDetailComponent } from './detail/power-factor-detail.component';
 import { PowerFactorOverviewChartComponent } from './overview/chart/power-factor-overview-chart.component';
