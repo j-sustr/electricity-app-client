@@ -20,7 +20,7 @@ import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor
         environment.production
             ? []
             : StoreDevtoolsModule.instrument({
-                  name: 'Angular NgRx Material Starter'
+                  name: 'ElectricityApp'
               })
     ],
     exports: [StoreModule],
