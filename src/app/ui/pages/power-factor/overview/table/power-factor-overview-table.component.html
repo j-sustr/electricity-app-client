@@ -1,32 +1,34 @@
-<dx-data-grid
-    [dataSource]="items$ | async"
-    [allowColumnReordering]="true"
-    [rowAlternationEnabled]="true"
-    [showBorders]="true"
->
-    <dxi-column
-        dataField="deviceName"
-        caption="Device Name"
-        dataType="string"
-    ></dxi-column>
-    <dxi-column
-        dataField="activeEnergy"
-        caption="Active Energy [kWh]"
-        dataType="number"
-    ></dxi-column>
-    <dxi-column
-        dataField="reactiveEnergyC"
-        caption="Reactive Energy C [kvarh]"
-        dataType="number"
-    ></dxi-column>
-    <dxi-column
-        dataField="reactiveEnergyL"
-        caption="Reactive Energy L [kvarh]"
-        dataType="number"
-    ></dxi-column>
-    <dxi-column
-        dataField="cosFi"
-        caption="Cos Fi"
-        dataType="number"
-    ></dxi-column>
-</dx-data-grid>
+<ng-container *ngIf="items$ | async as items">
+    <dx-data-grid
+        [dataSource]="items"
+        [allowColumnReordering]="true"
+        [rowAlternationEnabled]="true"
+        [showBorders]="true"
+    >
+        <dxi-column
+            dataField="deviceName"
+            caption="Device Name"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="activeEnergy"
+            caption="Active Energy [kWh]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="reactiveEnergyC"
+            caption="Reactive Energy C [kvarh]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="reactiveEnergyL"
+            caption="Reactive Energy L [kvarh]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="cosFi"
+            caption="Cos Fi"
+            dataType="number"
+        ></dxi-column>
+    </dx-data-grid>
+</ng-container>
