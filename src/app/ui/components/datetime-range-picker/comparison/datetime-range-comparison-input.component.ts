@@ -7,6 +7,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
+import { intervalToDuration } from 'date-fns';
 import { intervalsHaveEqualDuration } from 'src/app/common/temporal/interval/intervals-have-equal-duration';
 import { DatetimeRange } from '../input/datetime-range-selection-model';
 import { DatetimeRangePickerTarget } from '../picker/datetime-range-picker-content.component';
@@ -59,9 +60,11 @@ export class DatetimeRangeComparisonInputComponent {
         if (r === 1) {
             if (this._secondRangeEnabled && !this._isEqualToLastValue1(value)) {
                 this.removeRange();
+                this._lastValue1 = value;
                 return;
             }
             this._lastValue1 = value;
+            this._setRange2Target();
         }
         this._addRangeDisabled = false;
         this.valueChange.next({
@@ -103,4 +106,30 @@ export class DatetimeRangeComparisonInputComponent {
             value.toInterval()
         );
     }
+
+    _setRange2Target(): void {
+        const interval = this._lastValue1?.toInterval();
+        if (!interval) {
+            throw new Error('lastValue1 is not set');
+        }
+        this.targetRange = intervalToDatetimeRangePickerTarget(interval);
+    }
+}
+
+function intervalToDatetimeRangePickerTarget(
+    interval: Interval
+): DatetimeRangePickerTarget {
+    const d = intervalToDuration(interval);
+    switch (true) {
+        case d.years === 1:
+            return 'year';
+        case d.months === 1:
+            return 'month';
+        case d.days === 1:
+            return 'day';
+        case d.hours === 1:
+            return 'hour';
+    }
+
+    throw new Error('invalid interval');
 }
