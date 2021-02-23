@@ -7,6 +7,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
+import { intervalsHaveEqualDuration } from 'src/app/common/temporal/interval/intervals-have-equal-duration';
 import { DatetimeRange } from '../input/datetime-range-selection-model';
 import { DatetimeRangePickerTarget } from '../picker/datetime-range-picker-content.component';
 import { DatetimeRangePickerComponent } from '../picker/datetime-range-picker.component';
@@ -31,6 +32,8 @@ export class DatetimeRangeComparisonInputComponent {
         return this.picker2?.selectedValue;
     }
 
+    _lastValue1?: DatetimeRange | null;
+
     @Input()
     min: Date | null = null;
 
@@ -53,6 +56,13 @@ export class DatetimeRangeComparisonInputComponent {
     constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
     _handleRangeSelected(r: 1 | 2, value: DatetimeRange): void {
+        if (r === 1) {
+            if (this._secondRangeEnabled && !this._isEqualToLastValue1(value)) {
+                this.removeRange();
+                return;
+            }
+            this._lastValue1 = value;
+        }
         this._addRangeDisabled = false;
         this.valueChange.next({
             range1: r === 1 ? value : this.value1,
@@ -81,5 +91,16 @@ export class DatetimeRangeComparisonInputComponent {
         this.valueChange.next({
             range1: this.value1
         });
+    }
+
+    _isEqualToLastValue1(value: DatetimeRange): boolean {
+        if (!this._lastValue1) {
+            return false;
+        }
+
+        return intervalsHaveEqualDuration(
+            this._lastValue1.toInterval(),
+            value.toInterval()
+        );
     }
 }
