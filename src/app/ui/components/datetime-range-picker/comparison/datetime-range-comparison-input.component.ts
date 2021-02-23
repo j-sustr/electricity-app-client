@@ -8,6 +8,7 @@ import {
     Output
 } from '@angular/core';
 import { DatetimeRange } from '../input/datetime-range-selection-model';
+import { DatetimeRangePickerTarget } from '../picker/datetime-range-picker-content.component';
 
 export interface DatetimeRangeComparisonInputValueChange {
     index: number;
@@ -20,26 +21,18 @@ export interface DatetimeRangeComparisonInputValueChange {
     styleUrls: ['./datetime-range-comparison-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatetimeRangeComparisonInputComponent implements OnInit {
+export class DatetimeRangeComparisonInputComponent {
     @Input()
-    get min(): Date | null {
-        return this._min;
-    }
-    set min(value: Date | null) {
-        this._min = value;
-    }
-    private _min: Date | null = null;
+    min: Date | null = null;
 
     @Input()
-    get max(): Date | null {
-        return this._max;
-    }
-    set max(value: Date | null) {
-        this._max = value;
-    }
-    private _max: Date | null = null;
+    max: Date | null = null;
 
-    ranges: null[] = [];
+    _secondRangeEnabled = false;
+
+    _addRangeDisabled = true;
+
+    targetRange: DatetimeRangePickerTarget | null = null;
 
     @Output()
     valueChange = new EventEmitter<DatetimeRangeComparisonInputValueChange>();
@@ -48,35 +41,26 @@ export class DatetimeRangeComparisonInputComponent implements OnInit {
 
     constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
-    ngOnInit(): void {
-        this.ranges.push(null);
-        this._changeDetectorRef.markForCheck();
-    }
-
-    _handleRangeSelected(index: number, value: DatetimeRange): void {
+    _handleRangeSelected(r: 1 | 2, value: DatetimeRange): void {
+        this._addRangeDisabled = false;
         this.valueChange.next({
-            index: index,
+            index: r - 1,
             value: value
         });
+        this._changeDetectorRef.markForCheck();
     }
 
     addRange(): void {
-        if (this.ranges.length > 1) {
-            return;
-        }
-        this.ranges.push(null);
+        this._secondRangeEnabled = true;
         this._changeDetectorRef.markForCheck();
         this.valueChange.next({
-            index: this.ranges.length - 1,
+            index: 1,
             value: new DatetimeRange(null, null)
         });
     }
 
     removeRange(): void {
-        if (this.ranges.length < 2) {
-            return;
-        }
-        this.ranges.pop();
+        this._secondRangeEnabled = false;
         this._changeDetectorRef.markForCheck();
         this.rangeRemoveChange.next();
     }

@@ -1,13 +1,20 @@
 <div class="ranges">
-    <div
-        class="range-item"
-        *ngFor="let range of ranges; index as i; last as isLast;"
-    >
+    <div class="range-item">
+        <div class="action-field"></div>
+        <app-datetime-range-input
+            class="range-input"
+            [min]="min"
+            [max]="max"
+            [rangePicker]="rangePicker1"
+            (rangeSelected)="_handleRangeSelected(1, $event)"
+        ></app-datetime-range-input>
+        <app-datetime-range-picker #rangePicker1></app-datetime-range-picker>
+    </div>
+    <div class="range-item" *ngIf="_secondRangeEnabled">
         <div class="action-field">
             <dx-button
                 class="btn"
                 icon="close"
-                *ngIf="isLast && ranges.length > 1"
                 (onClick)="removeRange()"
             ></dx-button>
         </div>
@@ -15,12 +22,20 @@
             class="range-input"
             [min]="min"
             [max]="max"
-            [rangePicker]="rangePicker"
-            (rangeSelected)="_handleRangeSelected(i, $event)"
+            [rangePicker]="rangePicker2"
+            (rangeSelected)="_handleRangeSelected(2, $event)"
         ></app-datetime-range-input>
-        <app-datetime-range-picker #rangePicker></app-datetime-range-picker>
+        <app-datetime-range-picker
+            [target]="targetRange"
+            #rangePicker2
+        ></app-datetime-range-picker>
     </div>
-    <div class="range-item actions" *ngIf="ranges.length < 2">
-        <dx-button class="btn" icon="plus" (onClick)="addRange()"></dx-button>
+    <div class="range-item actions" *ngIf="!_secondRangeEnabled">
+        <dx-button
+            class="btn"
+            icon="plus"
+            (onClick)="addRange()"
+            [disabled]="_addRangeDisabled"
+        ></dx-button>
     </div>
 </div>
