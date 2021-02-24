@@ -1,0 +1,25 @@
+:host {
+    height: 100%;
+    padding: 0 80px;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.content-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .left {
+        flex-basis: 50%;
+    }
+}
+
+.title {
+    margin: 40px;
+}
+
+.ranges-container {
+    margin: 40px;
+}
