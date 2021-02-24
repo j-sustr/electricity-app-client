@@ -1,8 +1,13 @@
+@import '../../../../../styles/variables';
+
 :host {
     display: block;
-    border-radius: 4px;
+    padding: 15px;
 
-    border: 1px solid red;
+    background-color: map-get($theme, primary);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%),
+        0 1px 10px 0 rgb(0 0 0 / 12%);
 }
 
 .content-container {
