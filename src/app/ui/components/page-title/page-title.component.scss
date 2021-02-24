@@ -3,9 +3,15 @@
     flex-direction: row;
 }
 
+.page-name {
+    font-size: 2rem;
+}
+
 .separator {
     font-size: 4em;
     margin: auto 5px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: lighter;
 }
 
 .data-name {
