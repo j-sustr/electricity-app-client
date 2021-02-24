@@ -1,5 +1,10 @@
+@import '../../../../styles/variables';
+
 :host {
     padding-left: 200px;
+
+    background-color: map-get($theme, primary);
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
 }
 
 .main-nav {
@@ -10,10 +15,16 @@
     height: 100%;
 
     .nav-item {
-        padding: 10px;
+        padding: 15px;
         min-width: 150px;
         margin-right: 20px;
 
         text-align: center;
+
+        &.active {
+            background-color: map-get($theme, base1);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 8px 0 0 map-get($theme, base1);
+        }
     }
 }
