@@ -1,3 +1,5 @@
+@import 'variables';
+
 *,
 :after,
 :before {
@@ -7,4 +9,6 @@
 html,
 body {
     height: 100vh;
+
+    background: map-get($theme, base1) !important;
 }
