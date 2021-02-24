@@ -8,10 +8,15 @@
 .content-header {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding: 40px 0;
 
     .left {
         flex-basis: 60%;
+    }
+
+    .right {
+        flex-basis: 400px;
     }
 }
