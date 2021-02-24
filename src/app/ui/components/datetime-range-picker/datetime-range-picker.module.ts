@@ -13,22 +13,18 @@ import { DatetimeRangeComparisonInputContainerComponent } from './comparison-con
 const DX = [DxCalendarModule, DxButtonModule];
 const CDK = [OverlayModule, PortalModule];
 
+const COMPONENTS = [
+    DatetimeRangeComparisonInputComponent,
+    DatetimeRangeInputComponent,
+    DatetimeRangePickerComponent,
+    DatetimeRangePickerContentComponent,
+    DatetimeRangeComparisonInputContainerComponent
+];
+
 @NgModule({
     imports: [CommonModule, ...CDK, ...DX],
-    exports: [
-        DatetimeRangeComparisonInputComponent,
-        DatetimeRangeInputComponent,
-        DatetimeRangePickerComponent,
-        DatetimeRangePickerContentComponent,
-        DatetimeRangeComparisonInputContainerComponent
-    ],
-    declarations: [
-        DatetimeRangeComparisonInputComponent,
-        DatetimeRangeInputComponent,
-        DatetimeRangePickerContentComponent,
-        DatetimeRangePickerComponent,
-        DatetimeRangeComparisonInputContainerComponent
-    ],
+    exports: [...COMPONENTS],
+    declarations: [...COMPONENTS],
     providers: []
 })
 export class DatetimeRangePickerModule {}
