@@ -4,6 +4,7 @@ import { DxTemplateModule } from 'devextreme-angular/core';
 import { DxBulletModule } from 'devextreme-angular/ui/bullet';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DatetimeRangePickerModule } from '../../components/datetime-range-picker/datetime-range-picker.module';
+import { PageTitleModule } from '../../components/page-title/page-title.module';
 import { PowerFactorDetailComponent } from './detail/power-factor-detail.component';
 import { PowerFactorOverviewChartComponent } from './overview/chart/power-factor-overview-chart.component';
 import { PowerFactorOverviewComponent } from './overview/power-factor-overview.component';
@@ -17,6 +18,7 @@ const DX = [DxDataGridModule, DxTemplateModule, DxBulletModule];
         CommonModule,
         DatetimeRangePickerModule,
         PowerFactorRoutingModule,
+        PageTitleModule,
         ...DX
     ],
     exports: [],
