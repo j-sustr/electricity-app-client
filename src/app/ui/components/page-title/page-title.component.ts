@@ -9,7 +9,7 @@ export class PageTitleComponent {
     @Input()
     title = '';
 
-    dataName = 'data-name';
+    dataName = 'No data';
 
     constructor() {}
 }
