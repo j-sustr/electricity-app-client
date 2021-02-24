@@ -17,8 +17,7 @@ import { DatetimeRange } from '../input/datetime-range-selection-model';
 
 @Component({
     selector: 'app-datetime-range-comparison-input-container',
-    templateUrl: './datetime-range-comparison-input-container.component.html',
-    styleUrls: ['./datetime-range-comparison-input-container.component.scss']
+    templateUrl: './datetime-range-comparison-input-container.component.html'
 })
 export class DatetimeRangeComparisonInputContainerComponent
     implements AfterViewInit, OnDestroy {
