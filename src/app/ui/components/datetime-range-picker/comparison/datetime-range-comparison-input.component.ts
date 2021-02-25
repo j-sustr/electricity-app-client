@@ -8,6 +8,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { intervalToDuration } from 'date-fns';
+import { assertValidInterval } from 'src/app/common/temporal/interval/assert-valid-interval';
 import { intervalsHaveEqualDuration } from 'src/app/common/temporal/interval/intervals-have-equal-duration';
 import { DatetimeRange } from '../input/datetime-range-selection-model';
 import { DatetimeRangePickerTarget } from '../picker/datetime-range-picker-content.component';
@@ -126,7 +127,11 @@ export class DatetimeRangeComparisonInputComponent {
 
 function intervalToDatetimeRangePickerTarget(
     interval: Interval
-): DatetimeRangePickerTarget {
+): DatetimeRangePickerTarget | null {
+    assertValidInterval(interval);
+    if (interval.start === -Infinity && interval.end === Infinity) {
+        return null;
+    }
     const d = intervalToDuration(interval);
     switch (true) {
         case d.years === 1:
