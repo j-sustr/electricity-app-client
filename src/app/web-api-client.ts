@@ -644,7 +644,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
-    tanFi?: number;
+    cosFi?: number;
     interval?: Interval | null;
 
     constructor(data?: IPowerFactorOverviewItem) {
@@ -662,7 +662,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
             this.activeEnergy = _data["activeEnergy"] !== undefined ? _data["activeEnergy"] : <any>null;
             this.reactiveEnergyL = _data["reactiveEnergyL"] !== undefined ? _data["reactiveEnergyL"] : <any>null;
             this.reactiveEnergyC = _data["reactiveEnergyC"] !== undefined ? _data["reactiveEnergyC"] : <any>null;
-            this.tanFi = _data["tanFi"] !== undefined ? _data["tanFi"] : <any>null;
+            this.cosFi = _data["cosFi"] !== undefined ? _data["cosFi"] : <any>null;
             this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>null;
         }
     }
@@ -680,7 +680,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
         data["activeEnergy"] = this.activeEnergy !== undefined ? this.activeEnergy : <any>null;
         data["reactiveEnergyL"] = this.reactiveEnergyL !== undefined ? this.reactiveEnergyL : <any>null;
         data["reactiveEnergyC"] = this.reactiveEnergyC !== undefined ? this.reactiveEnergyC : <any>null;
-        data["tanFi"] = this.tanFi !== undefined ? this.tanFi : <any>null;
+        data["cosFi"] = this.cosFi !== undefined ? this.cosFi : <any>null;
         data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         return data; 
     }
@@ -691,7 +691,7 @@ export interface IPowerFactorOverviewItem {
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
-    tanFi?: number;
+    cosFi?: number;
     interval?: Interval | null;
 }
 
