@@ -138,7 +138,7 @@ export class GroupsClient implements IGroupsClient {
 }
 
 export interface IPowerFactorClient {
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
 }
 
 @Injectable({
@@ -154,16 +154,20 @@ export class PowerFactorClient implements IPowerFactorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/overview?";
         if (interval1_Start !== undefined && interval1_Start !== null)
             url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
         if (interval1_End !== undefined && interval1_End !== null)
             url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval1_IsInfinite !== undefined && interval1_IsInfinite !== null)
+            url_ += "Interval1.IsInfinite=" + encodeURIComponent("" + interval1_IsInfinite) + "&";
         if (interval2_Start !== undefined && interval2_Start !== null)
             url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
         if (interval2_End !== undefined && interval2_End !== null)
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
+        if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
+            url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
         if (groupIds !== undefined && groupIds !== null)
             groupIds && groupIds.forEach(item => { url_ += "GroupIds=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
