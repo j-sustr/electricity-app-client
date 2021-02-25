@@ -4,12 +4,17 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { PowerFactorClient } from 'src/app/web-api-client';
+import { API_BASE_URL, PowerFactorClient } from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
 import { DataSourceEffects } from './data-source/data-source.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
+
+function apiBaseUrlFactory(): string | undefined {
+    const url = 'https://localhost:44312';
+    return environment.production ? undefined : url;
+}
 
 @NgModule({
     imports: [
@@ -28,6 +33,10 @@ import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor
         {
             provide: POWER_FACTOR_CLIENT,
             useClass: PowerFactorClient
+        },
+        {
+            provide: API_BASE_URL,
+            useFactory: apiBaseUrlFactory
         }
     ]
 })
