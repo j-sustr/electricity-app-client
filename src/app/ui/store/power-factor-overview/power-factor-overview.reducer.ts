@@ -11,12 +11,10 @@ import { PowerFactorOverviewState } from './power-factor-overview.model';
 export const initialState: PowerFactorOverviewState = {
     viewType: 'table',
     showEnergy: false,
-    view: {
-        items: [],
-        series: [],
-        loading: false,
-        error: null
-    }
+    items: [],
+    series: [],
+    loading: false,
+    error: null
 };
 
 const reducer = createReducer(
@@ -31,30 +29,24 @@ const reducer = createReducer(
     })),
     on(actionPowerFactorOverviewGetData, (state) => ({
         ...state,
-        view: {
-            items: null,
-            series: null,
-            loading: true,
-            error: null
-        }
+        items: null,
+        series: null,
+        loading: true,
+        error: null
     })),
     on(actionPowerFactorOverviewGetDataSuccess, (state, { dto }) => ({
         ...state,
-        view: {
-            items: dto?.data?.[0].items ?? null,
-            series: null,
-            loading: false,
-            error: null
-        }
+        items: dto?.data?.[0].items ?? null,
+        series: null,
+        loading: false,
+        error: null
     })),
     on(actionPowerFactorOverviewGetDataError, (state, { error }) => ({
         ...state,
-        view: {
-            items: null,
-            series: null,
-            loading: false,
-            error
-        }
+        items: null,
+        series: null,
+        loading: false,
+        error
     }))
 );
 

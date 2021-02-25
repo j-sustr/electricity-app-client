@@ -1,6 +1,7 @@
-<ng-container *ngIf="items$ | async as items">
+<ng-container *ngIf="state$ | async as state">
     <dx-data-grid
-        [dataSource]="items"
+        ngif="state.items"
+        [dataSource]="state.items ? state.items : []"
         [allowColumnReordering]="true"
         [rowAlternationEnabled]="true"
         [showBorders]="true"

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="state$ | async as state">
     <div class="content-header">
         <div class="left">
             <app-page-title title="Power Factor Overview"></app-page-title>
@@ -11,7 +11,18 @@
     </div>
 
     <div class="content-body">
-        <app-power-factor-overview-table></app-power-factor-overview-table>
+        <dx-load-indicator
+            *ngIf="state.loading"
+            height="40"
+            width="40"
+        ></dx-load-indicator>
+        <ng-container *ngIf="state.items">
+            <app-power-factor-overview-table
+                *ngIf="state.viewType === 'table'"
+            ></app-power-factor-overview-table>
+            <app-power-factor-overview-chart *ngIf="state.viewType === 'chart'">
+            </app-power-factor-overview-chart>
+        </ng-container>
     </div>
 
     <div class="content-footer">footer</div>

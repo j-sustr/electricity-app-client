@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { DxLoadIndicatorModule } from 'devextreme-angular';
 import { DxTemplateModule } from 'devextreme-angular/core';
 import { DxBulletModule } from 'devextreme-angular/ui/bullet';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
@@ -11,7 +12,12 @@ import { PowerFactorOverviewComponent } from './overview/power-factor-overview.c
 import { PowerFactorOverviewTableComponent } from './overview/table/power-factor-overview-table.component';
 import { PowerFactorRoutingModule } from './power-factor-routing.module';
 
-const DX = [DxDataGridModule, DxTemplateModule, DxBulletModule];
+const DX = [
+    DxTemplateModule,
+    DxLoadIndicatorModule,
+    DxDataGridModule,
+    DxBulletModule
+];
 
 @NgModule({
     imports: [

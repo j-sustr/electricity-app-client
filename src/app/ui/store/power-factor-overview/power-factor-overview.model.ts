@@ -5,10 +5,8 @@ import { SeriesParams } from '../models';
 export interface PowerFactorOverviewState {
     viewType: 'table' | 'chart';
     showEnergy: boolean;
-    view: {
-        items: PowerFactorOverviewItem[] | null;
-        series: SeriesParams[] | null;
-        loading: boolean;
-        error?: HttpErrorResponse | null;
-    };
+    items: PowerFactorOverviewItem[] | null;
+    series: SeriesParams[] | null;
+    loading: boolean;
+    error?: HttpErrorResponse | null;
 }
