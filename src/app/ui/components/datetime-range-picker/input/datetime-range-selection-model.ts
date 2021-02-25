@@ -5,13 +5,18 @@ export class DatetimeRange {
     constructor(readonly start: Date | null, readonly end: Date | null) {}
 
     static fromInterval(interval: Interval): DatetimeRange {
-        if (!(interval.start instanceof Date)) {
-            throw new Error('start must be Date');
+        const s = interval.start;
+        const e = interval.end;
+        if (!(s instanceof Date || s === -Infinity)) {
+            throw new Error('start must be Date or -Infinity');
         }
-        if (!(interval.end instanceof Date)) {
-            throw new Error('end must be Date');
+        if (!(e instanceof Date || e === Infinity)) {
+            throw new Error('end must be Date of Infinity');
         }
-        return new DatetimeRange(interval.start, interval.end);
+        return new DatetimeRange(
+            s === -Infinity ? null : (s as Date),
+            e === Infinity ? null : (e as Date)
+        );
     }
 
     toInterval(): Interval {
