@@ -1,0 +1,60 @@
+{
+    "$4.17": "Cena za rezervovanou kapacitu provozovatele distribuční soustavy je:",
+    "4.17.": {
+        "$rows": "Provozovatel distribuční soustavy",
+        "$cols": "Hladina napětí, Složka rezervnované kapacity",
+        "$value": "Měsíční cena za roční/měsíční rezervovanou kapacitu v Kč/MW a měsíc",
+        "table": {
+            "$0": ["vvn-r", "vvn-m", "vn-r", "vn-m"],
+            "cez": [73069, 81691, 177031, 197921],
+            "eon": [68239, 76722, 158233, 177903],
+            "pre": [73846, 81413, 190360, 209867],
+            "uced": [null, null, 231631, 250161],
+            "svs": [null, null, 166697, 181389]
+        }
+    },
+    "$4.38.": "Cena za použití sítí provozovatele distribuční soustavy nad 1 kV je:",
+    "4.38.": {
+        "$rows": "Provozovatel distribuční soustavy",
+        "$cols": "Hladina napětí",
+        "$value": "Cena za použití sítí VVN a VN v Kč/MWh",
+        "table": {
+            "$0": ["vvn", "vn"],
+            "cez": [42.85, 66.79],
+            "eon": [58.56, 72.56],
+            "pre": [54.12, 73.83],
+            "uced": [null, 39.84],
+            "svs": [null, 77.12]
+        }
+    },
+    "$4.52.": "Přirážka za nedodržení účiníku",
+    "4.52.": {
+        "$rows": "Pásma účiníku",
+        "table": {
+            "$0": ["tgFiMin", "tgFiMax", "cosFiMin", "cosFiMax", "prirazka"],
+            "1": [0, 0.328, 0.95, 1, 0],
+            "2": [0.329, 0.484, 0.9, 0.949, 0.0285],
+            "3": [0.485, 0.75, 0.8, 0.899, 0.1238],
+            "4": [0.751, 1.02, 0.7, 0.799, 0.2807],
+            "5": [1.021, 1.333, 0.6, 0.699, 0.4858],
+            "6": [1.334, "Infinity", 0.0, 0.599, 1.0]
+        }
+    },
+    "$4.53.": "Cena za silovou elektřinu",
+    "4.53.": {
+        "$key": "Provozovatel distribuční soustavy",
+        "$value": "Cena silové elektřiny v Kč/MWh pro vyhodnocení ceny za nedodržení účiníku",
+        "record": {
+            "cez": 1493.49,
+            "eon": 1502.69,
+            "pre": 1534.26,
+            "uced": 1452.21,
+            "svs": 1452.21
+        }
+    },
+    "$4.54.": "Cena za nevyžádanou dodávku jalové energie do distribuční soustavy",
+    "4.54.": {
+        "$value": "cena v Kč/MVArh",
+        "value": 440
+    }
+}
