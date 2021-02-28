@@ -3,7 +3,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../app-store.state';
-import { actionPowerFactorOverviewGetData } from '../power-factor-overview/power-factor-overview.actions';
+import * as coActions from '../costs-overview/costs-overview.actions';
+import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
+import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
 import { actionDataSourceSetIntervals } from './data-source.actions';
 
 @Injectable()
@@ -13,7 +15,7 @@ export class DataSourceEffects {
             return this.actions$.pipe(
                 ofType(actionDataSourceSetIntervals),
                 tap(() => {
-                    this.store.dispatch(actionPowerFactorOverviewGetData());
+                    this.store.dispatch(pfoActions.getOverview());
                 })
             );
         },

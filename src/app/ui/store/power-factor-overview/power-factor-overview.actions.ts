@@ -2,25 +2,23 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 import { PowerFactorOverviewDto } from 'src/app/web-api-client';
 
-export const actionPFOverviewSetViewType = createAction(
+export const setViewType = createAction(
     '[Power Factor Overview] Set View Type',
     props<{ viewType: 'table' | 'chart' }>()
 );
 
-export const actionPFOverviewToggleEnergy = createAction(
+export const toggleEnergy = createAction(
     '[Power Factor Overview] Toggle Energy'
 );
 
-export const actionPowerFactorOverviewGetData = createAction(
-    '[Power Factor Overview] Get Data'
-);
+export const getOverview = createAction('[Power Factor Overview] Get Overview');
 
-export const actionPowerFactorOverviewGetDataSuccess = createAction(
-    '[Power Factor Overview] Get Data Success',
+export const getOverviewSuccess = createAction(
+    '[Power Factor Overview] Get Overview Success',
     props<{ dto: PowerFactorOverviewDto }>()
 );
 
-export const actionPowerFactorOverviewGetDataError = createAction(
-    '[Power Factor Overview] Get Data Error',
+export const getOverviewError = createAction(
+    '[Power Factor Overview] Get Overview Error',
     props<{ error: HttpErrorResponse }>()
 );

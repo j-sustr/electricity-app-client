@@ -1,10 +1,10 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import {
-    actionPowerFactorOverviewGetData as actionPowerFactorOverviewGetData,
-    actionPowerFactorOverviewGetDataSuccess as actionPowerFactorOverviewGetDataSuccess,
-    actionPFOverviewSetViewType,
-    actionPFOverviewToggleEnergy,
-    actionPowerFactorOverviewGetDataError
+    getOverview as getOverview,
+    getOverviewSuccess as getOverviewSuccess,
+    setViewType,
+    toggleEnergy,
+    getOverviewError
 } from './power-factor-overview.actions';
 import { PowerFactorOverviewState } from './power-factor-overview.model';
 
@@ -19,29 +19,29 @@ export const initialState: PowerFactorOverviewState = {
 
 const reducer = createReducer(
     initialState,
-    on(actionPFOverviewSetViewType, (state, action) => ({
+    on(setViewType, (state, action) => ({
         ...state,
         viewType: action.viewType
     })),
-    on(actionPFOverviewToggleEnergy, (state) => ({
+    on(toggleEnergy, (state) => ({
         ...state,
         showEnergy: !state.showEnergy
     })),
-    on(actionPowerFactorOverviewGetData, (state) => ({
+    on(getOverview, (state) => ({
         ...state,
         items: null,
         series: null,
         loading: true,
         error: null
     })),
-    on(actionPowerFactorOverviewGetDataSuccess, (state, { dto }) => ({
+    on(getOverviewSuccess, (state, { dto }) => ({
         ...state,
         items: dto?.data?.[0].items ?? null,
         series: null,
         loading: false,
         error: null
     })),
-    on(actionPowerFactorOverviewGetDataError, (state, { error }) => ({
+    on(getOverviewError, (state, { error }) => ({
         ...state,
         items: null,
         series: null,

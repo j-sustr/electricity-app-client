@@ -13,16 +13,16 @@ import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
 import { selectDataSourceIntervals } from '../data-source/data-source.selectors';
 import {
-    actionPowerFactorOverviewGetData,
-    actionPowerFactorOverviewGetDataError,
-    actionPowerFactorOverviewGetDataSuccess
+    getOverview,
+    getOverviewError,
+    getOverviewSuccess
 } from './power-factor-overview.actions';
 
 @Injectable()
 export class PowerFactorOverviewEffects {
     effectName$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(actionPowerFactorOverviewGetData),
+            ofType(getOverview),
             withLatestFrom(this.store.pipe(select(selectDataSourceIntervals))),
             switchMap(([, { interval1, interval2 }]) => {
                 const dto1 = intervalToDto(interval1);
@@ -42,13 +42,13 @@ export class PowerFactorOverviewEffects {
                     )
                     .pipe(
                         map((dto) =>
-                            actionPowerFactorOverviewGetDataSuccess({
+                            getOverviewSuccess({
                                 dto
                             })
                         ),
                         catchError((error: HttpErrorResponse) =>
                             of(
-                                actionPowerFactorOverviewGetDataError({
+                                getOverviewError({
                                     error
                                 })
                             )
