@@ -6,7 +6,7 @@ const selectDataSource = createFeatureSelector<AppState, DataSourceState>(
     'dataSource'
 );
 
-export const selectDataSourceIntervals = createSelector(
+export const selectIntervals = createSelector(
     selectDataSource,
     (state: DataSourceState) => ({
         interval1: state.interval1,
@@ -14,7 +14,7 @@ export const selectDataSourceIntervals = createSelector(
     })
 );
 
-export const selectDataSourceInfo = createSelector(
+export const selectInfo = createSelector(
     selectDataSource,
     (state: DataSourceState) => state.info
 );

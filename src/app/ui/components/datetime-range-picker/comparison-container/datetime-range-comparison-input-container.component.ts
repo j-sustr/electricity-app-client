@@ -6,8 +6,8 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { AppState } from 'src/app/ui/store/app-store.state';
 import { actionDataSourceSetIntervals } from 'src/app/ui/store/data-source/data-source.actions';
 import {
-    selectDataSourceInfo,
-    selectDataSourceIntervals
+    selectInfo,
+    selectIntervals
 } from 'src/app/ui/store/data-source/data-source.selectors';
 import {
     DatetimeRangeComparisonInputComponent,
@@ -30,7 +30,7 @@ export class DatetimeRangeComparisonInputContainerComponent
 
     ngAfterViewInit(): void {
         this.store
-            .pipe(select(selectDataSourceIntervals), take(1))
+            .pipe(select(selectIntervals), take(1))
             .subscribe(({ interval1, interval2 }) => {
                 setTimeout(() => {
                     this.input.value1 = DatetimeRange.fromInterval(interval1);
@@ -43,7 +43,7 @@ export class DatetimeRangeComparisonInputContainerComponent
             });
 
         this.store
-            .pipe(select(selectDataSourceInfo), takeUntil(this.destroy$))
+            .pipe(select(selectInfo), takeUntil(this.destroy$))
             .subscribe((info) => {
                 if (info) {
                     this.input.min = info.minDatetime;

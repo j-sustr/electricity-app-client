@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-    selectDataSourceInfo,
-    selectDataSourceIntervals
+    selectInfo,
+    selectIntervals
 } from 'src/app/ui/store/data-source/data-source.selectors';
 import { DatetimeRangePickerModule } from '../datetime-range-picker.module';
 
@@ -21,11 +21,11 @@ describe('DatetimeRangeComparisonInputContainerComponent', () => {
         }).compileComponents();
 
         store = TestBed.inject<MockStore<unknown>>(MockStore);
-        store.overrideSelector(selectDataSourceIntervals, [
+        store.overrideSelector(selectIntervals, [
             { start: -Infinity, end: Infinity },
             { start: -Infinity, end: Infinity }
         ]);
-        store.overrideSelector(selectDataSourceInfo, {
+        store.overrideSelector(selectInfo, {
             minDatetime: new Date(2021, 0, 1),
             maxDatetime: new Date(2021, 1, 1)
         });

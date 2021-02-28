@@ -11,7 +11,7 @@ import {
 import { IPowerFactorClient } from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
-import { selectDataSourceIntervals } from '../data-source/data-source.selectors';
+import { selectIntervals } from '../data-source/data-source.selectors';
 import {
     getOverview,
     getOverviewError,
@@ -23,7 +23,7 @@ export class PowerFactorOverviewEffects {
     effectName$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(getOverview),
-            withLatestFrom(this.store.pipe(select(selectDataSourceIntervals))),
+            withLatestFrom(this.store.pipe(select(selectIntervals))),
             switchMap(([, { interval1, interval2 }]) => {
                 const dto1 = intervalToDto(interval1);
                 let dto2: IntervalDto | undefined = undefined;
