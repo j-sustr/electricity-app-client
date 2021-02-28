@@ -517,8 +517,8 @@ export class SeriesClient implements ISeriesClient {
 }
 
 export class CostsOverviewDto implements ICostsOverviewDto {
-    items1?: CostsOverviewItem[] | null;
-    items2?: CostsOverviewItem[] | null;
+    items1?: CostlyQuantitiesOverviewItem[] | null;
+    items2?: CostlyQuantitiesOverviewItem[] | null;
 
     constructor(data?: ICostsOverviewDto) {
         if (data) {
@@ -534,12 +534,12 @@ export class CostsOverviewDto implements ICostsOverviewDto {
             if (Array.isArray(_data["items1"])) {
                 this.items1 = [] as any;
                 for (let item of _data["items1"])
-                    this.items1!.push(CostsOverviewItem.fromJS(item));
+                    this.items1!.push(CostlyQuantitiesOverviewItem.fromJS(item));
             }
             if (Array.isArray(_data["items2"])) {
                 this.items2 = [] as any;
                 for (let item of _data["items2"])
-                    this.items2!.push(CostsOverviewItem.fromJS(item));
+                    this.items2!.push(CostlyQuantitiesOverviewItem.fromJS(item));
             }
         }
     }
@@ -568,17 +568,17 @@ export class CostsOverviewDto implements ICostsOverviewDto {
 }
 
 export interface ICostsOverviewDto {
-    items1?: CostsOverviewItem[] | null;
-    items2?: CostsOverviewItem[] | null;
+    items1?: CostlyQuantitiesOverviewItem[] | null;
+    items2?: CostlyQuantitiesOverviewItem[] | null;
 }
 
-export class CostsOverviewItem implements ICostsOverviewItem {
+export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewItem {
     groupName?: string | null;
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;
 
-    constructor(data?: ICostsOverviewItem) {
+    constructor(data?: ICostlyQuantitiesOverviewItem) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -608,9 +608,9 @@ export class CostsOverviewItem implements ICostsOverviewItem {
         }
     }
 
-    static fromJS(data: any): CostsOverviewItem {
+    static fromJS(data: any): CostlyQuantitiesOverviewItem {
         data = typeof data === 'object' ? data : {};
-        let result = new CostsOverviewItem();
+        let result = new CostlyQuantitiesOverviewItem();
         result.init(data);
         return result;
     }
@@ -637,7 +637,7 @@ export class CostsOverviewItem implements ICostsOverviewItem {
     }
 }
 
-export interface ICostsOverviewItem {
+export interface ICostlyQuantitiesOverviewItem {
     groupName?: string | null;
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
@@ -646,8 +646,8 @@ export interface ICostsOverviewItem {
 
 export class CostsDetailDto implements ICostsDetailDto {
     groupName?: string | null;
-    items1?: CostsDetailItem[] | null;
-    items2?: CostsDetailItem[] | null;
+    items1?: CostlyQuantitiesDetailItem[] | null;
+    items2?: CostlyQuantitiesDetailItem[] | null;
 
     constructor(data?: ICostsDetailDto) {
         if (data) {
@@ -664,12 +664,12 @@ export class CostsDetailDto implements ICostsDetailDto {
             if (Array.isArray(_data["items1"])) {
                 this.items1 = [] as any;
                 for (let item of _data["items1"])
-                    this.items1!.push(CostsDetailItem.fromJS(item));
+                    this.items1!.push(CostlyQuantitiesDetailItem.fromJS(item));
             }
             if (Array.isArray(_data["items2"])) {
                 this.items2 = [] as any;
                 for (let item of _data["items2"])
-                    this.items2!.push(CostsDetailItem.fromJS(item));
+                    this.items2!.push(CostlyQuantitiesDetailItem.fromJS(item));
             }
         }
     }
@@ -700,18 +700,18 @@ export class CostsDetailDto implements ICostsDetailDto {
 
 export interface ICostsDetailDto {
     groupName?: string | null;
-    items1?: CostsDetailItem[] | null;
-    items2?: CostsDetailItem[] | null;
+    items1?: CostlyQuantitiesDetailItem[] | null;
+    items2?: CostlyQuantitiesDetailItem[] | null;
 }
 
-export class CostsDetailItem implements ICostsDetailItem {
+export class CostlyQuantitiesDetailItem implements ICostlyQuantitiesDetailItem {
     year?: number;
     month?: number;
     activeEnergy?: number;
     reactiveEnergy?: number;
     peakDemand?: number;
 
-    constructor(data?: ICostsDetailItem) {
+    constructor(data?: ICostlyQuantitiesDetailItem) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -730,9 +730,9 @@ export class CostsDetailItem implements ICostsDetailItem {
         }
     }
 
-    static fromJS(data: any): CostsDetailItem {
+    static fromJS(data: any): CostlyQuantitiesDetailItem {
         data = typeof data === 'object' ? data : {};
-        let result = new CostsDetailItem();
+        let result = new CostlyQuantitiesDetailItem();
         result.init(data);
         return result;
     }
@@ -748,7 +748,7 @@ export class CostsDetailItem implements ICostsDetailItem {
     }
 }
 
-export interface ICostsDetailItem {
+export interface ICostlyQuantitiesDetailItem {
     year?: number;
     month?: number;
     activeEnergy?: number;
