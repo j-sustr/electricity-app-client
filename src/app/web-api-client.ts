@@ -14,6 +14,147 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface ICostsClient {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsOverviewDto>;
+    getDetail(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupId: string | null | undefined): Observable<CostsDetailDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CostsClient implements ICostsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsOverviewDto> {
+        let url_ = this.baseUrl + "/api/Costs/overview?";
+        if (interval1_Start !== undefined && interval1_Start !== null)
+            url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
+        if (interval1_End !== undefined && interval1_End !== null)
+            url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval1_IsInfinite !== undefined && interval1_IsInfinite !== null)
+            url_ += "Interval1.IsInfinite=" + encodeURIComponent("" + interval1_IsInfinite) + "&";
+        if (interval2_Start !== undefined && interval2_Start !== null)
+            url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
+        if (interval2_End !== undefined && interval2_End !== null)
+            url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
+        if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
+            url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOverview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOverview(<any>response_);
+                } catch (e) {
+                    return <Observable<CostsOverviewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CostsOverviewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOverview(response: HttpResponseBase): Observable<CostsOverviewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CostsOverviewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CostsOverviewDto>(<any>null);
+    }
+
+    getDetail(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupId: string | null | undefined): Observable<CostsDetailDto> {
+        let url_ = this.baseUrl + "/api/Costs/detail?";
+        if (interval1_Start !== undefined && interval1_Start !== null)
+            url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
+        if (interval1_End !== undefined && interval1_End !== null)
+            url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval1_IsInfinite !== undefined && interval1_IsInfinite !== null)
+            url_ += "Interval1.IsInfinite=" + encodeURIComponent("" + interval1_IsInfinite) + "&";
+        if (interval2_Start !== undefined && interval2_Start !== null)
+            url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
+        if (interval2_End !== undefined && interval2_End !== null)
+            url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
+        if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
+            url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        if (groupId !== undefined && groupId !== null)
+            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<CostsDetailDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CostsDetailDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDetail(response: HttpResponseBase): Observable<CostsDetailDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CostsDetailDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CostsDetailDto>(<any>null);
+    }
+}
+
 export interface IGroupsClient {
     getUserGroups(userId: string | undefined): Observable<UserGroupsDto>;
     getUserGroupTree(userId: string | undefined): Observable<GroupTreeNodeDto>;
@@ -373,6 +514,246 @@ export class SeriesClient implements ISeriesClient {
         }
         return _observableOf<TimeSeriesDtoOfSingle>(<any>null);
     }
+}
+
+export class CostsOverviewDto implements ICostsOverviewDto {
+    items1?: CostsOverviewItem[] | null;
+    items2?: CostsOverviewItem[] | null;
+
+    constructor(data?: ICostsOverviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items1"])) {
+                this.items1 = [] as any;
+                for (let item of _data["items1"])
+                    this.items1!.push(CostsOverviewItem.fromJS(item));
+            }
+            if (Array.isArray(_data["items2"])) {
+                this.items2 = [] as any;
+                for (let item of _data["items2"])
+                    this.items2!.push(CostsOverviewItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CostsOverviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CostsOverviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items1)) {
+            data["items1"] = [];
+            for (let item of this.items1)
+                data["items1"].push(item.toJSON());
+        }
+        if (Array.isArray(this.items2)) {
+            data["items2"] = [];
+            for (let item of this.items2)
+                data["items2"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICostsOverviewDto {
+    items1?: CostsOverviewItem[] | null;
+    items2?: CostsOverviewItem[] | null;
+}
+
+export class CostsOverviewItem implements ICostsOverviewItem {
+    groupName?: string | null;
+    activeEnergyInMonths?: number[] | null;
+    reactiveEnergyInMonths?: number[] | null;
+    peakDemandInMonths?: number[] | null;
+
+    constructor(data?: ICostsOverviewItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            if (Array.isArray(_data["activeEnergyInMonths"])) {
+                this.activeEnergyInMonths = [] as any;
+                for (let item of _data["activeEnergyInMonths"])
+                    this.activeEnergyInMonths!.push(item);
+            }
+            if (Array.isArray(_data["reactiveEnergyInMonths"])) {
+                this.reactiveEnergyInMonths = [] as any;
+                for (let item of _data["reactiveEnergyInMonths"])
+                    this.reactiveEnergyInMonths!.push(item);
+            }
+            if (Array.isArray(_data["peakDemandInMonths"])) {
+                this.peakDemandInMonths = [] as any;
+                for (let item of _data["peakDemandInMonths"])
+                    this.peakDemandInMonths!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CostsOverviewItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new CostsOverviewItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        if (Array.isArray(this.activeEnergyInMonths)) {
+            data["activeEnergyInMonths"] = [];
+            for (let item of this.activeEnergyInMonths)
+                data["activeEnergyInMonths"].push(item);
+        }
+        if (Array.isArray(this.reactiveEnergyInMonths)) {
+            data["reactiveEnergyInMonths"] = [];
+            for (let item of this.reactiveEnergyInMonths)
+                data["reactiveEnergyInMonths"].push(item);
+        }
+        if (Array.isArray(this.peakDemandInMonths)) {
+            data["peakDemandInMonths"] = [];
+            for (let item of this.peakDemandInMonths)
+                data["peakDemandInMonths"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface ICostsOverviewItem {
+    groupName?: string | null;
+    activeEnergyInMonths?: number[] | null;
+    reactiveEnergyInMonths?: number[] | null;
+    peakDemandInMonths?: number[] | null;
+}
+
+export class CostsDetailDto implements ICostsDetailDto {
+    groupName?: string | null;
+    items1?: CostsDetailItem[] | null;
+    items2?: CostsDetailItem[] | null;
+
+    constructor(data?: ICostsDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            if (Array.isArray(_data["items1"])) {
+                this.items1 = [] as any;
+                for (let item of _data["items1"])
+                    this.items1!.push(CostsDetailItem.fromJS(item));
+            }
+            if (Array.isArray(_data["items2"])) {
+                this.items2 = [] as any;
+                for (let item of _data["items2"])
+                    this.items2!.push(CostsDetailItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CostsDetailDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CostsDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        if (Array.isArray(this.items1)) {
+            data["items1"] = [];
+            for (let item of this.items1)
+                data["items1"].push(item.toJSON());
+        }
+        if (Array.isArray(this.items2)) {
+            data["items2"] = [];
+            for (let item of this.items2)
+                data["items2"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICostsDetailDto {
+    groupName?: string | null;
+    items1?: CostsDetailItem[] | null;
+    items2?: CostsDetailItem[] | null;
+}
+
+export class CostsDetailItem implements ICostsDetailItem {
+    year?: number;
+    month?: number;
+    activeEnergy?: number;
+    reactiveEnergy?: number;
+    peakDemand?: number;
+
+    constructor(data?: ICostsDetailItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.year = _data["year"] !== undefined ? _data["year"] : <any>null;
+            this.month = _data["month"] !== undefined ? _data["month"] : <any>null;
+            this.activeEnergy = _data["activeEnergy"] !== undefined ? _data["activeEnergy"] : <any>null;
+            this.reactiveEnergy = _data["reactiveEnergy"] !== undefined ? _data["reactiveEnergy"] : <any>null;
+            this.peakDemand = _data["peakDemand"] !== undefined ? _data["peakDemand"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CostsDetailItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new CostsDetailItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["year"] = this.year !== undefined ? this.year : <any>null;
+        data["month"] = this.month !== undefined ? this.month : <any>null;
+        data["activeEnergy"] = this.activeEnergy !== undefined ? this.activeEnergy : <any>null;
+        data["reactiveEnergy"] = this.reactiveEnergy !== undefined ? this.reactiveEnergy : <any>null;
+        data["peakDemand"] = this.peakDemand !== undefined ? this.peakDemand : <any>null;
+        return data; 
+    }
+}
+
+export interface ICostsDetailItem {
+    year?: number;
+    month?: number;
+    activeEnergy?: number;
+    reactiveEnergy?: number;
+    peakDemand?: number;
 }
 
 export class UserGroupsDto implements IUserGroupsDto {
