@@ -1,6 +1,8 @@
 import { ActionReducerMap } from '@ngrx/store';
 import { CostsOverviewState } from './costs-overview/costs-overview.model';
 import { costsOverviewReducer } from './costs-overview/costs-overview.reducer';
+import { CostsState } from './costs/costs.model';
+import { costsReducer } from './costs/costs.reducer';
 import {
     dataSourceReducer,
     DataSourceState
@@ -10,12 +12,14 @@ import { powerFactorOverviewReducer } from './power-factor-overview/power-factor
 
 export interface AppState {
     dataSource: DataSourceState;
+    costs: CostsState;
     costsOverview: CostsOverviewState;
     powerFactorOverview: PowerFactorOverviewState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
     dataSource: dataSourceReducer,
+    costs: costsReducer,
     costsOverview: costsOverviewReducer,
     powerFactorOverview: powerFactorOverviewReducer
 };

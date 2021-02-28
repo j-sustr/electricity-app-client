@@ -1,25 +1,25 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { createEffect, ofType, Actions } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
-    withLatestFrom,
-    tap,
-    catchError,
-    map,
-    switchMap
-} from 'rxjs/operators';
-import {
-    intervalToDto,
-    IntervalDto
+    IntervalDto,
+    intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
 import { calculateCostsOverviewItem } from 'src/app/core/costs/calculate-costs-overview-item';
+import { CustomerParams } from 'src/app/core/costs/costs';
 import ERUCalculatorFactory from 'src/app/core/costs/ERUCalculatorFactory';
-import { CostsOverviewDto, ICostsClient } from 'src/app/web-api-client';
+import {
+    CostlyQuantitiesOverviewItem,
+    CostsOverviewDto,
+    ICostsClient
+} from 'src/app/web-api-client';
 import { COSTS_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
+import { selectCustomerParams } from '../costs/costs.selectors';
 import { selectIntervals } from '../data-source/data-source.selectors';
 import {
     getOverview,
@@ -35,10 +35,10 @@ export class CostsOveviewEffects {
             this.actions$.pipe(
                 ofType(getOverview),
                 withLatestFrom(
-                    combineLatest(
+                    combineLatest([
                         this.store.pipe(select(selectCustomerParams)),
                         this.store.pipe(select(selectIntervals))
-                    )
+                    ])
                 ),
                 switchMap(([, [customerParams, { interval1, interval2 }]]) => {
                     const dto1 = intervalToDto(interval1);
@@ -58,7 +58,10 @@ export class CostsOveviewEffects {
                         )
                         .pipe(
                             map((dto) => {
-                                const items = this._mapDtoToItems(dto);
+                                const items = this._createItems(
+                                    dto,
+                                    customerParams
+                                );
 
                                 return getOverviewSuccess({ items });
                             }),
@@ -83,7 +86,10 @@ export class CostsOveviewEffects {
         private calculatorFactory: ERUCalculatorFactory
     ) {}
 
-    _mapDtoToItems(dto: CostsOverviewDto): CostsOverviewItem[] | null {
+    _createItems(
+        dto: CostsOverviewDto,
+        customerParams: CustomerParams
+    ): CostsOverviewItem[] | null {
         if (!Array.isArray(dto.items1)) {
             return null;
         }

@@ -1,5 +1,4 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { ICostsClient } from 'src/app/web-api-client';
 import * as actions from './costs-overview.actions';
 import { CostsOverviewState } from './costs-overview.model';
 
