@@ -21,10 +21,10 @@ describe('DatetimeRangeComparisonInputContainerComponent', () => {
         }).compileComponents();
 
         store = TestBed.inject<MockStore<unknown>>(MockStore);
-        store.overrideSelector(selectIntervals, [
-            { start: -Infinity, end: Infinity },
-            { start: -Infinity, end: Infinity }
-        ]);
+        store.overrideSelector(selectIntervals, {
+            interval1: { start: -Infinity, end: Infinity },
+            interval2: { start: -Infinity, end: Infinity }
+        });
         store.overrideSelector(selectInfo, {
             minDatetime: new Date(2021, 0, 1),
             maxDatetime: new Date(2021, 1, 1)
