@@ -197,9 +197,9 @@ export default class ERUCalculator {
      * @returns  c_p [Kč] je cena za nedodržení účiníku,
      */
     powerFactorPenalty(pmax: number, u: number, w: number): number {
-        const crk = this.getCRK();
-        const cps = this.getCPS();
-        const cse = this.getCSE();
+        const crk = this._getCRK();
+        const cps = this._getCPS();
+        const cse = this._getCSE();
 
         return pmax * crk * u * ((cps + cse) * u * w);
     }
@@ -207,7 +207,7 @@ export default class ERUCalculator {
     /**
      * @returns c_rk [Kč/MW] je cena za rezervovanou kapacitu na příslušné napěťové hladině,
      */
-    getCRK(): number {
+    _getCRK(): number {
         let vl = this._voltageLevel;
         const rc = 'r'; // roční, TODO: ma to byt rocni, mecicni nebo spocitana
 
@@ -224,7 +224,7 @@ export default class ERUCalculator {
     /**
      * @returns c_ps [Kč/MWh] je cena za použití sítí na příslušné napěťové hladině,
      */
-    getCPS(): number {
+    _getCPS(): number {
         let vl = this._voltageLevel;
 
         // nn je stejne jako vn
@@ -238,7 +238,7 @@ export default class ERUCalculator {
     /**
      * @returns  c_se [Kč/MWh] je cena za silovou elektřinu podle tabulky uvedené v bodě (4.53.),
      */
-    getCSE(): number {
+    _getCSE(): number {
         return this._tables.getRecordValue('4.53.', this._dsOperator);
     }
 }
