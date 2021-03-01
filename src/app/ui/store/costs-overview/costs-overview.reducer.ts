@@ -16,9 +16,9 @@ const reducer = createReducer(
         loading: true,
         error: null
     })),
-    on(actions.getOverviewSuccess, (state, { dto }) => ({
+    on(actions.getOverviewSuccess, (state, { items }) => ({
         ...state,
-        items: dto?.items1 ?? null,
+        items,
         loading: false,
         error: null
     })),

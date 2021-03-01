@@ -40,11 +40,11 @@ export class CostsOveviewEffects {
                         this.store.pipe(select(selectIntervals))
                     ])
                 ),
-                switchMap(([, [customerParams, { interval1, interval2 }]]) => {
-                    const dto1 = intervalToDto(interval1);
+                switchMap(([, [customerParams, intervals]]) => {
+                    const dto1 = intervalToDto(intervals.interval1);
                     let dto2: IntervalDto | undefined = undefined;
-                    if (interval2) {
-                        dto2 = intervalToDto(interval2);
+                    if (intervals.interval2) {
+                        dto2 = intervalToDto(intervals.interval2);
                     }
                     return this.client
                         .getOverview(
@@ -53,8 +53,7 @@ export class CostsOveviewEffects {
                             dto1.isInfinite,
                             dto2?.start,
                             dto2?.end,
-                            dto2?.isInfinite,
-                            null
+                            dto2?.isInfinite
                         )
                         .pipe(
                             map((dto) => {
@@ -88,18 +87,26 @@ export class CostsOveviewEffects {
 
     _createItems(
         dto: CostsOverviewDto,
-        customerParams: CustomerParams
+        customerParams: CustomerParams | null
     ): CostsOverviewItem[] | null {
         if (!Array.isArray(dto.items1)) {
+            return [];
+        }
+        if (customerParams == null) {
             return null;
         }
+
         const calc = this.calculatorFactory.create(customerParams);
 
-        const items: CostsOverviewItem[] = [];
-        for (const srcItem of dto.items1) {
-            const item = calculateCostsOverviewItem(srcItem, calc);
-            items.push(item);
+        return calculateItems(dto.items1);
+
+        function calculateItems(items: CostlyQuantitiesOverviewItem[]) {
+            const resultItems: CostsOverviewItem[] = [];
+            for (const srcItem of items) {
+                const item = calculateCostsOverviewItem(srcItem, calc);
+                resultItems.push(item);
+            }
+            return resultItems;
         }
-        return items;
     }
 }
