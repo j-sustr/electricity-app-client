@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DxLoadIndicatorModule } from 'devextreme-angular';
+import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
 import { DxTemplateModule } from 'devextreme-angular/core';
 import { DxBulletModule } from 'devextreme-angular/ui/bullet';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';

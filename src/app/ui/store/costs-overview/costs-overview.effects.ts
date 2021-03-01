@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { of } from 'rxjs';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { of } from 'rxjs/internal/observable/of';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
     IntervalDto,
