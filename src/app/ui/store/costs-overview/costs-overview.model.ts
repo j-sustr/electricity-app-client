@@ -6,7 +6,7 @@ export interface CostsOverviewItem {
     reactiveEnergy: number;
     cosFi: number;
     peakDemand: number;
-    cost: number;
+    cost: number | null;
 }
 
 export interface CostsOverviewState {

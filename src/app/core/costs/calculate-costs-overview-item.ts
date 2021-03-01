@@ -1,3 +1,4 @@
+import { fn } from '@angular/compiler/src/output/output_ast';
 import { avg, sum, zip } from 'src/app/common/array/array-utils';
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
 import { CostsOverviewItem } from 'src/app/ui/store/costs-overview/costs-overview.model';
@@ -7,13 +8,25 @@ import ERUCalculator from './ERUCalculator';
 
 export function calculateCostsOverviewItem(
     source: CostlyQuantitiesOverviewItem,
-    calc: ERUCalculator
+    calc: ERUCalculator | null
 ): CostsOverviewItem {
     const cosFiInMonths = zip(
         source.activeEnergyInMonths ?? [],
         source.reactiveEnergyInMonths ?? []
     ).map(([ae, re]) => calcCosFi(ae, re));
 
+    const cost = calc !== null ? calcCost(source, calc) : null;
+
+    return {
+        activeEnergy: sum(source.activeEnergyInMonths ?? []),
+        reactiveEnergy: sum(source.reactiveEnergyInMonths ?? []),
+        peakDemand: Math.max(...(source.peakDemandInMonths ?? [])),
+        cosFi: Math.min(...cosFiInMonths),
+        cost
+    };
+}
+
+function calcCost(source: CostlyQuantitiesOverviewItem, calc: ERUCalculator) {
     const costInMonths = zip(
         source.activeEnergyInMonths ?? [],
         source.reactiveEnergyInMonths ?? [],
@@ -37,11 +50,5 @@ export function calculateCostsOverviewItem(
         return rpoCost + rcoCost + resCost + mrcCost + yrcCost + pfPenalty;
     });
 
-    return {
-        activeEnergy: sum(source.activeEnergyInMonths ?? []),
-        reactiveEnergy: sum(source.reactiveEnergyInMonths ?? []),
-        peakDemand: Math.max(...(source.peakDemandInMonths ?? [])),
-        cosFi: Math.min(...cosFiInMonths),
-        cost: sum(costInMonths)
-    };
+    return sum(costInMonths);
 }

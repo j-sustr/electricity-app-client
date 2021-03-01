@@ -88,15 +88,15 @@ export class CostsOveviewEffects {
     _createItems(
         dto: CostsOverviewDto,
         customerParams: CustomerParams | null
-    ): CostsOverviewItem[] | null {
+    ): CostsOverviewItem[] {
         if (!Array.isArray(dto.items1)) {
             return [];
         }
-        if (customerParams == null) {
-            return null;
-        }
 
-        const calc = this.calculatorFactory.create(customerParams);
+        const calc =
+            customerParams !== null
+                ? this.calculatorFactory.create(customerParams)
+                : null;
 
         return calculateItems(dto.items1);
 
