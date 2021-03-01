@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { SeriesParams } from '../models';
 
 export interface CostsOverviewItem {
+    groupName: string;
     activeEnergy: number;
     reactiveEnergy: number;
     cosFi: number;

@@ -1,1 +1,25 @@
-<p>costs-overview works!</p>
+<div class="container" *ngIf="state$ | async as state">
+    <div class="content-header">
+        <div class="left">
+            <app-page-title title="Costs Overview"></app-page-title>
+        </div>
+        <div class="right">
+            <div class="ranges-container">
+                <app-datetime-range-comparison-input-container></app-datetime-range-comparison-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <dx-load-indicator
+            *ngIf="state.loading"
+            height="40"
+            width="40"
+        ></dx-load-indicator>
+        <ng-container *ngIf="state.items">
+            <app-costs-overview-table></app-costs-overview-table>
+        </ng-container>
+    </div>
+
+    <div class="content-footer">footer</div>
+</div>

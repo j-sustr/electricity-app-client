@@ -17,6 +17,7 @@ export function calculateCostsOverviewItem(
     const cost = calc !== null ? calcCost(source, calc) : null;
 
     return {
+        groupName: source.groupName ?? '(no name)',
         activeEnergy: sum(source.activeEnergyInMonths ?? []),
         reactiveEnergy: sum(source.reactiveEnergyInMonths ?? []),
         peakDemand: Math.max(...(source.peakDemandInMonths ?? [])),

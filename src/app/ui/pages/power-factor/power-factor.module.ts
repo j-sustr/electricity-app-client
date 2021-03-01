@@ -22,10 +22,10 @@ const DX = [
 @NgModule({
     imports: [
         CommonModule,
-        DatetimeRangePickerModule,
-        PowerFactorRoutingModule,
         PageTitleModule,
-        ...DX
+        DatetimeRangePickerModule,
+        ...DX,
+        PowerFactorRoutingModule
     ],
     exports: [],
     declarations: [

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CostsDetailComponent } from './detail/costs-detail.component';
+import { CostsOverviewComponent } from './overview/costs-overview.component';
 
 const routes: Routes = [
     {
@@ -9,7 +10,7 @@ const routes: Routes = [
     },
     {
         path: 'overview',
-        component: CostsDetailComponent
+        component: CostsOverviewComponent
     },
     {
         path: 'detail',

@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppState } from 'src/app/ui/store/app-store.state';
+import { CostsOverviewState } from 'src/app/ui/store/costs-overview/costs-overview.model';
+import { selectCostsOverview } from 'src/app/ui/store/costs-overview/costs-overview.selectors';
 
 @Component({
-  selector: 'app-costs-overview-table',
-  templateUrl: './costs-overview-table.component.html',
-  styleUrls: ['./costs-overview-table.component.scss']
+    selector: 'app-costs-overview-table',
+    templateUrl: './costs-overview-table.component.html',
+    styleUrls: ['./costs-overview-table.component.scss']
 })
-export class CostsOverviewTableComponent implements OnInit {
+export class CostsOverviewTableComponent {
+    state$: Observable<CostsOverviewState>;
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    constructor(private store: Store<AppState>) {
+        this.state$ = this.store.pipe(select(selectCostsOverview));
+    }
 }

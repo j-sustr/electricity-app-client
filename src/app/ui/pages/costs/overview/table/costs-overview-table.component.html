@@ -1,1 +1,40 @@
-<p>costs-overview-table works!</p>
+<ng-container *ngIf="state$ | async as state">
+    <dx-data-grid
+        ngif="state.items"
+        [dataSource]="state.items ? state.items : []"
+        [allowColumnReordering]="true"
+        [rowAlternationEnabled]="true"
+        [showBorders]="true"
+    >
+        <dxi-column
+            dataField="groupName"
+            caption="Device Name"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="activeEnergy"
+            caption="Active Energy [kWh]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="reactiveEnergy"
+            caption="Reactive Energy [kvarh]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="cosFi"
+            caption="Cos Fi"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="peakDemand"
+            caption="Peak Demand [kW]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="cost"
+            caption="Cost [CZK]"
+            dataType="number"
+        ></dxi-column>
+    </dx-data-grid>
+</ng-container>

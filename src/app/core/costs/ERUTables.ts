@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Injectable } from '@angular/core';
 import * as tables from './eru-tables.json';
 
 export type ERUTableKey = keyof typeof tables;
 
+@Injectable({
+    providedIn: 'root'
+})
 export class ERUTableCollection {
     getValue(id: ERUTableKey): number {
         const value = (tables[id] as any).value as unknown;

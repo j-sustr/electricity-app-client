@@ -4,10 +4,15 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { API_BASE_URL, PowerFactorClient } from 'src/app/web-api-client';
-import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
+import {
+    API_BASE_URL,
+    CostsClient,
+    PowerFactorClient
+} from 'src/app/web-api-client';
+import { COSTS_CLIENT, POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
+import { CostsOveviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
 
@@ -21,7 +26,11 @@ function apiBaseUrlFactory(): string | undefined {
         CommonModule,
         HttpClientModule,
         StoreModule.forRoot(reducers),
-        EffectsModule.forRoot([DataSourceEffects, PowerFactorOverviewEffects]),
+        EffectsModule.forRoot([
+            DataSourceEffects,
+            CostsOveviewEffects,
+            PowerFactorOverviewEffects
+        ]),
         environment.production
             ? []
             : StoreDevtoolsModule.instrument({
@@ -30,6 +39,10 @@ function apiBaseUrlFactory(): string | undefined {
     ],
     exports: [StoreModule],
     providers: [
+        {
+            provide: COSTS_CLIENT,
+            useClass: CostsClient
+        },
         {
             provide: POWER_FACTOR_CLIENT,
             useClass: PowerFactorClient
