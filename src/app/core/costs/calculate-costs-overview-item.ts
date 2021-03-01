@@ -1,5 +1,4 @@
-import { fn } from '@angular/compiler/src/output/output_ast';
-import { avg, sum, zip } from 'src/app/common/array/array-utils';
+import { sum, zip } from 'src/app/common/array/array-utils';
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
 import { CostsOverviewItem } from 'src/app/ui/store/costs-overview/costs-overview.model';
 import { CostlyQuantitiesOverviewItem } from 'src/app/web-api-client';
