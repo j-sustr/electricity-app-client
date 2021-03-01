@@ -1,11 +1,19 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { CostsComponent } from './costs.component';
+import { RouterModule, Routes } from '@angular/router';
+import { CostsDetailComponent } from './detail/costs-detail.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: CostsComponent
+        redirectTo: 'overview'
+    },
+    {
+        path: 'overview',
+        component: CostsDetailComponent
+    },
+    {
+        path: 'detail',
+        component: CostsDetailComponent
     }
 ];
 
