@@ -30,51 +30,49 @@ import { CostsOverviewItem } from './costs-overview.model';
 
 @Injectable()
 export class CostsOveviewEffects {
-    persistTodos = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(getOverview),
-                withLatestFrom(
-                    combineLatest([
-                        this.store.pipe(select(selectCustomerParams)),
-                        this.store.pipe(select(selectIntervals))
-                    ])
-                ),
-                switchMap(([, [customerParams, intervals]]) => {
-                    const dto1 = intervalToDto(intervals.interval1);
-                    let dto2: IntervalDto | undefined = undefined;
-                    if (intervals.interval2) {
-                        dto2 = intervalToDto(intervals.interval2);
-                    }
-                    return this.client
-                        .getOverview(
-                            dto1.start,
-                            dto1.end,
-                            dto1.isInfinite,
-                            dto2?.start,
-                            dto2?.end,
-                            dto2?.isInfinite
-                        )
-                        .pipe(
-                            map((dto) => {
-                                const items = this._createItems(
-                                    dto,
-                                    customerParams
-                                );
-
-                                return getOverviewSuccess({ items });
-                            }),
-                            catchError((error: HttpErrorResponse) =>
-                                of(
-                                    getOverviewError({
-                                        error
-                                    })
-                                )
-                            )
-                        );
-                })
+    persistTodos = createEffect(() =>
+        this.actions$.pipe(
+            ofType(getOverview),
+            withLatestFrom(
+                combineLatest([
+                    this.store.pipe(select(selectCustomerParams)),
+                    this.store.pipe(select(selectIntervals))
+                ])
             ),
-        { dispatch: false }
+            switchMap(([, [customerParams, intervals]]) => {
+                const dto1 = intervalToDto(intervals.interval1);
+                let dto2: IntervalDto | undefined = undefined;
+                if (intervals.interval2) {
+                    dto2 = intervalToDto(intervals.interval2);
+                }
+                return this.client
+                    .getOverview(
+                        dto1.start,
+                        dto1.end,
+                        dto1.isInfinite,
+                        dto2?.start,
+                        dto2?.end,
+                        dto2?.isInfinite
+                    )
+                    .pipe(
+                        map((dto) => {
+                            const items = this._createItems(
+                                dto,
+                                customerParams
+                            );
+
+                            return getOverviewSuccess({ items });
+                        }),
+                        catchError((error: HttpErrorResponse) =>
+                            of(
+                                getOverviewError({
+                                    error
+                                })
+                            )
+                        )
+                    );
+            })
+        )
     );
 
     constructor(
