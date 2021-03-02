@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/ui/store/app-store.state';
-import { getOverview } from 'src/app/ui/store/costs-overview/costs-overview.actions';
 import { CostsOverviewState } from 'src/app/ui/store/costs-overview/costs-overview.model';
 import { selectCostsOverview } from 'src/app/ui/store/costs-overview/costs-overview.selectors';
 
@@ -11,14 +10,15 @@ import { selectCostsOverview } from 'src/app/ui/store/costs-overview/costs-overv
     templateUrl: './costs-overview.component.html',
     styleUrls: ['./costs-overview.component.scss']
 })
-export class CostsOverviewComponent implements OnInit {
+export class CostsOverviewComponent {
     state$: Observable<CostsOverviewState>;
 
     constructor(private store: Store<AppState>) {
         this.state$ = this.store.pipe(select(selectCostsOverview));
-    }
-
-    ngOnInit(): void {
-        this.store.dispatch(getOverview());
+        // this.state$.pipe(take(1)).subscribe((state) => {
+        //     if (state.items === null || state.items.length === 0) {
+        //         this.store.dispatch(getOverview());
+        //     }
+        // });
     }
 }
