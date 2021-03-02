@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
+import {
+    RouterStateSerializer,
+    StoreRouterConnectingModule
+} from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {
@@ -15,6 +19,7 @@ import { reducers } from './app-store.state';
 import { CostsOveviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
+import { CustomRouterSerializer } from './router/custom-router-serializer';
 
 function apiBaseUrlFactory(): string | undefined {
     const url = 'https://localhost:44312';
@@ -26,6 +31,7 @@ function apiBaseUrlFactory(): string | undefined {
         CommonModule,
         HttpClientModule,
         StoreModule.forRoot(reducers),
+        StoreRouterConnectingModule.forRoot(),
         EffectsModule.forRoot([
             DataSourceEffects,
             CostsOveviewEffects,
@@ -50,7 +56,8 @@ function apiBaseUrlFactory(): string | undefined {
         {
             provide: API_BASE_URL,
             useFactory: apiBaseUrlFactory
-        }
+        },
+        { provide: RouterStateSerializer, useClass: CustomRouterSerializer }
     ]
 })
 export class AppStoreModule {}
