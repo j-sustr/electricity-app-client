@@ -6,14 +6,14 @@ import { AppState } from '../app-store.state';
 import * as coActions from '../costs-overview/costs-overview.actions';
 import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
 import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
-import { actionDataSourceSetIntervals } from './data-source.actions';
+import { setIntervals } from './data-source.actions';
 
 @Injectable()
 export class DataSourceEffects {
     effectName$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(actionDataSourceSetIntervals),
+                ofType(setIntervals),
                 tap(() => {
                     this.store.dispatch(pfoActions.getOverview());
                 })

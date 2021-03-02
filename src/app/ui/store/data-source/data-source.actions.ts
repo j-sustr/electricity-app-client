@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-export const actionDataSourceSetIntervals = createAction(
+export const setIntervals = createAction(
     '[DataSource] Set Intervals',
     props<{
         interval1: Interval;

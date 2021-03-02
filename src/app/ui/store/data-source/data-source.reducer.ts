@@ -1,10 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Interval } from 'date-fns';
 import { isEqual } from 'lodash';
-import {
-    actionDataSourceSetInfo,
-    actionDataSourceSetIntervals
-} from './data-source.actions';
+import { actionDataSourceSetInfo, setIntervals } from './data-source.actions';
 
 export interface DataSourceState {
     interval1: Interval;
@@ -24,7 +21,7 @@ export const initialState: DataSourceState = {
 
 const reducer = createReducer(
     initialState,
-    on(actionDataSourceSetIntervals, (state, action) => {
+    on(setIntervals, (state, action) => {
         const interval1 = isEqual(state.interval1, action.interval1)
             ? state.interval1
             : action.interval1;
