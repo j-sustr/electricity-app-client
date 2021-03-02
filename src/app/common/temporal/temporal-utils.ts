@@ -12,6 +12,12 @@ export function startAndDurationToInterval(
     };
 }
 
+export function getMonthName(month: number, locale?: string): string {
+    const format = new Intl.DateTimeFormat(locale, { month: 'long' });
+    const date = new Date(Date.UTC(2000, month, 1, 0, 0, 0));
+    return format.format(date);
+}
+
 export function isYear(date: Date): boolean {
     return isEqual(d3.timeYear.floor(date), date);
 }

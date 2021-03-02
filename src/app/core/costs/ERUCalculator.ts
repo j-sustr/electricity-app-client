@@ -7,30 +7,22 @@ import { CustomerParams, DSOperator, VoltageLevel } from './costs';
 import { ERUTableCollection } from './ERUTables';
 
 export default class ERUCalculator {
-    _voltageLevel: VoltageLevel;
-    _dsOperator: DSOperator;
-    _reservedPower: number;
-    _yearlyReservedCapacity: number;
-    _monthlyReservedCapacity: number;
-    _isSupplier = false;
+    readonly voltageLevel: VoltageLevel;
+    readonly dsOperator: DSOperator;
+    readonly reservedPower: number;
+    readonly yearlyReservedCapacity: number;
+    readonly monthlyReservedCapacity: number;
+    readonly _isSupplier = false;
 
     constructor(private _tables: ERUTableCollection, customer: CustomerParams) {
-        this._voltageLevel = customer.voltageLevel;
-        this._dsOperator = customer.dsOperator;
-        this._reservedPower = customer.reservedPower;
-        this._yearlyReservedCapacity = customer.yearlyReservedCapacity;
-        this._monthlyReservedCapacity = customer.monthlyReservedCapacity;
+        this.voltageLevel = customer.voltageLevel;
+        this.dsOperator = customer.dsOperator;
+        this.reservedPower = customer.reservedPower;
+        this.yearlyReservedCapacity = customer.yearlyReservedCapacity;
+        this.monthlyReservedCapacity = customer.monthlyReservedCapacity;
     }
 
-    get yearlyReservedCapacity(): number {
-        return this._yearlyReservedCapacity;
-    }
-
-    get monthlyReservedCapacity(): number {
-        return this._monthlyReservedCapacity;
-    }
-
-    get reactiveEnergySupplyCostPerUnit(): number {
+    reactiveEnergySupplyCostPerUnit(): number {
         return this._tables.getValue('4.54.');
     }
 
@@ -38,36 +30,36 @@ export default class ERUCalculator {
      * @returns [Kč/MW]
      */
     yearlyReservedCapacityCostPerUnit(): number {
-        const vl = this._voltageLevel;
+        const vl = this.voltageLevel;
         if (vl === 'NN') {
             return 0;
         }
         return this._tables
             .getTable('4.17.')
-            .getValue(this._dsOperator, vl + '-r');
+            .getValue(this.dsOperator, vl + '-r');
     }
 
     /**
      * @returns [Kč/MW]
      */
     monthlyReservedCapacityCostPerUnit(): number {
-        const vl = this._voltageLevel;
+        const vl = this.voltageLevel;
         if (vl === 'NN') {
             return 0;
         }
         return this._tables
             .getTable('4.17.')
-            .getValue(this._dsOperator, vl + '-m');
+            .getValue(this.dsOperator, vl + '-m');
     }
 
     yearlyReservedCapacityCost(): number {
         const costPerUnit = this.yearlyReservedCapacityCostPerUnit();
-        return costPerUnit * toMega(this._yearlyReservedCapacity);
+        return costPerUnit * toMega(this.yearlyReservedCapacity);
     }
 
     monthlyReservedCapacityCost(): number {
         const costPerUnit = this.monthlyReservedCapacityCostPerUnit();
-        return costPerUnit * toMega(this._monthlyReservedCapacity);
+        return costPerUnit * toMega(this.monthlyReservedCapacity);
     }
 
     /**
@@ -103,8 +95,7 @@ export default class ERUCalculator {
         bodu (4.17.).
         */
         const capacity = Math.trunc(
-            (this._yearlyReservedCapacity + this._monthlyReservedCapacity) /
-                1000
+            (this.yearlyReservedCapacity + this.monthlyReservedCapacity) / 1000
         );
 
         return Math.max(pmax - capacity, 0);
@@ -129,7 +120,7 @@ export default class ERUCalculator {
      *  @returns [kW]
      */
     reservedPowerOverrun(pmax: number): number {
-        const power = Math.trunc(this._reservedPower / 1000);
+        const power = Math.trunc(this.reservedPower / 1000);
 
         return Math.max(pmax - power, 0);
     }
@@ -157,7 +148,7 @@ export default class ERUCalculator {
      * @param totalEnergy  [MVArh]
      */
     reactiveEnergySupplyCost(totalEnergy: number): number {
-        return totalEnergy * this.reactiveEnergySupplyCostPerUnit;
+        return totalEnergy * this.reactiveEnergySupplyCostPerUnit();
     }
 
     powerFactorSurcharge(cosFi: number): number {
@@ -208,37 +199,37 @@ export default class ERUCalculator {
      * @returns c_rk [Kč/MW] je cena za rezervovanou kapacitu na příslušné napěťové hladině,
      */
     _getCRK(): number {
-        let vl = this._voltageLevel;
+        let vl = this.voltageLevel;
         const rc = 'r'; // roční, TODO: ma to byt rocni, mecicni nebo spocitana
 
         // nn je stejne jako vn
-        if (this._voltageLevel === 'NN') {
+        if (this.voltageLevel === 'NN') {
             vl = 'VN';
         }
 
         return this._tables
             .getTable('4.17.')
-            .getValue(this._dsOperator, vl + '-' + rc);
+            .getValue(this.dsOperator, vl + '-' + rc);
     }
 
     /**
      * @returns c_ps [Kč/MWh] je cena za použití sítí na příslušné napěťové hladině,
      */
     _getCPS(): number {
-        let vl = this._voltageLevel;
+        let vl = this.voltageLevel;
 
         // nn je stejne jako vn
-        if (this._voltageLevel === 'NN') {
+        if (this.voltageLevel === 'NN') {
             vl = 'VN';
         }
 
-        return this._tables.getTable('4.38.').getValue(this._dsOperator, vl);
+        return this._tables.getTable('4.38.').getValue(this.dsOperator, vl);
     }
 
     /**
      * @returns  c_se [Kč/MWh] je cena za silovou elektřinu podle tabulky uvedené v bodě (4.53.),
      */
     _getCSE(): number {
-        return this._tables.getRecordValue('4.53.', this._dsOperator);
+        return this._tables.getRecordValue('4.53.', this.dsOperator);
     }
 }
