@@ -12,7 +12,7 @@ export interface CostsDetailItem {
 }
 
 export interface CostsDetailState {
-    groupName: string;
+    groupName: string | null;
     items: CostsDetailItem[] | null;
     loading: boolean;
     error?: HttpErrorResponse | null;

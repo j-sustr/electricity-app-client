@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/ui/store/app-store.state';
-import { getOverview } from 'src/app/ui/store/power-factor-overview/power-factor-overview.actions';
 import { PowerFactorOverviewState } from 'src/app/ui/store/power-factor-overview/power-factor-overview.model';
 import { selectPowerFactorOverview } from 'src/app/ui/store/power-factor-overview/power-factor-overview.selectors';
 
@@ -11,14 +10,10 @@ import { selectPowerFactorOverview } from 'src/app/ui/store/power-factor-overvie
     templateUrl: './power-factor-overview.component.html',
     styleUrls: ['./power-factor-overview.component.scss']
 })
-export class PowerFactorOverviewComponent implements OnInit {
+export class PowerFactorOverviewComponent {
     state$: Observable<PowerFactorOverviewState>;
 
     constructor(private store: Store<AppState>) {
         this.state$ = this.store.pipe(select(selectPowerFactorOverview));
-    }
-
-    ngOnInit(): void {
-        this.store.dispatch(getOverview());
     }
 }

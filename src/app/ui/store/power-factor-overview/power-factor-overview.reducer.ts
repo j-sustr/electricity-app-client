@@ -11,8 +11,8 @@ import { PowerFactorOverviewState } from './power-factor-overview.model';
 export const initialState: PowerFactorOverviewState = {
     viewType: 'table',
     showEnergy: false,
-    items: [],
-    series: [],
+    items: null,
+    series: null,
     loading: false,
     error: null
 };

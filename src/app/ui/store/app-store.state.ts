@@ -1,6 +1,8 @@
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
 import { RouterStateUrl } from '../router/router.state';
+import { CostsDetailState } from './costs-detail/costs-detail.model';
+import { costsDetailReducer } from './costs-detail/costs-detail.reducer';
 import { CostsOverviewState } from './costs-overview/costs-overview.model';
 import { costsOverviewReducer } from './costs-overview/costs-overview.reducer';
 import { CostsState } from './costs/costs.model';
@@ -16,6 +18,7 @@ export interface AppState {
     dataSource: DataSourceState;
     costs: CostsState;
     costsOverview: CostsOverviewState;
+    costsDetail: CostsDetailState;
     powerFactorOverview: PowerFactorOverviewState;
     router: RouterReducerState<RouterStateUrl>;
 }
@@ -24,6 +27,7 @@ export const reducers: ActionReducerMap<AppState> = {
     dataSource: dataSourceReducer,
     costs: costsReducer,
     costsOverview: costsOverviewReducer,
+    costsDetail: costsDetailReducer,
     powerFactorOverview: powerFactorOverviewReducer,
     router: routerReducer
 };

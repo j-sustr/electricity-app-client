@@ -4,15 +4,15 @@ import { CostsDetailItem } from './costs-detail.model';
 
 export const getDetail = createAction('[Costs Detail] Get Detail');
 
-export const getOverviewSuccess = createAction(
-    '[Costs Overview] Get Overview Success',
+export const getDetailSuccess = createAction(
+    '[Costs Detail] Get Detail Success',
     props<{
         groupName: string;
         items: CostsDetailItem[];
     }>()
 );
 
-export const getOverviewError = createAction(
-    '[Costs Overview] Get Overview Error',
+export const getDetailError = createAction(
+    '[Costs Detail] Get Detail Error',
     props<{ error: HttpErrorResponse }>()
 );

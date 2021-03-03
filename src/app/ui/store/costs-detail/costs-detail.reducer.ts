@@ -1,8 +1,9 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import * as actions from './costs-overview.actions';
-import { CostsOverviewState } from './costs-overview.model';
+import { CostsDetailState } from './costs-detail.model';
+import * as actions from './costs-detail.actions';
 
-export const initialState: CostsOverviewState = {
+export const initialState: CostsDetailState = {
+    groupName: null,
     items: null,
     loading: false,
     error: null
@@ -10,19 +11,20 @@ export const initialState: CostsOverviewState = {
 
 const reducer = createReducer(
     initialState,
-    on(actions.getOverview, (state) => ({
+    on(actions.getDetail, (state) => ({
         ...state,
         items: null,
         loading: true,
         error: null
     })),
-    on(actions.getOverviewSuccess, (state, { items }) => ({
+    on(actions.getDetailSuccess, (state, { groupName, items }) => ({
         ...state,
+        groupName,
         items,
         loading: false,
         error: null
     })),
-    on(actions.getOverviewError, (state, { error }) => ({
+    on(actions.getDetailError, (state, { error }) => ({
         ...state,
         items: null,
         loading: false,
@@ -30,9 +32,9 @@ const reducer = createReducer(
     }))
 );
 
-export function costsOverviewReducer(
-    state: CostsOverviewState | undefined,
+export function costsDetailReducer(
+    state: CostsDetailState | undefined,
     action: Action
-): CostsOverviewState {
+): CostsDetailState {
     return reducer(state, action);
 }
