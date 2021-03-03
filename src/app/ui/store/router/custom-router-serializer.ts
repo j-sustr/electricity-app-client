@@ -9,16 +9,21 @@ export class CustomRouterSerializer
     serialize(routerState: RouterStateSnapshot): RouterStateUrl {
         let route = routerState.root;
 
+        const pathComponents = [];
         while (route.firstChild) {
             route = route.firstChild;
+            if (route.routeConfig?.path) {
+                pathComponents.push(route.routeConfig.path);
+            }
         }
 
+        const path = '/' + pathComponents.join('/');
         const {
             url,
             root: { queryParams }
         } = routerState;
         const { params } = route;
 
-        return { url, params, queryParams };
+        return { url, path, params, queryParams };
     }
 }

@@ -19,12 +19,12 @@ import * as coActions from '../costs-overview/costs-overview.actions';
 import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
 import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
 import { selectPowerFactorOverviewHasData } from '../power-factor-overview/power-factor-overview.selectors';
-import { selectRouterState } from '../router/router.selectors';
 import { setIntervals } from './data-source.actions';
 import { selectIntervals } from './data-source.selectors';
 import { selectCostsOverviewHasData } from '../costs-overview/costs-overview.selectors';
+import { selectRouterPath } from '../router/router.selectors';
 
-const SECTION_URLS = [
+const SECTION_PATHS = [
     '/costs/overview',
     '/costs/overview',
     '/costs/detail',
@@ -32,7 +32,7 @@ const SECTION_URLS = [
     '/power-factor/detail'
 ] as const;
 
-type SectionURL = typeof SECTION_URLS[number];
+type SectionURL = typeof SECTION_PATHS[number];
 
 @Injectable()
 export class DataSourceEffects {
@@ -47,19 +47,22 @@ export class DataSourceEffects {
                             pairwise(),
                             map(([prev, curr]) => !isEqual(prev, curr))
                         ),
-                        this.store.pipe(select(selectRouterState))
+                        this.store.pipe(select(selectRouterPath))
                     ]),
                     (v1, v2) => v2
                 ),
-                filter(([, routerStateUrl]) => {
-                    return isSectionUrl(routerStateUrl.url);
+                filter(([, routerPath]) => {
+                    return isSectionPath(routerPath);
                 }),
-                map(([intervalsChanged, routerStateUrl]) => {
-                    const url = routerStateUrl.url;
+                map(([intervalsChanged, routerPath]) => {
                     return {
                         intervalsChanged,
-                        hasDataSelector: mapUrlToHasDataSelector(url as never),
-                        getDataAction: mapUrlToGetDataAction(url as never)
+                        hasDataSelector: mapSectionPathToHasDataSelector(
+                            routerPath as never
+                        ),
+                        getDataAction: mapSectionPathToGetDataAction(
+                            routerPath as never
+                        )
                     };
                 }),
                 switchMap(
@@ -86,11 +89,11 @@ export class DataSourceEffects {
     constructor(private actions$: Actions, private store: Store<AppState>) {}
 }
 
-function isSectionUrl(url: string): url is SectionURL {
-    return SECTION_URLS.includes(url as never);
+function isSectionPath(path: string): path is SectionURL {
+    return SECTION_PATHS.includes(path as never);
 }
 
-function mapUrlToGetDataAction(url: SectionURL): Action {
+function mapSectionPathToGetDataAction(url: SectionURL): Action {
     switch (url) {
         case '/costs/overview':
             return coActions.getOverview();
@@ -104,7 +107,9 @@ function mapUrlToGetDataAction(url: SectionURL): Action {
     throw new Error('invalid section url');
 }
 
-function mapUrlToHasDataSelector(url: SectionURL): Selector<AppState, boolean> {
+function mapSectionPathToHasDataSelector(
+    url: SectionURL
+): Selector<AppState, boolean> {
     switch (url) {
         case '/costs/overview':
             return selectCostsOverviewHasData;
