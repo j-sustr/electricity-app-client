@@ -36,7 +36,7 @@ type SectionURL = typeof SECTION_URLS[number];
 
 @Injectable()
 export class DataSourceEffects {
-    effectName$ = createEffect(
+    getData$ = createEffect(
         () => {
             return this.actions$.pipe(
                 ofType(setIntervals),

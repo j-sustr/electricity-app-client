@@ -30,7 +30,7 @@ import { CostsOverviewItem } from './costs-overview.model';
 
 @Injectable()
 export class CostsOveviewEffects {
-    persistTodos = createEffect(() =>
+    getData$ = createEffect(() =>
         this.actions$.pipe(
             ofType(getOverview),
             withLatestFrom(

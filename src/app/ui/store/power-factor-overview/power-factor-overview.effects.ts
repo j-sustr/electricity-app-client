@@ -20,7 +20,7 @@ import {
 
 @Injectable()
 export class PowerFactorOverviewEffects {
-    effectName$ = createEffect(() => {
+    getData$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(getOverview),
             withLatestFrom(this.store.pipe(select(selectIntervals))),
