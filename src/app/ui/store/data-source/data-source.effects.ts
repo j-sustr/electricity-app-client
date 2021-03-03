@@ -1,11 +1,11 @@
-import { fn } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, select, Selector, Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
-import { combineLatest, forkJoin } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import {
     filter,
+    first,
     map,
     pairwise,
     switchMap,
@@ -16,13 +16,13 @@ import { AppState } from '../app-store.state';
 import * as cdActions from '../costs-detail/costs-detail.actions';
 import { selectCostsDetailHasData } from '../costs-detail/costs-detail.selectors';
 import * as coActions from '../costs-overview/costs-overview.actions';
+import { selectCostsOverviewHasData } from '../costs-overview/costs-overview.selectors';
 import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
 import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
 import { selectPowerFactorOverviewHasData } from '../power-factor-overview/power-factor-overview.selectors';
+import { selectRouterPath } from '../router/router.selectors';
 import { setIntervals } from './data-source.actions';
 import { selectIntervals } from './data-source.selectors';
-import { selectCostsOverviewHasData } from '../costs-overview/costs-overview.selectors';
-import { selectRouterPath } from '../router/router.selectors';
 
 const SECTION_PATHS = [
     '/costs/overview',
@@ -69,6 +69,7 @@ export class DataSourceEffects {
                     ({ intervalsChanged, hasDataSelector, getDataAction }) =>
                         this.store.pipe(
                             select(hasDataSelector),
+                            first(),
                             map((hasData) => ({
                                 intervalsChanged,
                                 hasData,
