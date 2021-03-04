@@ -11,6 +11,7 @@ import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DatetimeRangePickerModule } from '../../components/datetime-range-picker/datetime-range-picker.module';
 import { PageTitleModule } from '../../components/page-title/page-title.module';
+import { ViewControlBarModule } from '../../components/view-control-bar/view-control-bar.module';
 import { CostsRoutingModule } from './costs-routing.module';
 import { CustomerParamsPopupFormComponent } from './customer-params-popup-form/customer-params-popup-form.component';
 import { CostsDetailComponent } from './detail/costs-detail.component';
@@ -35,6 +36,7 @@ const DX = [
         ReactiveFormsModule,
         PageTitleModule,
         DatetimeRangePickerModule,
+        ViewControlBarModule,
         ...DX,
         CostsRoutingModule
     ],
