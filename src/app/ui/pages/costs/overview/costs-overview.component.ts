@@ -23,4 +23,8 @@ export class CostsOverviewComponent {
         //     }
         // });
     }
+
+    handleFormSubmitted(): void {
+        this.popupVisible = false;
+    }
 }

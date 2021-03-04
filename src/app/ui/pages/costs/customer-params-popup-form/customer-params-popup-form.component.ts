@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
@@ -20,6 +20,9 @@ import { selectCustomerParams } from 'src/app/ui/store/costs/costs.selectors';
 export class CustomerParamsPopupFormComponent {
     @Input()
     visible = false;
+
+    @Output()
+    submitted = new EventEmitter<void>();
 
     voltageLevelOptions = VOLTAGE_LEVELS;
     dsOperatorOptions = DS_OPERATORS;
@@ -62,6 +65,7 @@ export class CustomerParamsPopupFormComponent {
             return;
         }
         this.save();
+        this.submitted.next();
     }
 
     reset(): void {

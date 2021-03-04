@@ -24,5 +24,6 @@
     <div class="content-footer">footer</div>
     <app-customer-params-popup-form
         [visible]="popupVisible"
+        (submitted)="handleFormSubmitted()"
     ></app-customer-params-popup-form>
 </div>
