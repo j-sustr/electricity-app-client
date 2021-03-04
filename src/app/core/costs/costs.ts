@@ -10,7 +10,7 @@ export interface CustomerParams {
     isSupplier: boolean;
     voltageLevel: VoltageLevel;
     dsOperator: DSOperator;
-    reservedPower: number;
-    yearlyReservedCapacity: number;
-    monthlyReservedCapacity: number;
+    reservedPowerKW: number;
+    yearlyReservedCapacityKW: number;
+    monthlyReservedCapacityKW: number;
 }

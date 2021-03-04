@@ -3,5 +3,5 @@ import { CustomerParams } from 'src/app/core/costs/costs';
 
 export const setCustomerParams = createAction(
     '[Costs] Set Customer Params',
-    props<{ customerParams: CustomerParams }>()
+    props<{ params: CustomerParams | null }>()
 );

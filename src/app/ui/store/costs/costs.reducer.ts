@@ -10,7 +10,7 @@ const reducer = createReducer(
     initialState,
     on(setCustomerParams, (state, action) => ({
         ...state,
-        customerParams: action.customerParams
+        customerParams: action.params
     }))
 );
 

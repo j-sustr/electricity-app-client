@@ -11,6 +11,8 @@ import { selectCostsOverview } from 'src/app/ui/store/costs-overview/costs-overv
     styleUrls: ['./costs-overview.component.scss']
 })
 export class CostsOverviewComponent {
+    popupVisible = true;
+
     state$: Observable<CostsOverviewState>;
 
     constructor(private store: Store<AppState>) {

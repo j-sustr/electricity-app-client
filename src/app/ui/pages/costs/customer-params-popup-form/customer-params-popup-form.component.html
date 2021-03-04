@@ -1,0 +1,67 @@
+<dx-popup
+    [width]="600"
+    [height]="500"
+    [showTitle]="true"
+    title="Customer Params"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="false"
+    [(visible)]="visible"
+>
+    <form [formGroup]="form">
+        <div class="dx-field">
+            <div class="dx-field-label">Voltage Level</div>
+            <dx-select-box
+                formControlName="voltageLevel"
+                [dataSource]="voltageLevelOptions"
+                [isValid]="voltageLevelControl?.valid === true || voltageLevelControl?.pristine === true"
+                [validationError]="{ message: 'is invalid'}"
+            >
+            </dx-select-box>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">DS Operator</div>
+            <dx-select-box
+                formControlName="dsOperator"
+                [dataSource]="dsOperatorOptions"
+                [isValid]="dsOperatorControl?.valid === true || dsOperatorControl?.pristine === true"
+                [validationError]="{ message: 'is invalid'}"
+            >
+            </dx-select-box>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Reserved Power [KW]</div>
+            <dx-number-box
+                formControlName="reservedPowerKW"
+                [isValid]="reservedPowerControl?.valid === true || reservedPowerControl?.pristine === true"
+                [validationError]="{ message: 'is invalid'}"
+            ></dx-number-box>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Yearly Reserved Capacity [KW]</div>
+            <dx-number-box
+                formControlName="yearlyReservedCapacityKW"
+                [isValid]="yearlyReservedCapacityControl?.valid === true || yearlyReservedCapacityControl?.pristine === true"
+                [validationError]="{ message: 'is invalid'}"
+            ></dx-number-box>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Monthly Reserved Capacity [KW]</div>
+            <dx-number-box
+                formControlName="monthlyReservedCapacityKW"
+                [isValid]="monthlyReservedCapacityControl?.valid === true || monthlyReservedCapacityControl?.pristine === true"
+                [validationError]="{ message: 'is invalid'}"
+            ></dx-number-box>
+        </div>
+        <div class="actions">
+            <dx-button text="Reset" type="normal" (onClick)="reset()">
+            </dx-button>
+            <dx-button
+                text="Submit"
+                type="success"
+                (onClick)="submit()"
+                [disabled]="!form.valid"
+            >
+            </dx-button>
+        </div>
+    </form>
+</dx-popup>

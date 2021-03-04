@@ -17,9 +17,10 @@ export default class ERUCalculator {
     constructor(private _tables: ERUTableCollection, customer: CustomerParams) {
         this.voltageLevel = customer.voltageLevel;
         this.dsOperator = customer.dsOperator;
-        this.reservedPower = customer.reservedPower;
-        this.yearlyReservedCapacity = customer.yearlyReservedCapacity;
-        this.monthlyReservedCapacity = customer.monthlyReservedCapacity;
+        this.reservedPower = customer.reservedPowerKW * 1000;
+        this.yearlyReservedCapacity = customer.yearlyReservedCapacityKW * 1000;
+        this.monthlyReservedCapacity =
+            customer.monthlyReservedCapacityKW * 1000;
     }
 
     reactiveEnergySupplyCostPerUnit(): number {
