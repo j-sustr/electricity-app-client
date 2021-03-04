@@ -1,6 +1,6 @@
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
-import { RouterStateUrl } from '../router/router.state';
+import { RouterStateUrl } from './router/router.store';
 import { CostsDetailState } from './costs-detail/costs-detail.model';
 import { costsDetailReducer } from './costs-detail/costs-detail.reducer';
 import { CostsOverviewState } from './costs-overview/costs-overview.model';

@@ -1,10 +1,13 @@
-<ng-container *ngIf="viewTypeControl">
-    <dx-button-group
-        [items]="viewTypeOptions"
-        keyExpr="key"
-        stylingMode="outlined"
-        [selectedItemKeys]="['table']"
-        (onItemClick)="viewTypeItemClick($event)"
-    >
-    </dx-button-group>
-</ng-container>
+<div class="left-group"></div>
+<div class="right-group">
+    <div class="view-type-btns" *ngIf="viewTypeControl">
+        <dx-button-group
+            [items]="viewTypeOptions"
+            keyExpr="key"
+            stylingMode="outlined"
+            [selectedItemKeys]="viewTypeSeletedItemKeys"
+            (onItemClick)="viewTypeItemClick($event)"
+        >
+        </dx-button-group>
+    </div>
+</div>

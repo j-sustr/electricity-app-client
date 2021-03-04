@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action, select, Selector, Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { combineLatest } from 'rxjs';
 import {
@@ -13,26 +13,14 @@ import {
     withLatestFrom
 } from 'rxjs/operators';
 import { AppState } from '../app-store.state';
-import * as cdActions from '../costs-detail/costs-detail.actions';
-import { selectCostsDetailHasData } from '../costs-detail/costs-detail.selectors';
-import * as coActions from '../costs-overview/costs-overview.actions';
-import { selectCostsOverviewHasData } from '../costs-overview/costs-overview.selectors';
-import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
-import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
-import { selectPowerFactorOverviewHasData } from '../power-factor-overview/power-factor-overview.selectors';
 import { selectRouterPath } from '../router/router.selectors';
+import {
+    isSectionPath,
+    mapSectionPathToHasDataSelector,
+    mapSectionPathToGetDataAction
+} from '../router/section-path-utils';
 import { setIntervals } from './data-source.actions';
 import { selectIntervals } from './data-source.selectors';
-
-const SECTION_PATHS = [
-    '/costs/overview',
-    '/costs/overview',
-    '/costs/detail',
-    '/power-factor/overview',
-    '/power-factor/detail'
-] as const;
-
-type SectionURL = typeof SECTION_PATHS[number];
 
 @Injectable()
 export class DataSourceEffects {
@@ -88,36 +76,4 @@ export class DataSourceEffects {
     );
 
     constructor(private actions$: Actions, private store: Store<AppState>) {}
-}
-
-function isSectionPath(path: string): path is SectionURL {
-    return SECTION_PATHS.includes(path as never);
-}
-
-function mapSectionPathToGetDataAction(url: SectionURL): Action {
-    switch (url) {
-        case '/costs/overview':
-            return coActions.getOverview();
-        case '/costs/detail':
-            return cdActions.getDetail();
-        case '/power-factor/overview':
-            return pfoActions.getOverview();
-        case '/power-factor/detail':
-            return pfoActions.getOverview();
-    }
-    throw new Error('invalid section url');
-}
-
-function mapSectionPathToHasDataSelector(
-    url: SectionURL
-): Selector<AppState, boolean> {
-    switch (url) {
-        case '/costs/overview':
-            return selectCostsOverviewHasData;
-        case '/costs/detail':
-            return selectCostsDetailHasData;
-        case '/power-factor/overview':
-            return selectPowerFactorOverviewHasData;
-    }
-    throw new Error('invalid section url');
 }

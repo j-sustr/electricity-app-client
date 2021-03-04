@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/ui/store/app-store.state';
 import { PowerFactorOverviewState } from 'src/app/ui/store/power-factor-overview/power-factor-overview.model';
-import { selectPowerFactorOverview } from 'src/app/ui/store/power-factor-overview/power-factor-overview.selectors';
+import { selectOverview } from 'src/app/ui/store/power-factor-overview/power-factor-overview.selectors';
 
 @Component({
     selector: 'app-power-factor-overview',
@@ -14,6 +14,6 @@ export class PowerFactorOverviewComponent {
     state$: Observable<PowerFactorOverviewState>;
 
     constructor(private store: Store<AppState>) {
-        this.state$ = this.store.pipe(select(selectPowerFactorOverview));
+        this.state$ = this.store.pipe(select(selectOverview));
     }
 }

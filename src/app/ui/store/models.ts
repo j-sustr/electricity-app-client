@@ -4,3 +4,5 @@ export interface SeriesParams {
     unit: string;
     // filter: string;
 }
+
+export type ViewType = 'table' | 'chart';

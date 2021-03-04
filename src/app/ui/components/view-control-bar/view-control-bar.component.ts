@@ -1,7 +1,24 @@
-import { Component, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Component, Input, OnInit } from '@angular/core';
+import { select, Selector, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import {
+    filter,
+    map,
+    share,
+    shareReplay,
+    switchMap,
+    tap
+} from 'rxjs/operators';
+import { selectOnce } from 'src/app/common/observable/selectOnce';
 import { AppState } from '../../store/app-store.state';
+import { ViewType } from '../../store/models';
+import { selectRouterPath } from '../../store/router/router.selectors';
+import {
+    isSectionPath,
+    mapRoutePathToSetViewTypeAction,
+    mapRoutePathToViewTypeSelector,
+    SectionPath
+} from '../../store/router/section-path-utils';
 
 type ViewTypeOption = {
     text: string;
@@ -13,7 +30,7 @@ type ViewTypeOption = {
     templateUrl: './view-control-bar.component.html',
     styleUrls: ['./view-control-bar.component.scss']
 })
-export class ViewControlBarComponent {
+export class ViewControlBarComponent implements OnInit {
     viewTypeOptions: ViewTypeOption[] = [
         {
             text: 'Table',
@@ -28,16 +45,38 @@ export class ViewControlBarComponent {
     @Input()
     viewTypeControl = true;
 
-    constructor(
-        private store: Store<AppState>,
-        private route: ActivatedRoute
-    ) {}
+    viewTypeSeletedItemKeys = ['table'];
+
+    sectionPath$: Observable<SectionPath>;
+
+    constructor(private store: Store<AppState>) {
+        this.sectionPath$ = this.store.pipe(
+            selectOnce(selectRouterPath),
+            filter((path: string): path is SectionPath => isSectionPath(path)),
+            shareReplay(1)
+        );
+    }
+
+    ngOnInit(): void {
+        if (this.viewTypeControl) {
+            this.sectionPath$
+                .pipe(
+                    map((path) => mapRoutePathToViewTypeSelector(path)),
+                    switchMap((selector) => this.store.pipe(select(selector))),
+                    tap((viewType) => {
+                        this.viewTypeSeletedItemKeys = [viewType];
+                    })
+                )
+                .subscribe();
+        }
+    }
 
     viewTypeItemClick(event: unknown): void {
-        console.log(event);
+        this.sectionPath$
+            .pipe(
+                map(mapRoutePathToSetViewTypeAction),
+                tap((action) => this.store.dispatch(action))
+            )
+            .subscribe();
     }
 }
-
-function mapRoutePathToViewTypeSelector() {}
-
-function mapRoutePathToSetViewTypeAction() {}
