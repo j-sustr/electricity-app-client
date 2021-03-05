@@ -1,9 +1,9 @@
 <ng-container *ngIf="table$ | async as table">
     <dx-data-grid
         [dataSource]="table.items"
-        [allowColumnReordering]="true"
-        [rowAlternationEnabled]="true"
+        [columnAutoWidth]="true"
         [showBorders]="true"
+        rowTemplate="rowTemplateName"
     >
         <dxi-column
             dataField="groupName"
@@ -30,5 +30,17 @@
             caption="Cos Fi"
             dataType="number"
         ></dxi-column>
+
+        <tr
+            class="dx-row"
+            [ngClass]="{'comparison-row': item.data.isForComparison }"
+            *dxTemplate="let item of 'rowTemplateName'"
+        >
+            <td>{{item.data.groupName}}</td>
+            <td style="text-align: right">{{item.data.activeEnergy}}</td>
+            <td style="text-align: right">{{item.data.reactiveEnergyL}}</td>
+            <td style="text-align: right">{{item.data.reactiveEnergyC}}</td>
+            <td style="text-align: right">{{item.data.cosFi}}</td>
+        </tr>
     </dx-data-grid>
 </ng-container>

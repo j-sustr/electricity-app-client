@@ -29,7 +29,7 @@ export interface PowerFactorOverviewTableItem {
     reactiveEnergyL: number;
     reactiveEnergyC: number;
     cosFi: number;
-    forComparison?: boolean;
+    isForComparison?: boolean;
 }
 
 export interface PowerFactorOverviewTable {
@@ -64,9 +64,9 @@ export const selectOverviewTableItems = createSelector(
             const length = items1.length;
             const result = [];
             for (let i = 0; i < length; i++) {
-                const tableItem1 = mapToTableItem(items1[i]);
-                const tableItem2 = mapToTableItem(items2[i]);
-                tableItem2.forComparison = true;
+                const tableItem1 = mapToTableItem(items1[i], 1);
+                const tableItem2 = mapToTableItem(items2[i], 2);
+                tableItem2.isForComparison = true;
                 result.push(tableItem1);
                 result.push(tableItem2);
             }
@@ -75,10 +75,12 @@ export const selectOverviewTableItems = createSelector(
         return null;
 
         function mapToTableItem(
-            item: PowerFactorOverviewItem
+            item: PowerFactorOverviewItem,
+            stack?: 1 | 2
         ): PowerFactorOverviewTableItem {
+            const suffix = stack ? ` (${stack})` : '';
             return {
-                groupName: item.groupName ?? '(no name)',
+                groupName: (item.groupName ?? '(no name)') + suffix,
                 activeEnergy: item.activeEnergy ?? NaN,
                 reactiveEnergyL: item.reactiveEnergyL ?? NaN,
                 reactiveEnergyC: item.reactiveEnergyC ?? NaN,
