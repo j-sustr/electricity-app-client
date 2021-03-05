@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import isDate from 'date-fns/isDate';
 import { AppState } from '../app-store.state';
 import { DataSourceState } from './data-source.reducer';
 
@@ -17,4 +18,9 @@ export const selectIntervals = createSelector(
 export const selectInfo = createSelector(
     selectDataSource,
     (state: DataSourceState) => state.info
+);
+
+export const selectIsComparisonMode = createSelector(
+    selectDataSource,
+    (state) => isDate(state.interval2?.start)
 );

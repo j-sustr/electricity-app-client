@@ -11,8 +11,8 @@ import { PowerFactorOverviewState } from './power-factor-overview.model';
 export const initialState: PowerFactorOverviewState = {
     viewType: 'table',
     showEnergy: false,
-    items: null,
-    series: null,
+    items1: null,
+    items2: null,
     loading: false,
     error: null
 };
@@ -30,21 +30,19 @@ const reducer = createReducer(
     on(getOverview, (state) => ({
         ...state,
         items: null,
-        series: null,
         loading: true,
         error: null
     })),
-    on(getOverviewSuccess, (state, { dto }) => ({
+    on(getOverviewSuccess, (state, { items1, items2 }) => ({
         ...state,
-        items: dto?.data?.[0].items ?? null,
-        series: null,
+        items1,
+        items2,
         loading: false,
         error: null
     })),
     on(getOverviewError, (state, { error }) => ({
         ...state,
         items: null,
-        series: null,
         loading: false,
         error
     }))

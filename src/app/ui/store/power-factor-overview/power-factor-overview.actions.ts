@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { PowerFactorOverviewDto } from 'src/app/web-api-client';
+import { PowerFactorOverviewItem } from 'src/app/web-api-client';
 
 export const setViewType = createAction(
     '[Power Factor Overview] Set View Type',
@@ -15,7 +15,10 @@ export const getOverview = createAction('[Power Factor Overview] Get Overview');
 
 export const getOverviewSuccess = createAction(
     '[Power Factor Overview] Get Overview Success',
-    props<{ dto: PowerFactorOverviewDto }>()
+    props<{
+        items1: PowerFactorOverviewItem[];
+        items2: PowerFactorOverviewItem[] | null;
+    }>()
 );
 
 export const getOverviewError = createAction(

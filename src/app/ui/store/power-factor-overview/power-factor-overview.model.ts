@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { PowerFactorOverviewItem } from 'src/app/web-api-client';
-import { SeriesParams } from '../models';
+import { ViewType } from '../models';
 
 export interface PowerFactorOverviewState {
-    viewType: 'table' | 'chart';
+    viewType: ViewType;
     showEnergy: boolean;
-    items: PowerFactorOverviewItem[] | null;
-    series: SeriesParams[] | null;
+    items1: PowerFactorOverviewItem[] | null;
+    items2: PowerFactorOverviewItem[] | null;
     loading: boolean;
     error?: HttpErrorResponse | null;
 }

@@ -8,7 +8,10 @@ import {
     IntervalDto,
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
-import { IPowerFactorClient } from 'src/app/web-api-client';
+import {
+    IPowerFactorClient,
+    PowerFactorOverviewItem
+} from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
 import { selectIntervals } from '../data-source/data-source.selectors';
@@ -41,11 +44,17 @@ export class PowerFactorOverviewEffects {
                         null
                     )
                     .pipe(
-                        map((dto) =>
-                            getOverviewSuccess({
-                                dto
-                            })
-                        ),
+                        map((dto) => {
+                            validateItems(dto.items1);
+                            if (dto.items2) {
+                                validateItems(dto.items2);
+                            }
+
+                            return getOverviewSuccess({
+                                items1: dto.items1 as PowerFactorOverviewItem[],
+                                items2: dto.items2 ?? null
+                            });
+                        }),
                         catchError((error: HttpErrorResponse) =>
                             of(
                                 getOverviewError({
@@ -64,4 +73,10 @@ export class PowerFactorOverviewEffects {
         @Inject(POWER_FACTOR_CLIENT)
         private client: IPowerFactorClient
     ) {}
+}
+
+function validateItems(
+    items: PowerFactorOverviewItem[] | null | undefined
+): items is PowerFactorOverviewItem[] {
+    return true;
 }

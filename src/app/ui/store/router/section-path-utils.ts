@@ -7,7 +7,7 @@ import * as pfoSelectors from '../power-factor-overview/power-factor-overview.se
 import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
 import * as pfdSelectors from '../power-factor-detail/power-factor-detail.selectors';
 import { selectHasData } from '../power-factor-overview/power-factor-overview.selectors';
-import { Action, Selector } from '@ngrx/store';
+import { Action, ActionCreator, Selector } from '@ngrx/store';
 import { AppState } from '../app-store.state';
 import { ViewType } from '../models';
 
@@ -68,7 +68,9 @@ export function mapRoutePathToViewTypeSelector(
     throw new Error('invalid section path');
 }
 
-export function mapRoutePathToSetViewTypeAction(path: SectionPath): Action {
+export function mapRoutePathToSetViewTypeAction(
+    path: SectionPath
+): ActionCreator {
     switch (path) {
         case '/costs/overview':
         case '/costs/detail':

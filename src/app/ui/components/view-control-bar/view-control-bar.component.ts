@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { select, Selector, Store } from '@ngrx/store';
+import { Action, select, Selector, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
     filter,
@@ -11,7 +11,6 @@ import {
 } from 'rxjs/operators';
 import { selectOnce } from 'src/app/common/observable/selectOnce';
 import { AppState } from '../../store/app-store.state';
-import { ViewType } from '../../store/models';
 import { selectRouterPath } from '../../store/router/router.selectors';
 import {
     isSectionPath,
@@ -43,7 +42,7 @@ export class ViewControlBarComponent implements OnInit {
     ];
 
     @Input()
-    viewTypeControl = true;
+    viewTypeControl = false;
 
     viewTypeSeletedItemKeys = ['table'];
 
@@ -71,11 +70,17 @@ export class ViewControlBarComponent implements OnInit {
         }
     }
 
-    viewTypeItemClick(event: unknown): void {
+    viewTypeItemClick(event: { itemData: { key: string } }): void {
         this.sectionPath$
             .pipe(
                 map(mapRoutePathToSetViewTypeAction),
-                tap((action) => this.store.dispatch(action))
+                tap((action) =>
+                    this.store.dispatch(
+                        action({
+                            viewType: event?.itemData?.key
+                        }) as Action
+                    )
+                )
             )
             .subscribe();
     }
