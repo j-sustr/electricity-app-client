@@ -17,7 +17,7 @@
             height="40"
             width="40"
         ></dx-load-indicator>
-        <ng-container *ngIf="state.items">
+        <ng-container *ngIf="!state.loading">
             <app-power-factor-overview-table
                 *ngIf="state.viewType === 'table'"
             ></app-power-factor-overview-table>

@@ -17,7 +17,8 @@ export interface PowerFactorOverviewChartItem {
     cosFi2?: number;
 }
 
-export interface PoweFactorOverviewChart {
+export interface PowerFactorOverviewChart {
+    title: string;
     items: PowerFactorOverviewChartItem[];
     series: SeriesParams[];
 }
@@ -29,6 +30,10 @@ export interface PowerFactorOverviewTableItem {
     reactiveEnergyC: number;
     cosFi: number;
     forComparison?: boolean;
+}
+
+export interface PowerFactorOverviewTable {
+    items: PowerFactorOverviewTableItem[];
 }
 
 export const selectOverview = createFeatureSelector<
@@ -83,6 +88,18 @@ export const selectOverviewTableItems = createSelector(
     }
 );
 
+export const selectOverviewTable = createSelector(
+    selectOverviewTableItems,
+    (items): PowerFactorOverviewTable | null => {
+        if (!items) {
+            return null;
+        }
+        return {
+            items
+        };
+    }
+);
+
 export const selectOverviewChartItems = createSelector(selectOverview, (state):
     | PowerFactorOverviewChartItem[]
     | null => {
@@ -128,11 +145,12 @@ export const selectSeriesParamsArray = createSelector(
 export const selectOverviewChart = createSelector(
     selectOverviewChartItems,
     selectSeriesParamsArray,
-    (items, series): PoweFactorOverviewChart | null => {
+    (items, series): PowerFactorOverviewChart | null => {
         if (!items) {
             return null;
         }
         return {
+            title: '',
             items,
             series
         };
@@ -144,22 +162,30 @@ function createSeriesParamsArray(isComparison: boolean) {
         {
             name: 'Active Energy',
             valueField: 'activeEnergy1',
-            unit: 'kWh'
+            unit: 'kWh',
+            color: 'red',
+            stack: 1
         },
         {
             name: 'Reactive Energy L',
             valueField: 'reactiveEnergyL1',
-            unit: 'kvarh'
+            unit: 'kvarh',
+            color: 'orange',
+            stack: 1
         },
         {
             name: 'Reactive Energy C',
             valueField: 'reactiveEnergyC1',
-            unit: 'kvarh'
+            unit: 'kvarh',
+            color: 'blue',
+            stack: 1
         },
         {
             name: 'cos FI',
             valueField: 'cosFi1',
-            unit: ''
+            unit: '',
+            color: 'purple',
+            stack: 1
         }
     ];
 
@@ -174,6 +200,7 @@ function createSeriesParamsArray(isComparison: boolean) {
     arr2.forEach((item) => {
         item.name += ' (2)';
         item.valueField.replace(/1$/, '2');
+        item.stack = 2;
     });
 
     return arr.concat(...arr2);

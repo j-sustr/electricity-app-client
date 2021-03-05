@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/ui/store/app-store.state';
-import { PowerFactorOverviewState } from 'src/app/ui/store/power-factor-overview/power-factor-overview.model';
-import { selectOverview } from 'src/app/ui/store/power-factor-overview/power-factor-overview.selectors';
+import {
+    PowerFactorOverviewChart,
+    selectOverviewChart
+} from 'src/app/ui/store/power-factor-overview/power-factor-overview.selectors';
 
 @Component({
     selector: 'app-power-factor-overview-chart',
@@ -11,9 +13,21 @@ import { selectOverview } from 'src/app/ui/store/power-factor-overview/power-fac
     styleUrls: ['./power-factor-overview-chart.component.scss']
 })
 export class PowerFactorOverviewChartComponent {
-    state$: Observable<PowerFactorOverviewState>;
+    chart$: Observable<PowerFactorOverviewChart | null>;
 
     constructor(private store: Store<AppState>) {
-        this.state$ = this.store.pipe(select(selectOverview));
+        this.chart$ = this.store.pipe(select(selectOverviewChart));
     }
+
+    customizeTooltip = (args: unknown) => {
+        console.log(args);
+        return {
+            text: ''
+        };
+    };
+
+    customizeLabel = (args: unknown) => {
+        console.log(args);
+        return '';
+    };
 }
