@@ -13,6 +13,8 @@ import { PowerFactorOverviewChartComponent } from './overview/chart/power-factor
 import { PowerFactorOverviewComponent } from './overview/power-factor-overview.component';
 import { PowerFactorOverviewTableComponent } from './overview/table/power-factor-overview-table.component';
 import { PowerFactorRoutingModule } from './power-factor-routing.module';
+import { PowerFactorDistributionChartComponent } from './detail/distribution-chart/power-factor-distribution-chart.component';
+import { PowerFactorDistributionTableComponent } from './detail/distribution-table/power-factor-distribution-table.component';
 
 const DX = [
     DxTemplateModule,
@@ -36,7 +38,9 @@ const DX = [
         PowerFactorDetailComponent,
         PowerFactorOverviewComponent,
         PowerFactorOverviewTableComponent,
-        PowerFactorOverviewChartComponent
+        PowerFactorOverviewChartComponent,
+        PowerFactorDistributionChartComponent,
+        PowerFactorDistributionTableComponent
     ],
     providers: []
 })
