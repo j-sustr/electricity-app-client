@@ -1,1 +1,32 @@
-<p>power-factor-detail works!</p>
+<div class="container" *ngIf="state$ | async as state">
+    <div class="app-content-header">
+        <div class="left">
+            <app-page-title title="Power Factor Overview"></app-page-title>
+        </div>
+        <div class="right">
+            <div class="ranges-container">
+                <app-datetime-range-comparison-input-container></app-datetime-range-comparison-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <app-view-control-bar [viewTypeControl]="true"></app-view-control-bar>
+        <dx-load-indicator
+            *ngIf="state.loading"
+            height="40"
+            width="40"
+        ></dx-load-indicator>
+        <ng-container *ngIf="!state.loading">
+            <app-power-factor-distribution-table
+                *ngIf="state.viewType === 'table'"
+            ></app-power-factor-distribution-table>
+            <app-power-factor-distribution-chart
+                *ngIf="state.viewType === 'chart'"
+            >
+            </app-power-factor-distribution-chart>
+        </ng-container>
+    </div>
+
+    <div class="content-footer"></div>
+</div>
