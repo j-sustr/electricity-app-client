@@ -280,6 +280,7 @@ export class GroupsClient implements IGroupsClient {
 
 export interface IPowerFactorClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
+    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PowerFactorDistributionDto>;
 }
 
 @Injectable({
@@ -355,6 +356,68 @@ export class PowerFactorClient implements IPowerFactorClient {
             }));
         }
         return _observableOf<PowerFactorOverviewDto>(<any>null);
+    }
+
+    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PowerFactorDistributionDto> {
+        let url_ = this.baseUrl + "/api/PowerFactor/distribution?";
+        if (groupId !== undefined && groupId !== null)
+            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
+        if (interval1_Start !== undefined && interval1_Start !== null)
+            url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
+        if (interval1_End !== undefined && interval1_End !== null)
+            url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval1_IsInfinite !== undefined && interval1_IsInfinite !== null)
+            url_ += "Interval1.IsInfinite=" + encodeURIComponent("" + interval1_IsInfinite) + "&";
+        if (interval2_Start !== undefined && interval2_Start !== null)
+            url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
+        if (interval2_End !== undefined && interval2_End !== null)
+            url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
+        if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
+            url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDistribution(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDistribution(<any>response_);
+                } catch (e) {
+                    return <Observable<PowerFactorDistributionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PowerFactorDistributionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDistribution(response: HttpResponseBase): Observable<PowerFactorDistributionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PowerFactorDistributionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PowerFactorDistributionDto>(<any>null);
     }
 }
 
@@ -1038,6 +1101,166 @@ export class Interval implements IInterval {
 export interface IInterval {
     start?: Date | null;
     end?: Date | null;
+}
+
+export class PowerFactorDistributionDto implements IPowerFactorDistributionDto {
+    groupName?: string | null;
+    distribution1?: PowerFactorDistributionItem[] | null;
+    distribution2?: PowerFactorDistributionItem[] | null;
+    interval1?: IntervalDto | null;
+    interval2?: IntervalDto | null;
+
+    constructor(data?: IPowerFactorDistributionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            if (Array.isArray(_data["distribution1"])) {
+                this.distribution1 = [] as any;
+                for (let item of _data["distribution1"])
+                    this.distribution1!.push(PowerFactorDistributionItem.fromJS(item));
+            }
+            if (Array.isArray(_data["distribution2"])) {
+                this.distribution2 = [] as any;
+                for (let item of _data["distribution2"])
+                    this.distribution2!.push(PowerFactorDistributionItem.fromJS(item));
+            }
+            this.interval1 = _data["interval1"] ? IntervalDto.fromJS(_data["interval1"]) : <any>null;
+            this.interval2 = _data["interval2"] ? IntervalDto.fromJS(_data["interval2"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PowerFactorDistributionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PowerFactorDistributionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        if (Array.isArray(this.distribution1)) {
+            data["distribution1"] = [];
+            for (let item of this.distribution1)
+                data["distribution1"].push(item.toJSON());
+        }
+        if (Array.isArray(this.distribution2)) {
+            data["distribution2"] = [];
+            for (let item of this.distribution2)
+                data["distribution2"].push(item.toJSON());
+        }
+        data["interval1"] = this.interval1 ? this.interval1.toJSON() : <any>null;
+        data["interval2"] = this.interval2 ? this.interval2.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IPowerFactorDistributionDto {
+    groupName?: string | null;
+    distribution1?: PowerFactorDistributionItem[] | null;
+    distribution2?: PowerFactorDistributionItem[] | null;
+    interval1?: IntervalDto | null;
+    interval2?: IntervalDto | null;
+}
+
+export class PowerFactorDistributionItem implements IPowerFactorDistributionItem {
+    value?: number;
+    range?: string | null;
+    kind?: string | null;
+    phase?: number;
+
+    constructor(data?: IPowerFactorDistributionItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
+            this.range = _data["range"] !== undefined ? _data["range"] : <any>null;
+            this.kind = _data["kind"] !== undefined ? _data["kind"] : <any>null;
+            this.phase = _data["phase"] !== undefined ? _data["phase"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PowerFactorDistributionItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new PowerFactorDistributionItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value !== undefined ? this.value : <any>null;
+        data["range"] = this.range !== undefined ? this.range : <any>null;
+        data["kind"] = this.kind !== undefined ? this.kind : <any>null;
+        data["phase"] = this.phase !== undefined ? this.phase : <any>null;
+        return data; 
+    }
+}
+
+export interface IPowerFactorDistributionItem {
+    value?: number;
+    range?: string | null;
+    kind?: string | null;
+    phase?: number;
+}
+
+export class IntervalDto implements IIntervalDto {
+    start?: Date | null;
+    end?: Date | null;
+    isInfinite?: boolean | null;
+
+    constructor(data?: IIntervalDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
+            this.isInfinite = _data["isInfinite"] !== undefined ? _data["isInfinite"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): IntervalDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IntervalDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start ? this.start.toISOString() : <any>null;
+        data["end"] = this.end ? this.end.toISOString() : <any>null;
+        data["isInfinite"] = this.isInfinite !== undefined ? this.isInfinite : <any>null;
+        return data; 
+    }
+}
+
+export interface IIntervalDto {
+    start?: Date | null;
+    end?: Date | null;
+    isInfinite?: boolean | null;
 }
 
 export class QuantitiesDto implements IQuantitiesDto {
