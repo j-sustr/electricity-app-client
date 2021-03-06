@@ -1,17 +1,22 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../app-store.state';
-import { PowerFactorOverviewState } from '../power-factor-overview/power-factor-overview.model';
+import { PowerFactorDetailState } from './power-factor-detail.model';
 
 export const selectDetail = createFeatureSelector<
     AppState,
-    PowerFactorOverviewState
->('powerFactorOverview');
+    PowerFactorDetailState
+>('powerFactorDetail');
 
 export const selectHasData = createSelector(selectDetail, (state) =>
-    Array.isArray(state.items1)
+    Array.isArray(state.distribution)
 );
 
 export const selectViewType = createSelector(
     selectDetail,
     (state) => state.viewType
+);
+
+export const selectDistribution = createSelector(
+    selectDetail,
+    (state) => state.distribution
 );

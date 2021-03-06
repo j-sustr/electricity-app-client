@@ -16,8 +16,8 @@ import { AppState } from '../app-store.state';
 import { selectRouterPath } from '../router/router.selectors';
 import {
     isSectionPath,
-    mapSectionPathToHasDataSelector,
-    mapSectionPathToGetDataAction
+    mapSectionPathToGetDataAction,
+    mapSectionPathToHasDataSelector
 } from '../router/section-path-utils';
 import { setIntervals } from './data-source.actions';
 import { selectIntervals } from './data-source.selectors';

@@ -13,7 +13,7 @@ const routes: Routes = [
         component: PowerFactorOverviewComponent
     },
     {
-        path: 'detail',
+        path: 'detail/:groupId',
         component: PowerFactorDetailComponent
     }
 ];

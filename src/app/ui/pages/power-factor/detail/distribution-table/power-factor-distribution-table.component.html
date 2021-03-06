@@ -1,1 +1,46 @@
-<p>power-factor-distribution-table works!</p>
+<ng-container *ngIf="table$ | async as table">
+    <dx-data-grid
+        [dataSource]="table.items"
+        [columnAutoWidth]="true"
+        [showBorders]="true"
+        rowTemplate="rowTemplateName"
+    >
+        <dxi-column
+            dataField="range"
+            caption="Range"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="valueMain"
+            caption="Main [%]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="valueL1"
+            caption="L1 [%]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="valueL2"
+            caption="L2 [%]"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="valueL3"
+            caption="L3 [%]"
+            dataType="number"
+        ></dxi-column>
+
+        <tr
+            class="dx-row"
+            [ngClass]="{'comparison-row': item.data.isForComparison }"
+            *dxTemplate="let item of 'rowTemplateName'"
+        >
+            <td>{{item.data.range}}</td>
+            <td style="text-align: right">{{item.data.valueMain}}</td>
+            <td style="text-align: right">{{item.data.valueL1}}</td>
+            <td style="text-align: right">{{item.data.valueL2}}</td>
+            <td style="text-align: right">{{item.data.valueL3}}</td>
+        </tr>
+    </dx-data-grid>
+</ng-container>

@@ -29,7 +29,8 @@ const reducer = createReducer(
     })),
     on(getOverview, (state) => ({
         ...state,
-        items: null,
+        items1: null,
+        items2: null,
         loading: true,
         error: null
     })),
@@ -42,7 +43,8 @@ const reducer = createReducer(
     })),
     on(getOverviewError, (state, { error }) => ({
         ...state,
-        items: null,
+        items1: null,
+        items2: null,
         loading: false,
         error
     }))

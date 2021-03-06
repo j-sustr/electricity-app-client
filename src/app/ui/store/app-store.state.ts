@@ -13,6 +13,8 @@ import {
 } from './data-source/data-source.reducer';
 import { PowerFactorOverviewState } from './power-factor-overview/power-factor-overview.model';
 import { powerFactorOverviewReducer } from './power-factor-overview/power-factor-overview.reducer';
+import { PowerFactorDetailState } from './power-factor-detail/power-factor-detail.model';
+import { powerFactorDetailReducer } from './power-factor-detail/power-factor-detail.reducer';
 
 export interface AppState {
     dataSource: DataSourceState;
@@ -20,6 +22,7 @@ export interface AppState {
     costsOverview: CostsOverviewState;
     costsDetail: CostsDetailState;
     powerFactorOverview: PowerFactorOverviewState;
+    powerFactorDetail: PowerFactorDetailState;
     router: RouterReducerState<RouterStateUrl>;
 }
 
@@ -29,5 +32,6 @@ export const reducers: ActionReducerMap<AppState> = {
     costsOverview: costsOverviewReducer,
     costsDetail: costsDetailReducer,
     powerFactorOverview: powerFactorOverviewReducer,
+    powerFactorDetail: powerFactorDetailReducer,
     router: routerReducer
 };
