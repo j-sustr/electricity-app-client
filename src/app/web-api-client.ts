@@ -636,6 +636,7 @@ export interface ICostsOverviewDto {
 }
 
 export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewItem {
+    groupId?: string | null;
     groupName?: string | null;
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
@@ -652,6 +653,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
 
     init(_data?: any) {
         if (_data) {
+            this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
             this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
             if (Array.isArray(_data["activeEnergyInMonths"])) {
                 this.activeEnergyInMonths = [] as any;
@@ -680,6 +682,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
         data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
         if (Array.isArray(this.activeEnergyInMonths)) {
             data["activeEnergyInMonths"] = [];
@@ -701,6 +704,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
 }
 
 export interface ICostlyQuantitiesOverviewItem {
+    groupId?: string | null;
     groupName?: string | null;
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
@@ -1008,6 +1012,7 @@ export interface IPowerFactorOverviewDto {
 }
 
 export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
+    groupId?: string | null;
     groupName?: string | null;
     activeEnergy?: number;
     reactiveEnergyL?: number;
@@ -1026,6 +1031,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
 
     init(_data?: any) {
         if (_data) {
+            this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
             this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
             this.activeEnergy = _data["activeEnergy"] !== undefined ? _data["activeEnergy"] : <any>null;
             this.reactiveEnergyL = _data["reactiveEnergyL"] !== undefined ? _data["reactiveEnergyL"] : <any>null;
@@ -1044,6 +1050,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
         data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
         data["activeEnergy"] = this.activeEnergy !== undefined ? this.activeEnergy : <any>null;
         data["reactiveEnergyL"] = this.reactiveEnergyL !== undefined ? this.reactiveEnergyL : <any>null;
@@ -1055,6 +1062,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
 }
 
 export interface IPowerFactorOverviewItem {
+    groupId?: string | null;
     groupName?: string | null;
     activeEnergy?: number;
     reactiveEnergyL?: number;
