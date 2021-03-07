@@ -9,6 +9,7 @@ import {
 import { PowerFactorDetailState } from './power-factor-detail.model';
 
 export const initialState: PowerFactorDetailState = {
+    detailType: 'distribution',
     viewType: 'table',
     showEnergy: false,
     distribution: {

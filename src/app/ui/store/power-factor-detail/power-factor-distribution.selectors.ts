@@ -117,7 +117,11 @@ export const selectDistributionChartItems = createSelector(
                 valueMain1: item1.value ?? NaN,
                 valueL1_1: item1.value ?? NaN,
                 valueL2_1: item1.value ?? NaN,
-                valueL3_1: item1.value ?? NaN
+                valueL3_1: item1.value ?? NaN,
+                valueMain2: item2?.value,
+                valueL1_2: item2?.value,
+                valueL2_2: item2?.value,
+                valueL3_2: item2?.value
             };
         }
     }

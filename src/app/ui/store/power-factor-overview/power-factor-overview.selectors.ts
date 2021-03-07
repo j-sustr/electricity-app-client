@@ -6,6 +6,7 @@ import { SeriesParams } from '../models';
 import { PowerFactorOverviewState } from './power-factor-overview.model';
 
 export interface PowerFactorOverviewChartItem {
+    groupId: string;
     groupName: string;
     activeEnergy1: number;
     reactiveEnergyL1: number;
@@ -24,6 +25,7 @@ export interface PowerFactorOverviewChart {
 }
 
 export interface PowerFactorOverviewTableItem {
+    groupId: string;
     groupName: string;
     activeEnergy: number;
     reactiveEnergyL: number;
@@ -80,6 +82,7 @@ export const selectOverviewTableItems = createSelector(
         ): PowerFactorOverviewTableItem {
             const suffix = stack ? ` (${stack})` : '';
             return {
+                groupId: item.groupId ?? '(no id)',
                 groupName: (item.groupName ?? '(no name)') + suffix,
                 activeEnergy: item.activeEnergy ?? NaN,
                 reactiveEnergyL: item.reactiveEnergyL ?? NaN,
@@ -126,6 +129,7 @@ export const selectOverviewChartItems = createSelector(selectOverview, (state):
         item2?: PowerFactorOverviewItem
     ): PowerFactorOverviewChartItem {
         return {
+            groupId: item1.groupId ?? '(no id)',
             groupName: item1.groupName ?? '(no name)',
             activeEnergy1: item1.activeEnergy ?? NaN,
             reactiveEnergyL1: item1.reactiveEnergyL ?? NaN,

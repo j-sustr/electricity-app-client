@@ -32,9 +32,10 @@
         ></dxi-column>
 
         <tr
-            class="dx-row"
+            class="dx-row data-table-row"
             [ngClass]="{'comparison-row': item.data.isForComparison }"
             *dxTemplate="let item of 'rowTemplateName'"
+            routerLink="/power-factor/detail/{{item.data.groupId}}"
         >
             <td>{{item.data.groupName}}</td>
             <td style="text-align: right">{{item.data.activeEnergy}}</td>

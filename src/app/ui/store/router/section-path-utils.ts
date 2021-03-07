@@ -1,22 +1,20 @@
 import * as cdActions from '../costs-detail/costs-detail.actions';
-import { selectCostsDetailHasData } from '../costs-detail/costs-detail.selectors';
+import * as cdSelectors from '../costs-detail/costs-detail.selectors';
 import * as coActions from '../costs-overview/costs-overview.actions';
-import { selectCostsOverviewHasData } from '../costs-overview/costs-overview.selectors';
+import * as coSelectors from '../costs-overview/costs-overview.selectors';
 import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
 import * as pfoSelectors from '../power-factor-overview/power-factor-overview.selectors';
 import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
 import * as pfdSelectors from '../power-factor-detail/power-factor-detail.selectors';
-import { selectHasData } from '../power-factor-overview/power-factor-overview.selectors';
 import { Action, ActionCreator, Selector } from '@ngrx/store';
 import { AppState } from '../app-store.state';
 import { ViewType } from '../models';
 
 export const SECTION_PATHS = [
     '/costs/overview',
-    '/costs/overview',
-    '/costs/detail',
+    '/costs/detail/:groupId',
     '/power-factor/overview',
-    '/power-factor/detail'
+    '/power-factor/detail/:groupId'
 ] as const;
 
 export type SectionPath = typeof SECTION_PATHS[number];
@@ -29,12 +27,12 @@ export function mapSectionPathToGetDataAction(path: SectionPath): Action {
     switch (path) {
         case '/costs/overview':
             return coActions.getOverview();
-        case '/costs/detail':
+        case '/costs/detail/:groupId':
             return cdActions.getDetail();
         case '/power-factor/overview':
             return pfoActions.getOverview();
-        case '/power-factor/detail':
-            return pfoActions.getOverview();
+        case '/power-factor/detail/:groupId':
+            return pfdActions.getDetail();
     }
     throw new Error('invalid section url');
 }
@@ -44,11 +42,13 @@ export function mapSectionPathToHasDataSelector(
 ): Selector<AppState, boolean> {
     switch (path) {
         case '/costs/overview':
-            return selectCostsOverviewHasData;
-        case '/costs/detail':
-            return selectCostsDetailHasData;
+            return coSelectors.selectHasData;
+        case '/costs/detail/:groupId':
+            return cdSelectors.selectHasData;
         case '/power-factor/overview':
-            return selectHasData;
+            return pfoSelectors.selectHasData;
+        case '/power-factor/detail/:groupId':
+            return pfdSelectors.selectHasData;
     }
     throw new Error('invalid section path');
 }
@@ -58,11 +58,11 @@ export function mapRoutePathToViewTypeSelector(
 ): Selector<AppState, ViewType> {
     switch (path) {
         case '/costs/overview':
-        case '/costs/detail':
+        case '/costs/detail/:groupId':
             throw new Error('not implemented');
         case '/power-factor/overview':
             return pfoSelectors.selectViewType;
-        case '/power-factor/detail':
+        case '/power-factor/detail/:groupId':
             return pfdSelectors.selectViewType;
     }
     throw new Error('invalid section path');
@@ -73,11 +73,11 @@ export function mapRoutePathToSetViewTypeAction(
 ): ActionCreator {
     switch (path) {
         case '/costs/overview':
-        case '/costs/detail':
+        case '/costs/detail/:groupId':
             throw new Error('not implemented');
         case '/power-factor/overview':
             return pfoActions.setViewType;
-        case '/power-factor/detail':
+        case '/power-factor/detail/:groupId':
             return pfdActions.setViewType;
     }
     throw new Error('invalid section path');

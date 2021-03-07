@@ -1,8 +1,5 @@
 import { Action } from '@ngrx/store';
-import {
-    actionDataSourceRemoveInterval,
-    actionDataSourceSetInterval
-} from './data-source.actions';
+import { setIntervals } from './data-source.actions';
 import {
     dataSourceReducer,
     DataSourceState,
@@ -11,25 +8,21 @@ import {
 
 describe('AppReducer', () => {
     const TEST_INITIAL_STATE: DataSourceState = {
-        intervals: [
-            {
-                start: -Infinity,
-                end: Infinity
-            }
-        ]
+        interval1: {
+            start: -Infinity,
+            end: Infinity
+        }
     };
 
     const TEST_INITIAL_STATE_2: DataSourceState = {
-        intervals: [
-            {
-                start: -Infinity,
-                end: Infinity
-            },
-            {
-                start: -Infinity,
-                end: Infinity
-            }
-        ]
+        interval1: {
+            start: -Infinity,
+            end: Infinity
+        },
+        interval2: {
+            start: -Infinity,
+            end: Infinity
+        }
     };
 
     it('should return the default state', () => {
@@ -39,32 +32,38 @@ describe('AppReducer', () => {
         expect(state).toBe(initialState);
     });
 
-    it('should set an interval', () => {
-        const action = actionDataSourceSetInterval({
-            index: 0,
-            start: new Date(0),
-            end: new Date(1000)
+    it('should set an interval1', () => {
+        const action = setIntervals({
+            interval1: {
+                start: new Date(0),
+                end: new Date(1000)
+            }
         });
 
         const state = dataSourceReducer(TEST_INITIAL_STATE, action);
-        expect(state.intervals).toEqual([
-            {
-                start: action.start,
-                end: action.end
-            }
-        ]);
+        expect(state.interval1).toEqual({
+            start: action.interval1.start,
+            end: action.interval1.end
+        });
     });
 
     it('should remove an interval', () => {
-        const action = actionDataSourceRemoveInterval();
+        const action = setIntervals({
+            interval1: {
+                start: -Infinity,
+                end: Infinity
+            },
+            interval2: undefined
+        });
 
         const state = dataSourceReducer(TEST_INITIAL_STATE_2, action);
 
-        expect(state.intervals).toEqual([
-            {
+        expect(state).toEqual({
+            interval1: {
                 start: -Infinity,
                 end: Infinity
-            }
-        ]);
+            },
+            interval2: undefined
+        });
     });
 });

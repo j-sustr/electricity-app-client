@@ -18,6 +18,8 @@ import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
 import { CostsOveviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
+import { PowerFactorDetailEffects } from './power-factor-detail/power-factor-detail.effects';
+import { PowerFactorDistributionEffects } from './power-factor-detail/power-factor-distribution.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
 import { CustomRouterSerializer } from './router/custom-router-serializer';
 
@@ -35,7 +37,9 @@ function apiBaseUrlFactory(): string | undefined {
         EffectsModule.forRoot([
             DataSourceEffects,
             CostsOveviewEffects,
-            PowerFactorOverviewEffects
+            PowerFactorOverviewEffects,
+            PowerFactorDetailEffects,
+            PowerFactorDistributionEffects
         ]),
         environment.production
             ? []

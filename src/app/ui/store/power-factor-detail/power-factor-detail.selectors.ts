@@ -16,6 +16,11 @@ export const selectViewType = createSelector(
     (state) => state.viewType
 );
 
+export const selectDetailType = createSelector(
+    selectDetail,
+    (state) => state.detailType
+);
+
 export const selectDistribution = createSelector(
     selectDetail,
     (state) => state.distribution

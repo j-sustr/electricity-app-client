@@ -9,12 +9,14 @@ export const setViewType = createAction(
 
 export const toggleEnergy = createAction('[Power Factor Detail] Toggle Energy');
 
+export const getDetail = createAction('[Power Factor Detail] Get Detail');
+
 export const getDistribution = createAction(
-    '[Power Factor Overview] Get Distribution'
+    '[Power Factor Detail] Get Distribution'
 );
 
 export const getDistributionSuccess = createAction(
-    '[Power Factor Overview] Get Overview Success',
+    '[Power Factor Detail] Get Distribution Success',
     props<{
         groupName: string;
         items1: PowerFactorDistributionItem[];
@@ -23,6 +25,6 @@ export const getDistributionSuccess = createAction(
 );
 
 export const getDistributionError = createAction(
-    '[Power Factor Overview] Get Overview Error',
+    '[Power Factor Detail] Get Distribution Error',
     props<{ error: HttpErrorResponse }>()
 );

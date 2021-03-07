@@ -23,7 +23,7 @@ import {
 } from './power-factor-detail.actions';
 
 @Injectable()
-export class PowerFactorOverviewEffects {
+export class PowerFactorDistributionEffects {
     getDistribution$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(getDistribution),
