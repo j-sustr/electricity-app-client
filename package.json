@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "bundle:report": "source-map-explorer dist/**/*.js"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +36,7 @@
     "lodash": "^4.17.20",
     "normalize.css": "^8.0.1",
     "rxjs": "~6.6.0",
+    "source-map-explorer": "^2.5.2",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
