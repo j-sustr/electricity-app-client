@@ -1,5 +1,5 @@
 import { Interval, intervalToDuration } from 'date-fns';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 export function intervalsHaveEqualDuration(
     interval1: Interval,

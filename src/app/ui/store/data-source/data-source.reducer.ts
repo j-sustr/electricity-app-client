@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Interval } from 'date-fns';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { actionDataSourceSetInfo, setIntervals } from './data-source.actions';
 
 export interface DataSourceState {
