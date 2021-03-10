@@ -11,9 +11,14 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {
     API_BASE_URL,
     CostsClient,
+    DataSourceClient,
     PowerFactorClient
 } from 'src/app/web-api-client';
-import { COSTS_CLIENT, POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
+import {
+    COSTS_CLIENT,
+    DATA_SOURCE_CLIENT,
+    POWER_FACTOR_CLIENT
+} from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
 import { CostsOveviewEffects } from './costs-overview/costs-overview.effects';
@@ -49,6 +54,10 @@ function apiBaseUrlFactory(): string | undefined {
     ],
     exports: [StoreModule],
     providers: [
+        {
+            provide: DATA_SOURCE_CLIENT,
+            useClass: DataSourceClient
+        },
         {
             provide: COSTS_CLIENT,
             useClass: CostsClient

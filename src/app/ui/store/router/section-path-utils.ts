@@ -53,7 +53,7 @@ export function mapSectionPathToHasDataSelector(
     throw new Error('invalid section path');
 }
 
-export function mapRoutePathToViewTypeSelector(
+export function mapSectionPathToViewTypeSelector(
     path: SectionPath
 ): Selector<AppState, ViewType> {
     switch (path) {
@@ -68,7 +68,7 @@ export function mapRoutePathToViewTypeSelector(
     throw new Error('invalid section path');
 }
 
-export function mapRoutePathToSetViewTypeAction(
+export function mapSectionPathToSetViewTypeAction(
     path: SectionPath
 ): ActionCreator {
     switch (path) {
@@ -79,6 +79,17 @@ export function mapRoutePathToSetViewTypeAction(
             return pfoActions.setViewType;
         case '/power-factor/detail/:groupId':
             return pfdActions.setViewType;
+    }
+    throw new Error('invalid section path');
+}
+
+export function mapSectionPathToArch(path: SectionPath): number {
+    switch (path) {
+        case '/costs/overview':
+        case '/costs/detail/:groupId':
+        case '/power-factor/overview':
+        case '/power-factor/detail/:groupId':
+            return 6;
     }
     throw new Error('invalid section path');
 }

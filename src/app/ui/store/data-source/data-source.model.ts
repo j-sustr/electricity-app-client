@@ -1,3 +1,5 @@
+import { HttpErrorResponse } from '@angular/common/http';
+
 export type Phases = {
     main: boolean;
     l1: boolean;
@@ -13,4 +15,6 @@ export interface DataSourceState {
         minDatetime: Date;
         maxDatetime: Date;
     };
+    loading: boolean;
+    error?: HttpErrorResponse;
 }

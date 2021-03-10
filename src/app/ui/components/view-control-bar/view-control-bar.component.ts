@@ -1,21 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Action, select, Selector, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-    filter,
-    map,
-    share,
-    shareReplay,
-    switchMap,
-    tap
-} from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { selectOnce } from 'src/app/common/observable/selectOnce';
 import { AppState } from '../../store/app-store.state';
 import { selectRouterPath } from '../../store/router/router.selectors';
 import {
     isSectionPath,
-    mapRoutePathToSetViewTypeAction,
-    mapRoutePathToViewTypeSelector,
+    mapSectionPathToSetViewTypeAction,
+    mapSectionPathToViewTypeSelector,
     SectionPath
 } from '../../store/router/section-path-utils';
 
@@ -60,7 +53,7 @@ export class ViewControlBarComponent implements OnInit {
         if (this.viewTypeControl) {
             this.sectionPath$
                 .pipe(
-                    map((path) => mapRoutePathToViewTypeSelector(path)),
+                    map((path) => mapSectionPathToViewTypeSelector(path)),
                     switchMap((selector) => this.store.pipe(select(selector))),
                     tap((viewType) => {
                         this.viewTypeSeletedItemKeys = [viewType];
@@ -73,7 +66,7 @@ export class ViewControlBarComponent implements OnInit {
     viewTypeItemClick(event: { itemData: { key: string } }): void {
         this.sectionPath$
             .pipe(
-                map(mapRoutePathToSetViewTypeAction),
+                map(mapSectionPathToSetViewTypeAction),
                 tap((action) =>
                     this.store.dispatch(
                         action({

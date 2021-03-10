@@ -1,6 +1,12 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
-import { setInfo, setIntervals, setPhases } from './data-source.actions';
+import {
+    getInfo,
+    getInfoError,
+    getInfoSuccess,
+    setIntervals,
+    setPhases
+} from './data-source.actions';
 import { DataSourceState } from './data-source.model';
 
 export const initialState: DataSourceState = {
@@ -13,7 +19,8 @@ export const initialState: DataSourceState = {
         l1: false,
         l2: false,
         l3: false
-    }
+    },
+    loading: false
 };
 
 const reducer = createReducer(
@@ -42,13 +49,29 @@ const reducer = createReducer(
             }
         };
     }),
-    on(setInfo, (state, action) => {
+    on(getInfo, (state) => {
+        return {
+            ...state,
+            info: undefined,
+            loading: true,
+            error: undefined
+        };
+    }),
+    on(getInfoSuccess, (state, action) => {
         return {
             ...state,
             info: {
                 minDatetime: action.minDatetime,
                 maxDatetime: action.maxDatetime
-            }
+            },
+            loading: false
+        };
+    }),
+    on(getInfoError, (state, action) => {
+        return {
+            ...state,
+            loading: false,
+            error: action.error
         };
     })
 );

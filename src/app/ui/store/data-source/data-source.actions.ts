@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 
 export const setIntervals = createAction(
@@ -18,10 +19,17 @@ export const setPhases = createAction(
     }>()
 );
 
-export const setInfo = createAction(
-    '[DataSource] Set Info',
+export const getInfo = createAction('[DataSource] Get Info');
+
+export const getInfoSuccess = createAction(
+    '[DataSource] Get Info Success',
     props<{
         minDatetime: Date;
         maxDatetime: Date;
     }>()
+);
+
+export const getInfoError = createAction(
+    '[DataSource] Get Info Error',
+    props<{ error: HttpErrorResponse }>()
 );

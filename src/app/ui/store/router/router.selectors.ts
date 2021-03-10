@@ -10,10 +10,15 @@ export const selectRouterReducerState = createFeatureSelector<
 
 export const selectRouterState = createSelector(
     selectRouterReducerState,
-    (router) => router && router.state
+    (router) => router?.state
 );
 
 export const selectRouterPath = createSelector(
     selectRouterReducerState,
-    (router) => router && router.state.path
+    (router) => router?.state.path
+);
+
+export const selectGroupId = createSelector(
+    selectRouterReducerState,
+    (router) => router?.state.params?.groupId as string | undefined
 );
