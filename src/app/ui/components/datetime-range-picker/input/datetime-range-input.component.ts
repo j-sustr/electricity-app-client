@@ -143,6 +143,6 @@ export class DatetimeRangeInputComponent {
         if (!this._min || !this._model?.selection.start) {
             return true;
         }
-        return this._model?.selection.start < this._min;
+        return this._model?.selection.start > this._min;
     }
 }

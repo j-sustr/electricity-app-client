@@ -3,8 +3,8 @@
         <div class="action-field"></div>
         <app-datetime-range-input
             class="range-input"
-            [min]="min"
-            [max]="max"
+            [min]="_min"
+            [max]="_max"
             [rangePicker]="rangePicker1"
             (rangeSelected)="_handleRangeSelected(1, $event)"
         ></app-datetime-range-input>
@@ -20,8 +20,8 @@
         </div>
         <app-datetime-range-input
             class="range-input"
-            [min]="min"
-            [max]="max"
+            [min]="_min"
+            [max]="_max"
             [rangePicker]="rangePicker2"
             (rangeSelected)="_handleRangeSelected(2, $event)"
         ></app-datetime-range-input>

@@ -45,10 +45,18 @@ export class DatetimeRangeComparisonInputComponent {
     _lastValue1?: DatetimeRange | null;
 
     @Input()
-    min: Date | null = null;
+    set min(value: Date | null) {
+        this._min = value;
+        this._changeDetectorRef.markForCheck();
+    }
+    _min: Date | null = null;
 
     @Input()
-    max: Date | null = null;
+    set max(value: Date | null) {
+        this._max = value;
+        this._changeDetectorRef.markForCheck();
+    }
+    _max: Date | null = null;
 
     _secondRangeEnabled = false;
 
