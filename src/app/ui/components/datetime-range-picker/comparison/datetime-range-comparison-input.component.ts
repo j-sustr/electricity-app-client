@@ -83,7 +83,7 @@ export class DatetimeRangeComparisonInputComponent {
             this._lastValue1 = value;
             this._setRange2Target();
         }
-        this._addRangeDisabled = false;
+        this._addRangeDisabled = value.start === null || value.end === null;
         this.valueChange.next({
             range1: r === 1 ? value : this.value1,
             range2: r === 2 ? value : this.value2
