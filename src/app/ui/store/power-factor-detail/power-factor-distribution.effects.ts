@@ -14,7 +14,10 @@ import {
 } from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
-import { selectIntervals } from '../data-source/data-source.selectors';
+import {
+    selectIntervals,
+    selectPhases
+} from '../data-source/data-source.selectors';
 import { selectRouterState } from '../router/router.selectors';
 import {
     getDistribution,
@@ -30,10 +33,12 @@ export class PowerFactorDistributionEffects {
             withLatestFrom(
                 combineLatest([
                     this.store.pipe(select(selectRouterState)),
-                    this.store.pipe(select(selectIntervals))
-                ])
+                    this.store.pipe(select(selectIntervals)),
+                    this.store.pipe(select(selectPhases))
+                ]),
+                (v1, v2) => v2
             ),
-            switchMap(([, [routerState, { interval1, interval2 }]]) => {
+            switchMap(([routerState, { interval1, interval2 }, phases]) => {
                 const groupId = routerState.params?.groupId as string;
                 const dto1 = intervalToDto(interval1);
                 let dto2: IntervalDto | undefined = undefined;
@@ -48,7 +53,11 @@ export class PowerFactorDistributionEffects {
                         dto1.isInfinite,
                         dto2?.start,
                         dto2?.end,
-                        dto2?.isInfinite
+                        dto2?.isInfinite,
+                        phases.main,
+                        phases.l1,
+                        phases.l2,
+                        phases.l3
                     )
                     .pipe(
                         map((dto) => {

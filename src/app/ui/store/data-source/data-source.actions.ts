@@ -8,7 +8,17 @@ export const setIntervals = createAction(
     }>()
 );
 
-export const actionDataSourceSetInfo = createAction(
+export const setPhases = createAction(
+    '[DataSource] Set Phases',
+    props<{
+        main: boolean;
+        l1: boolean;
+        l2: boolean;
+        l3: boolean;
+    }>()
+);
+
+export const setInfo = createAction(
     '[DataSource] Set Info',
     props<{
         minDatetime: Date;

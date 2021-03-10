@@ -33,7 +33,7 @@
 
         <tr
             class="dx-row data-table-row"
-            [ngClass]="{'comparison-row': item.data.isForComparison }"
+            [ngClass]="{'for-comparison': item.data.isForComparison }"
             *dxTemplate="let item of 'rowTemplateName'"
             routerLink="/power-factor/detail/{{item.data.groupId}}"
         >

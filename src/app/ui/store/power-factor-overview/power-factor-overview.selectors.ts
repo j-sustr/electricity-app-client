@@ -8,14 +8,14 @@ import { PowerFactorOverviewState } from './power-factor-overview.model';
 export interface PowerFactorOverviewChartItem {
     groupId: string;
     groupName: string;
-    activeEnergy1: number;
-    reactiveEnergyL1: number;
-    reactiveEnergyC1: number;
-    cosFi1: number;
-    activeEnergy2?: number;
-    reactiveEnergyL2?: number;
-    reactiveEnergyC2?: number;
-    cosFi2?: number;
+    activeEnergy_1: number;
+    reactiveEnergyL_1: number;
+    reactiveEnergyC_1: number;
+    cosFi_1: number;
+    activeEnergy_2?: number;
+    reactiveEnergyL_2?: number;
+    reactiveEnergyC_2?: number;
+    cosFi_2?: number;
 }
 
 export interface PowerFactorOverviewChart {
@@ -131,14 +131,14 @@ export const selectOverviewChartItems = createSelector(selectOverview, (state):
         return {
             groupId: item1.groupId ?? '(no id)',
             groupName: item1.groupName ?? '(no name)',
-            activeEnergy1: item1.activeEnergy ?? NaN,
-            reactiveEnergyL1: item1.reactiveEnergyL ?? NaN,
-            reactiveEnergyC1: item1.reactiveEnergyC ?? NaN,
-            cosFi1: item1.cosFi ?? NaN,
-            activeEnergy2: item2 ? item2.activeEnergy ?? NaN : undefined,
-            reactiveEnergyL2: item2 ? item2.reactiveEnergyL ?? NaN : undefined,
-            reactiveEnergyC2: item2 ? item2.reactiveEnergyC ?? NaN : undefined,
-            cosFi2: item2 ? item2.cosFi ?? NaN : undefined
+            activeEnergy_1: item1.activeEnergy ?? NaN,
+            reactiveEnergyL_1: item1.reactiveEnergyL ?? NaN,
+            reactiveEnergyC_1: item1.reactiveEnergyC ?? NaN,
+            cosFi_1: item1.cosFi ?? NaN,
+            activeEnergy_2: item2 ? item2.activeEnergy ?? NaN : undefined,
+            reactiveEnergyL_2: item2 ? item2.reactiveEnergyL ?? NaN : undefined,
+            reactiveEnergyC_2: item2 ? item2.reactiveEnergyC ?? NaN : undefined,
+            cosFi_2: item2 ? item2.cosFi ?? NaN : undefined
         };
     }
 });
@@ -167,28 +167,28 @@ function createSeriesParamsArray(isComparison: boolean) {
     const arr: SeriesParams[] = [
         {
             name: 'Active Energy',
-            valueField: 'activeEnergy1',
+            valueField: 'activeEnergy_1',
             unit: 'kWh',
             color: 'red',
             stack: 1
         },
         {
             name: 'Reactive Energy L',
-            valueField: 'reactiveEnergyL1',
+            valueField: 'reactiveEnergyL_1',
             unit: 'kvarh',
             color: 'orange',
             stack: 1
         },
         {
             name: 'Reactive Energy C',
-            valueField: 'reactiveEnergyC1',
+            valueField: 'reactiveEnergyC_1',
             unit: 'kvarh',
             color: 'blue',
             stack: 1
         },
         {
             name: 'cos FI',
-            valueField: 'cosFi1',
+            valueField: 'cosFi_1',
             unit: '',
             color: 'purple',
             stack: 1
@@ -205,7 +205,7 @@ function createSeriesParamsArray(isComparison: boolean) {
     });
     arr2.forEach((item) => {
         item.name += ' (2)';
-        item.valueField.replace(/1$/, '2');
+        item.valueField = item.valueField.replace(/_1$/, '_2');
         item.stack = 2;
     });
 

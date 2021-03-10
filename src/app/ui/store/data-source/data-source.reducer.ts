@@ -1,21 +1,18 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Interval } from 'date-fns';
 import { isEqual } from 'lodash-es';
-import { actionDataSourceSetInfo, setIntervals } from './data-source.actions';
-
-export interface DataSourceState {
-    interval1: Interval;
-    interval2?: Interval;
-    info?: {
-        minDatetime: Date;
-        maxDatetime: Date;
-    };
-}
+import { setInfo, setIntervals, setPhases } from './data-source.actions';
+import { DataSourceState } from './data-source.model';
 
 export const initialState: DataSourceState = {
     interval1: {
         start: -Infinity,
         end: Infinity
+    },
+    phases: {
+        main: true,
+        l1: false,
+        l2: false,
+        l3: false
     }
 };
 
@@ -34,7 +31,18 @@ const reducer = createReducer(
             interval2
         };
     }),
-    on(actionDataSourceSetInfo, (state, action) => {
+    on(setPhases, (state, action) => {
+        return {
+            ...state,
+            phases: {
+                main: action.main,
+                l1: action.l1,
+                l2: action.l2,
+                l3: action.l3
+            }
+        };
+    }),
+    on(setInfo, (state, action) => {
         return {
             ...state,
             info: {

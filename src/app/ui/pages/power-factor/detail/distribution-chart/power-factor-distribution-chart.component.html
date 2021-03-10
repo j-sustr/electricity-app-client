@@ -1,1 +1,27 @@
-<p>power-factor-distribution-chart works!</p>
+<ng-container *ngIf="chart$ | async as chart">
+    <dx-chart
+        [dataSource]="chart.items"
+        [rotated]="false"
+        [title]="chart.title"
+    >
+        <dxo-common-series-settings argumentField="range" type="bar">
+        </dxo-common-series-settings>
+        <ng-container *ngFor="let s of chart.series">
+            <dxi-series
+                [valueField]="s.valueField"
+                [name]="s.name"
+                [color]="s.color"
+                [stack]="s.stack"
+            >
+            </dxi-series>
+        </ng-container>
+        <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip">
+        </dxo-tooltip>
+        <dxi-value-axis>
+            <dxo-label [customizeText]="customizeLabel"></dxo-label>
+        </dxi-value-axis>
+        <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+            <dxo-margin [left]="50"></dxo-margin>
+        </dxo-legend>
+    </dx-chart>
+</ng-container>

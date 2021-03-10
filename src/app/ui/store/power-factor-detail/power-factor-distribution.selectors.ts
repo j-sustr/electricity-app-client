@@ -1,17 +1,20 @@
 import { createSelector } from '@ngrx/store';
 import { PowerFactorDistributionItem } from 'src/app/web-api-client';
-import { selectIsComparisonMode } from '../data-source/data-source.selectors';
+import { Phases } from '../data-source/data-source.model';
+import {
+    selectIsComparisonMode,
+    selectPhases
+} from '../data-source/data-source.selectors';
 import { SeriesParams } from '../models';
-import { PowerFactorDistribution } from './power-factor-detail.model';
 import { selectDistribution } from './power-factor-detail.selectors';
 
 export interface PowerFactorDistributionChartItem {
     range: string;
-    valueMain1: number;
+    valueMain_1: number;
     valueL1_1: number;
     valueL2_1: number;
     valueL3_1: number;
-    valueMain2?: number;
+    valueMain_2?: number;
     valueL1_2?: number;
     valueL2_2?: number;
     valueL3_2?: number;
@@ -35,13 +38,12 @@ export interface PowerFactorDistributionTableItem {
 
 export interface PowerFactorDistributionTable {
     items: PowerFactorDistributionTableItem[];
+    phases: Phases;
 }
 
 export const selectDistributionTableItems = createSelector(
     selectDistribution,
-    (
-        data: PowerFactorDistribution | null
-    ): PowerFactorDistributionTableItem[] | null => {
+    (data): PowerFactorDistributionTableItem[] | null => {
         const items1 = data?.items1;
         const items2 = data?.items2;
         if (items1 && !items2) {
@@ -68,10 +70,10 @@ export const selectDistributionTableItems = createSelector(
             return {
                 intervalId: stack,
                 range: item.range ?? '(no range)',
-                valueMain: item.value ?? NaN,
-                valueL1: item.value ?? NaN,
-                valueL2: item.value ?? NaN,
-                valueL3: item.value ?? NaN
+                valueMain: item.valueMain ?? NaN,
+                valueL1: item.valueL1 ?? NaN,
+                valueL2: item.valueL2 ?? NaN,
+                valueL3: item.valueL3 ?? NaN
             };
         }
     }
@@ -79,12 +81,14 @@ export const selectDistributionTableItems = createSelector(
 
 export const selectDistributionTable = createSelector(
     selectDistributionTableItems,
-    (items): PowerFactorDistributionTable | null => {
+    selectPhases,
+    (items, phases): PowerFactorDistributionTable | null => {
         if (!items) {
             return null;
         }
         return {
-            items
+            items,
+            phases
         };
     }
 );
@@ -114,22 +118,23 @@ export const selectDistributionChartItems = createSelector(
         ): PowerFactorDistributionChartItem {
             return {
                 range: item1.range ?? '(unlabeled range)',
-                valueMain1: item1.value ?? NaN,
-                valueL1_1: item1.value ?? NaN,
-                valueL2_1: item1.value ?? NaN,
-                valueL3_1: item1.value ?? NaN,
-                valueMain2: item2?.value,
-                valueL1_2: item2?.value,
-                valueL2_2: item2?.value,
-                valueL3_2: item2?.value
+                valueMain_1: item1.valueMain ?? NaN,
+                valueL1_1: item1.valueL1 ?? NaN,
+                valueL2_1: item1.valueL2 ?? NaN,
+                valueL3_1: item1.valueL3 ?? NaN,
+                valueMain_2: item2?.valueMain ?? undefined,
+                valueL1_2: item2?.valueL1 ?? undefined,
+                valueL2_2: item2?.valueL2 ?? undefined,
+                valueL3_2: item2?.valueL3 ?? undefined
             };
         }
     }
 );
 
 export const selectSeriesParamsArray = createSelector(
+    selectPhases,
     selectIsComparisonMode,
-    (isComparison) => createSeriesParamsArray(isComparison)
+    (phases, isComparison) => createSeriesParamsArray(phases, isComparison)
 );
 
 export const selectDistributionChart = createSelector(
@@ -147,37 +152,45 @@ export const selectDistributionChart = createSelector(
     }
 );
 
-function createSeriesParamsArray(isComparison: boolean) {
-    const arr: SeriesParams[] = [
-        {
+function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
+    const arr: SeriesParams[] = [];
+
+    if (phases.main) {
+        arr.push({
             name: 'Main',
-            valueField: 'valueMain',
+            valueField: 'valueMain_1',
             unit: '%',
             color: 'red',
             stack: 1
-        },
-        {
+        });
+    }
+    if (phases.l1) {
+        arr.push({
             name: 'L1',
-            valueField: 'valueL1',
+            valueField: 'valueL1_1',
             unit: '%',
             color: 'orange',
             stack: 1
-        },
-        {
+        });
+    }
+    if (phases.l2) {
+        arr.push({
             name: 'L2',
-            valueField: 'valueL2',
+            valueField: 'valueL2_1',
             unit: '%',
             color: 'blue',
             stack: 1
-        },
-        {
+        });
+    }
+    if (phases.l3) {
+        arr.push({
             name: 'L3',
-            valueField: 'cosFi1',
+            valueField: 'valueL3_1',
             unit: '%',
             color: 'purple',
             stack: 1
-        }
-    ];
+        });
+    }
 
     if (!isComparison) {
         return arr;
@@ -189,7 +202,7 @@ function createSeriesParamsArray(isComparison: boolean) {
     });
     arr2.forEach((item) => {
         item.name += ' (2)';
-        item.valueField.replace(/1$/, '2');
+        item.valueField = item.valueField.replace(/_1$/, '_2');
         item.stack = 2;
     });
 

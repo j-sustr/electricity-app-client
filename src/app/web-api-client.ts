@@ -156,8 +156,8 @@ export class CostsClient implements ICostsClient {
 }
 
 export interface IGroupsClient {
-    getUserGroups(userId: string | undefined): Observable<UserGroupsDto>;
-    getUserGroupTree(userId: string | undefined): Observable<GroupTreeNodeDto>;
+    getUserGroups(): Observable<UserGroupsDto>;
+    getUserGroupTree(): Observable<GroupTreeNodeDto>;
 }
 
 @Injectable({
@@ -173,12 +173,8 @@ export class GroupsClient implements IGroupsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getUserGroups(userId: string | undefined): Observable<UserGroupsDto> {
-        let url_ = this.baseUrl + "/api/Groups?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    getUserGroups(): Observable<UserGroupsDto> {
+        let url_ = this.baseUrl + "/api/Groups";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -225,12 +221,8 @@ export class GroupsClient implements IGroupsClient {
         return _observableOf<UserGroupsDto>(<any>null);
     }
 
-    getUserGroupTree(userId: string | undefined): Observable<GroupTreeNodeDto> {
-        let url_ = this.baseUrl + "/api/Groups/tree?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    getUserGroupTree(): Observable<GroupTreeNodeDto> {
+        let url_ = this.baseUrl + "/api/Groups/tree";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -280,7 +272,7 @@ export class GroupsClient implements IGroupsClient {
 
 export interface IPowerFactorClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
-    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PowerFactorDistributionDto>;
+    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined): Observable<PowerFactorDistributionDto>;
 }
 
 @Injectable({
@@ -358,7 +350,7 @@ export class PowerFactorClient implements IPowerFactorClient {
         return _observableOf<PowerFactorOverviewDto>(<any>null);
     }
 
-    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PowerFactorDistributionDto> {
+    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined): Observable<PowerFactorDistributionDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/distribution?";
         if (groupId !== undefined && groupId !== null)
             url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
@@ -374,6 +366,14 @@ export class PowerFactorClient implements IPowerFactorClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        if (phases_Main !== undefined && phases_Main !== null)
+            url_ += "Phases.Main=" + encodeURIComponent("" + phases_Main) + "&";
+        if (phases_L1 !== undefined && phases_L1 !== null)
+            url_ += "Phases.L1=" + encodeURIComponent("" + phases_L1) + "&";
+        if (phases_L2 !== undefined && phases_L2 !== null)
+            url_ += "Phases.L2=" + encodeURIComponent("" + phases_L2) + "&";
+        if (phases_L3 !== undefined && phases_L3 !== null)
+            url_ += "Phases.L3=" + encodeURIComponent("" + phases_L3) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1180,10 +1180,11 @@ export interface IPowerFactorDistributionDto {
 }
 
 export class PowerFactorDistributionItem implements IPowerFactorDistributionItem {
-    value?: number;
     range?: string | null;
-    kind?: string | null;
-    phase?: number;
+    valueMain?: number | null;
+    valueL1?: number | null;
+    valueL2?: number | null;
+    valueL3?: number | null;
 
     constructor(data?: IPowerFactorDistributionItem) {
         if (data) {
@@ -1196,10 +1197,11 @@ export class PowerFactorDistributionItem implements IPowerFactorDistributionItem
 
     init(_data?: any) {
         if (_data) {
-            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
             this.range = _data["range"] !== undefined ? _data["range"] : <any>null;
-            this.kind = _data["kind"] !== undefined ? _data["kind"] : <any>null;
-            this.phase = _data["phase"] !== undefined ? _data["phase"] : <any>null;
+            this.valueMain = _data["valueMain"] !== undefined ? _data["valueMain"] : <any>null;
+            this.valueL1 = _data["valueL1"] !== undefined ? _data["valueL1"] : <any>null;
+            this.valueL2 = _data["valueL2"] !== undefined ? _data["valueL2"] : <any>null;
+            this.valueL3 = _data["valueL3"] !== undefined ? _data["valueL3"] : <any>null;
         }
     }
 
@@ -1212,19 +1214,21 @@ export class PowerFactorDistributionItem implements IPowerFactorDistributionItem
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["value"] = this.value !== undefined ? this.value : <any>null;
         data["range"] = this.range !== undefined ? this.range : <any>null;
-        data["kind"] = this.kind !== undefined ? this.kind : <any>null;
-        data["phase"] = this.phase !== undefined ? this.phase : <any>null;
+        data["valueMain"] = this.valueMain !== undefined ? this.valueMain : <any>null;
+        data["valueL1"] = this.valueL1 !== undefined ? this.valueL1 : <any>null;
+        data["valueL2"] = this.valueL2 !== undefined ? this.valueL2 : <any>null;
+        data["valueL3"] = this.valueL3 !== undefined ? this.valueL3 : <any>null;
         return data; 
     }
 }
 
 export interface IPowerFactorDistributionItem {
-    value?: number;
     range?: string | null;
-    kind?: string | null;
-    phase?: number;
+    valueMain?: number | null;
+    valueL1?: number | null;
+    valueL2?: number | null;
+    valueL3?: number | null;
 }
 
 export class IntervalDto implements IIntervalDto {

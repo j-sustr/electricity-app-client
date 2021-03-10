@@ -11,36 +11,48 @@
             dataType="string"
         ></dxi-column>
         <dxi-column
+            *ngIf="table.phases.main"
             dataField="valueMain"
             caption="Main [%]"
             dataType="number"
         ></dxi-column>
         <dxi-column
+            *ngIf="table.phases.l1"
             dataField="valueL1"
             caption="L1 [%]"
             dataType="number"
         ></dxi-column>
         <dxi-column
+            *ngIf="table.phases.l2"
             dataField="valueL2"
             caption="L2 [%]"
             dataType="number"
         ></dxi-column>
         <dxi-column
+            *ngIf="table.phases.l3"
             dataField="valueL3"
             caption="L3 [%]"
             dataType="number"
         ></dxi-column>
 
         <tr
-            class="dx-row"
-            [ngClass]="{'comparison-row': item.data.isForComparison }"
+            class="dx-row data-table-row"
+            [ngClass]="{'for-comparison': item.data.isForComparison }"
             *dxTemplate="let item of 'rowTemplateName'"
         >
             <td>{{item.data.range}}</td>
-            <td style="text-align: right">{{item.data.valueMain}}</td>
-            <td style="text-align: right">{{item.data.valueL1}}</td>
-            <td style="text-align: right">{{item.data.valueL2}}</td>
-            <td style="text-align: right">{{item.data.valueL3}}</td>
+            <td style="text-align: right" *ngIf="table.phases.main">
+                {{item.data.valueMain}}
+            </td>
+            <td style="text-align: right" *ngIf="table.phases.l1">
+                {{item.data.valueL1}}
+            </td>
+            <td style="text-align: right" *ngIf="table.phases.l2">
+                {{item.data.valueL2}}
+            </td>
+            <td style="text-align: right" *ngIf="table.phases.l3">
+                {{item.data.valueL3}}
+            </td>
         </tr>
     </dx-data-grid>
 </ng-container>
