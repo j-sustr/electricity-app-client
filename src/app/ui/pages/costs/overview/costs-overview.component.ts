@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppState } from 'src/app/ui/store/app-store.state';
 import { CostsOverviewState } from 'src/app/ui/store/costs-overview/costs-overview.model';
 import { selectOverview } from 'src/app/ui/store/costs-overview/costs-overview.selectors';
+import { selectHasCustomerParams } from 'src/app/ui/store/costs/costs.selectors';
 
 @Component({
     selector: 'app-costs-overview',
@@ -11,17 +12,20 @@ import { selectOverview } from 'src/app/ui/store/costs-overview/costs-overview.s
     styleUrls: ['./costs-overview.component.scss']
 })
 export class CostsOverviewComponent {
-    popupVisible = true;
+    popupVisible = false;
 
+    hasCustomerParams$: Observable<boolean>;
     state$: Observable<CostsOverviewState>;
 
     constructor(private store: Store<AppState>) {
         this.state$ = this.store.pipe(select(selectOverview));
-        // this.state$.pipe(take(1)).subscribe((state) => {
-        //     if (state.items === null || state.items.length === 0) {
-        //         this.store.dispatch(getOverview());
-        //     }
-        // });
+        this.hasCustomerParams$ = this.store.pipe(
+            select(selectHasCustomerParams)
+        );
+    }
+
+    handlePopupVisibleChanged(event: boolean): void {
+        this.popupVisible = event;
     }
 
     handleFormSubmitted(): void {

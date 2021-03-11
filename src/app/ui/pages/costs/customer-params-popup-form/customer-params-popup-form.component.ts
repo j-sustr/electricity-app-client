@@ -24,6 +24,9 @@ export class CustomerParamsPopupFormComponent {
     @Output()
     submitted = new EventEmitter<void>();
 
+    @Output()
+    visibleChanged = new EventEmitter<boolean>();
+
     voltageLevelOptions = VOLTAGE_LEVELS;
     dsOperatorOptions = DS_OPERATORS;
 
@@ -77,5 +80,9 @@ export class CustomerParamsPopupFormComponent {
                 params: null
             })
         );
+    }
+
+    handleVisibleChange(event: boolean): void {
+        this.visibleChanged.next(event);
     }
 }

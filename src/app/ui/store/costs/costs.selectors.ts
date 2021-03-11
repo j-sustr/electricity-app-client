@@ -8,3 +8,8 @@ export const selectCustomerParams = createSelector(
     selectCosts,
     (state: CostsState) => state.customerParams
 );
+
+export const selectHasCustomerParams = createSelector(
+    selectCosts,
+    (state: CostsState) => state.customerParams !== null
+);

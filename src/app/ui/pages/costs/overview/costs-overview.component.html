@@ -11,6 +11,19 @@
     </div>
 
     <div class="content-body">
+        <div
+            class="prompt-container"
+            *ngIf="(hasCustomerParams$ | async) !== true"
+        >
+            <dx-button
+                stylingMode="contained"
+                text="Fill out Customer Params"
+                type="success"
+                [width]="300"
+                (onClick)="popupVisible = true"
+            >
+            </dx-button>
+        </div>
         <app-view-control-bar></app-view-control-bar>
         <dx-load-indicator
             *ngIf="state.loading"
@@ -25,6 +38,7 @@
     <div class="content-footer">footer</div>
     <app-customer-params-popup-form
         [visible]="popupVisible"
+        (visibleChanged)="handlePopupVisibleChanged($event)"
         (submitted)="handleFormSubmitted()"
     ></app-customer-params-popup-form>
 </div>

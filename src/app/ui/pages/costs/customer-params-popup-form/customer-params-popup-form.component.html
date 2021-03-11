@@ -5,7 +5,8 @@
     title="Customer Params"
     [dragEnabled]="false"
     [closeOnOutsideClick]="false"
-    [(visible)]="visible"
+    [visible]="visible"
+    (visibleChange)="handleVisibleChange($event)"
 >
     <form [formGroup]="form">
         <div class="dx-field">
