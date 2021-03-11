@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { selectOnce } from 'src/app/common/observable/selectOnce';
 import { AppState } from '../../store/app-store.state';
+import { setPhases } from '../../store/data-source/data-source.actions';
+import { Phases } from '../../store/data-source/data-source.model';
+import { selectPhases } from '../../store/data-source/data-source.selectors';
 import { selectRouterPath } from '../../store/router/router.selectors';
 import {
     isSectionPath,
@@ -35,6 +38,15 @@ export class ViewControlBarComponent implements OnInit {
     ];
 
     @Input()
+    phasesPicker = false;
+
+    phasesPickerOpen = false;
+
+    phases?: Phases;
+
+    phases$: Observable<Phases>;
+
+    @Input()
     viewTypeControl = false;
 
     viewTypeSeletedItemKeys = ['table'];
@@ -42,6 +54,13 @@ export class ViewControlBarComponent implements OnInit {
     sectionPath$: Observable<SectionPath>;
 
     constructor(private store: Store<AppState>) {
+        this.phases$ = this.store.pipe(
+            select(selectPhases),
+            tap((phases) => {
+                this.phases = phases;
+            })
+        );
+
         this.sectionPath$ = this.store.pipe(
             selectOnce(selectRouterPath),
             filter((path: string): path is SectionPath => isSectionPath(path)),
@@ -60,6 +79,21 @@ export class ViewControlBarComponent implements OnInit {
                     })
                 )
                 .subscribe();
+        }
+    }
+
+    phaseCheckboxValueChanged(event: {
+        value: boolean;
+        element: HTMLElement;
+    }): void {
+        const name = event?.element?.getAttribute('name');
+        if (name && this.phases) {
+            this.store.dispatch(
+                setPhases({
+                    ...this.phases,
+                    [name]: event.value
+                })
+            );
         }
     }
 

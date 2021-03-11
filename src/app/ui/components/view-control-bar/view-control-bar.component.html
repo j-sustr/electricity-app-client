@@ -1,4 +1,16 @@
-<div class="left-group"></div>
+<div class="left-group">
+    <div cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+        <dx-button
+            *ngIf="phasesPicker"
+            stylingMode="contained"
+            text="Phases"
+            type="normal"
+            [width]="120"
+            (onClick)="phasesPickerOpen = !phasesPickerOpen"
+        >
+        </dx-button>
+    </div>
+</div>
 <div class="right-group">
     <div class="view-type-btns" *ngIf="viewTypeControl">
         <dx-button-group
@@ -11,3 +23,46 @@
         </dx-button-group>
     </div>
 </div>
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="phasesPickerOpen"
+>
+    <div class="phases-picker">
+        <div class="items" *ngIf="phases$ | async as phases">
+            <div>
+                <div>Main</div>
+                <dx-check-box
+                    name="main"
+                    [value]="phases.main"
+                    (onValueChanged)="phaseCheckboxValueChanged($event)"
+                ></dx-check-box>
+            </div>
+            <div>
+                <div>Phase 1</div>
+                <dx-check-box
+                    name="l1"
+                    [value]="phases.l1"
+                    (onValueChanged)="phaseCheckboxValueChanged($event)"
+                ></dx-check-box>
+            </div>
+            <div>
+                <div>Phase 2</div>
+                <dx-check-box
+                    name="l2"
+                    [value]="phases.l2"
+                    (onValueChanged)="phaseCheckboxValueChanged($event)"
+                ></dx-check-box>
+            </div>
+            <div>
+                <div>Phase 3</div>
+                <dx-check-box
+                    name="l3"
+                    [value]="phases.l3"
+                    (onValueChanged)="phaseCheckboxValueChanged($event)"
+                ></dx-check-box>
+            </div>
+        </div>
+    </div>
+</ng-template>
