@@ -20,7 +20,7 @@ export class GroupsEffects {
                         const userGroups = dto.groups?.map((g) => {
                             return {
                                 id: g.id ?? '(no id)',
-                                name: g.id ?? '(no name)'
+                                name: g.name ?? '(no name)'
                             } as Group;
                         });
 

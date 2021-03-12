@@ -6,6 +6,7 @@ import { DxChartModule } from 'devextreme-angular/ui/chart';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
 import { DatetimeRangePickerModule } from '../../components/datetime-range-picker/datetime-range-picker.module';
+import { DetailViewControlsModule } from '../../components/detail-view-controls/detail-view-controls.module';
 import { PageTitleModule } from '../../components/page-title/page-title.module';
 import { ViewControlBarModule } from '../../components/view-control-bar/view-control-bar.module';
 import { PowerFactorDistributionChartComponent } from './detail/distribution-chart/power-factor-distribution-chart.component';
@@ -29,6 +30,7 @@ const DX = [
         CommonModule,
         PageTitleModule,
         DatetimeRangePickerModule,
+        DetailViewControlsModule,
         ViewControlBarModule,
         ...DX,
         PowerFactorRoutingModule

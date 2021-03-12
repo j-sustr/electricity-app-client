@@ -1,0 +1,26 @@
+<dx-button
+    *ngIf="selectedGroupName$ | async as name"
+    stylingMode="outlined"
+    [text]="name"
+    type="normal"
+    [width]="200"
+    (onClick)="openGroupPicker()"
+>
+</dx-button>
+
+<dx-popup
+    [width]="600"
+    [height]="500"
+    [showTitle]="true"
+    title="Groups"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="false"
+    [(visible)]="groupPickerPopupVisible"
+>
+    <ng-container *ngIf="groupTree$ | async as tree">
+        <dx-tree-view
+            [dataSource]="tree.items"
+            (onItemClick)="selectGroupTreeItem($event)"
+        ></dx-tree-view>
+    </ng-container>
+</dx-popup>
