@@ -82,6 +82,10 @@ export class ViewControlBarComponent implements OnInit {
         }
     }
 
+    phasesOutsideClick(): void {
+        this.phasesPickerOpen = false;
+    }
+
     phaseCheckboxValueChanged(event: {
         value: boolean;
         element: HTMLElement;

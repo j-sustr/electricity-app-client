@@ -28,6 +28,7 @@
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="trigger"
     [cdkConnectedOverlayOpen]="phasesPickerOpen"
+    (overlayOutsideClick)="phasesOutsideClick()"
 >
     <div class="phases-picker">
         <div class="items" *ngIf="phases$ | async as phases">
