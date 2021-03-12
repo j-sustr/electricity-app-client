@@ -13,7 +13,7 @@ const routes: Routes = [
         component: CostsOverviewComponent
     },
     {
-        path: 'detail',
+        path: 'detail/:groupId',
         component: CostsDetailComponent
     }
 ];
