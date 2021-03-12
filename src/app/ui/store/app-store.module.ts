@@ -12,17 +12,20 @@ import {
     API_BASE_URL,
     CostsClient,
     DataSourceClient,
+    GroupsClient,
     PowerFactorClient
 } from 'src/app/web-api-client';
 import {
     COSTS_CLIENT,
     DATA_SOURCE_CLIENT,
+    GROUPS_CLIENT,
     POWER_FACTOR_CLIENT
 } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
 import { CostsOveviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
+import { GroupsEffects } from './groups/groups.effects';
 import { PowerFactorDetailEffects } from './power-factor-detail/power-factor-detail.effects';
 import { PowerFactorDistributionEffects } from './power-factor-detail/power-factor-distribution.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
@@ -41,6 +44,7 @@ function apiBaseUrlFactory(): string | undefined {
         StoreRouterConnectingModule.forRoot(),
         EffectsModule.forRoot([
             DataSourceEffects,
+            GroupsEffects,
             CostsOveviewEffects,
             PowerFactorOverviewEffects,
             PowerFactorDetailEffects,
@@ -57,6 +61,10 @@ function apiBaseUrlFactory(): string | undefined {
         {
             provide: DATA_SOURCE_CLIENT,
             useClass: DataSourceClient
+        },
+        {
+            provide: GROUPS_CLIENT,
+            useClass: GroupsClient
         },
         {
             provide: COSTS_CLIENT,

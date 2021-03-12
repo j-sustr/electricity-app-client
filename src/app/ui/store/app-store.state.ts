@@ -8,6 +8,8 @@ import { CostsState } from './costs/costs.model';
 import { costsReducer } from './costs/costs.reducer';
 import { DataSourceState } from './data-source/data-source.model';
 import { dataSourceReducer } from './data-source/data-source.reducer';
+import { GroupsState } from './groups/groups.model';
+import { groupsReducer } from './groups/groups.reducer';
 import { PowerFactorDetailState } from './power-factor-detail/power-factor-detail.model';
 import { powerFactorDetailReducer } from './power-factor-detail/power-factor-detail.reducer';
 import { PowerFactorOverviewState } from './power-factor-overview/power-factor-overview.model';
@@ -16,6 +18,7 @@ import { RouterStateUrl } from './router/router.store';
 
 export interface AppState {
     dataSource: DataSourceState;
+    groups: GroupsState;
     costs: CostsState;
     costsOverview: CostsOverviewState;
     costsDetail: CostsDetailState;
@@ -26,6 +29,7 @@ export interface AppState {
 
 export const reducers: ActionReducerMap<AppState> = {
     dataSource: dataSourceReducer,
+    groups: groupsReducer,
     costs: costsReducer,
     costsOverview: costsOverviewReducer,
     costsDetail: costsDetailReducer,
