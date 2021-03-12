@@ -37,7 +37,7 @@ export default class ERUCalculator {
         }
         return this._tables
             .getTable('4.17.')
-            .getValue(this.dsOperator, vl + '-r');
+            .getValue(this.dsOperator.toLowerCase(), vl.toLowerCase() + '-r');
     }
 
     /**
@@ -50,7 +50,7 @@ export default class ERUCalculator {
         }
         return this._tables
             .getTable('4.17.')
-            .getValue(this.dsOperator, vl + '-m');
+            .getValue(this.dsOperator.toLowerCase(), vl.toLowerCase() + '-m');
     }
 
     yearlyReservedCapacityCost(): number {
@@ -210,7 +210,10 @@ export default class ERUCalculator {
 
         return this._tables
             .getTable('4.17.')
-            .getValue(this.dsOperator, vl + '-' + rc);
+            .getValue(
+                this.dsOperator.toLowerCase(),
+                vl.toLowerCase() + '-' + rc
+            );
     }
 
     /**
@@ -224,13 +227,18 @@ export default class ERUCalculator {
             vl = 'VN';
         }
 
-        return this._tables.getTable('4.38.').getValue(this.dsOperator, vl);
+        return this._tables
+            .getTable('4.38.')
+            .getValue(this.dsOperator.toLowerCase(), vl.toLowerCase());
     }
 
     /**
      * @returns  c_se [Kč/MWh] je cena za silovou elektřinu podle tabulky uvedené v bodě (4.53.),
      */
     _getCSE(): number {
-        return this._tables.getRecordValue('4.53.', this.dsOperator);
+        return this._tables.getRecordValue(
+            '4.53.',
+            this.dsOperator.toLowerCase()
+        );
     }
 }

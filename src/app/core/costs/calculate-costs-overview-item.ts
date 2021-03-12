@@ -1,9 +1,18 @@
 import { sum, zip } from 'src/app/common/array/array-utils';
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
-import { CostsOverviewItem } from 'src/app/ui/store/costs-overview/costs-overview.model';
 import { CostlyQuantitiesOverviewItem } from 'src/app/web-api-client';
 import { calcCosFi } from './costs-utils';
 import ERUCalculator from './ERUCalculator';
+
+export interface CostsOverviewItem {
+    groupId: string;
+    groupName: string;
+    activeEnergy: number;
+    reactiveEnergy: number;
+    cosFi: number;
+    peakDemand: number;
+    cost: number | null;
+}
 
 export function calculateCostsOverviewItem(
     source: CostlyQuantitiesOverviewItem,
@@ -17,6 +26,7 @@ export function calculateCostsOverviewItem(
     const cost = calc !== null ? calcCost(source, calc) : null;
 
     return {
+        groupId: source.groupId ?? '(no id)',
         groupName: source.groupName ?? '(no name)',
         activeEnergy: sum(source.activeEnergyInMonths ?? []),
         reactiveEnergy: sum(source.reactiveEnergyInMonths ?? []),

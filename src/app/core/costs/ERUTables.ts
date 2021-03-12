@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@angular/core';
-import * as tables from './eru-tables.json';
+import * as tablesModule from './eru-tables.json';
 
-export type ERUTableKey = keyof typeof tables;
+export type ERUTableKey = keyof typeof tablesModule;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const tables = (tablesModule as any).default;
 
 @Injectable({
     providedIn: 'root'

@@ -15,7 +15,7 @@ export class CostsOverviewComponent {
     popupVisible = false;
 
     hasCustomerParams$: Observable<boolean>;
-    state$: Observable<CostsOverviewState>;
+    state$: Observable<CostsOverviewState | null>;
 
     constructor(private store: Store<AppState>) {
         this.state$ = this.store.pipe(select(selectOverview));

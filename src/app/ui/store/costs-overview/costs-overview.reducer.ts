@@ -3,7 +3,8 @@ import * as actions from './costs-overview.actions';
 import { CostsOverviewState } from './costs-overview.model';
 
 export const initialState: CostsOverviewState = {
-    items: null,
+    items1: null,
+    items2: null,
     loading: false,
     error: null
 };
@@ -12,19 +13,20 @@ const reducer = createReducer(
     initialState,
     on(actions.getOverview, (state) => ({
         ...state,
-        items: null,
+        items1: null,
+        items2: null,
         loading: true,
         error: null
     })),
-    on(actions.getOverviewSuccess, (state, { items }) => ({
+    on(actions.getOverviewSuccess, (state, { items1, items2 }) => ({
         ...state,
-        items,
+        items1,
+        items2,
         loading: false,
         error: null
     })),
     on(actions.getOverviewError, (state, { error }) => ({
         ...state,
-        items: null,
         loading: false,
         error
     }))
