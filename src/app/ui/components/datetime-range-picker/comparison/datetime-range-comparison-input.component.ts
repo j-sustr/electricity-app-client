@@ -47,14 +47,14 @@ export class DatetimeRangeComparisonInputComponent {
     @Input()
     set min(value: Date | null) {
         this._min = value;
-        this._changeDetectorRef.markForCheck();
+        this._changeDetectorRef.detectChanges();
     }
     _min: Date | null = null;
 
     @Input()
     set max(value: Date | null) {
         this._max = value;
-        this._changeDetectorRef.markForCheck();
+        this._changeDetectorRef.detectChanges();
     }
     _max: Date | null = null;
 
