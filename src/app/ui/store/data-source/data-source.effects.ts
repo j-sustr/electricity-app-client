@@ -28,14 +28,11 @@ import {
     SectionPath
 } from '../router/section-path-utils';
 import {
-    getInfo,
     getInfoError,
     getInfoSuccess,
     setIntervals
 } from './data-source.actions';
 import { selectIntervals } from './data-source.selectors';
-
-const INIT = of('init-effect-trigger');
 
 @Injectable()
 export class DataSourceEffects {

@@ -4,7 +4,8 @@ import * as actions from './costs-detail.actions';
 
 export const initialState: CostsDetailState = {
     groupName: null,
-    items: null,
+    items1: null,
+    items2: null,
     loading: false,
     error: null
 };
@@ -13,20 +14,21 @@ const reducer = createReducer(
     initialState,
     on(actions.getDetail, (state) => ({
         ...state,
-        items: null,
+        items1: null,
+        items2: null,
         loading: true,
         error: null
     })),
-    on(actions.getDetailSuccess, (state, { groupName, items }) => ({
+    on(actions.getDetailSuccess, (state, { groupName, items1, items2 }) => ({
         ...state,
         groupName,
-        items,
+        items1,
+        items2,
         loading: false,
         error: null
     })),
     on(actions.getDetailError, (state, { error }) => ({
         ...state,
-        items: null,
         loading: false,
         error
     }))

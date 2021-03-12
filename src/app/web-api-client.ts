@@ -16,7 +16,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface ICostsClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsOverviewDto>;
-    getDetail(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupId: string | null | undefined): Observable<CostsDetailDto>;
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsDetailDto>;
 }
 
 @Injectable({
@@ -92,8 +92,10 @@ export class CostsClient implements ICostsClient {
         return _observableOf<CostsOverviewDto>(<any>null);
     }
 
-    getDetail(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupId: string | null | undefined): Observable<CostsDetailDto> {
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsDetailDto> {
         let url_ = this.baseUrl + "/api/Costs/detail?";
+        if (groupId !== undefined && groupId !== null)
+            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
         if (interval1_Start !== undefined && interval1_Start !== null)
             url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
         if (interval1_End !== undefined && interval1_End !== null)
@@ -106,8 +108,6 @@ export class CostsClient implements ICostsClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
-        if (groupId !== undefined && groupId !== null)
-            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

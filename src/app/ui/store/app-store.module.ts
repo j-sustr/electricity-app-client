@@ -23,7 +23,8 @@ import {
 } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
-import { CostsOveviewEffects } from './costs-overview/costs-overview.effects';
+import { CostsDetailEffects } from './costs-detail/costs-detail.effects';
+import { CostsOverviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
 import { GroupsEffects } from './groups/groups.effects';
 import { PowerFactorDetailEffects } from './power-factor-detail/power-factor-detail.effects';
@@ -45,7 +46,8 @@ function apiBaseUrlFactory(): string | undefined {
         EffectsModule.forRoot([
             DataSourceEffects,
             GroupsEffects,
-            CostsOveviewEffects,
+            CostsOverviewEffects,
+            CostsDetailEffects,
             PowerFactorOverviewEffects,
             PowerFactorDetailEffects,
             PowerFactorDistributionEffects

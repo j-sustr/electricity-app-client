@@ -9,71 +9,62 @@ import {
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
 import {
-    IPowerFactorClient,
-    PowerFactorDistributionItem
+    CostlyQuantitiesDetailItem,
+    ICostsClient
 } from 'src/app/web-api-client';
-import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
+import { COSTS_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
-import {
-    selectIntervals,
-    selectPhases
-} from '../data-source/data-source.selectors';
+import { selectIntervals } from '../data-source/data-source.selectors';
 import { selectGroupId } from '../router/router.selectors';
 import {
-    getDistribution,
-    getDistributionError,
-    getDistributionSuccess
-} from './power-factor-detail.actions';
+    getDetail,
+    getDetailError,
+    getDetailSuccess
+} from './costs-detail.actions';
 
 @Injectable()
-export class PowerFactorDistributionEffects {
-    getDistribution$ = createEffect(() => {
+export class CostsDetailEffects {
+    getDetail$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getDistribution),
+            ofType(getDetail),
             withLatestFrom(
                 combineLatest([
                     this.store.pipe(select(selectGroupId)),
-                    this.store.pipe(select(selectIntervals)),
-                    this.store.pipe(select(selectPhases))
+                    this.store.pipe(select(selectIntervals))
                 ]),
                 (v1, v2) => v2
             ),
-            switchMap(([groupId, { interval1, interval2 }, phases]) => {
+            switchMap(([groupId, { interval1, interval2 }]) => {
                 const dto1 = intervalToDto(interval1);
                 let dto2: IntervalDto | undefined = undefined;
                 if (interval2) {
                     dto2 = intervalToDto(interval2);
                 }
                 return this.client
-                    .getDistribution(
+                    .getDetail(
                         groupId,
                         dto1.start,
                         dto1.end,
                         dto1.isInfinite,
                         dto2?.start,
                         dto2?.end,
-                        dto2?.isInfinite,
-                        phases.main,
-                        phases.l1,
-                        phases.l2,
-                        phases.l3
+                        dto2?.isInfinite
                     )
                     .pipe(
                         map((dto) => {
-                            validateItems(dto.distribution1);
-                            if (dto.distribution2) {
-                                validateItems(dto.distribution2);
+                            validateItems(dto.items1);
+                            if (dto.items2) {
+                                validateItems(dto.items2);
                             }
-
-                            return getDistributionSuccess({
+                            return getDetailSuccess({
                                 groupName: dto.groupName ?? '(no name)',
-                                items1: dto.distribution1 as PowerFactorDistributionItem[],
-                                items2: dto.distribution2 ?? null
+                                items1: dto.items1 as CostlyQuantitiesDetailItem[],
+                                items2: dto.items2 ?? null
                             });
                         }),
                         catchError((error: HttpErrorResponse) =>
                             of(
-                                getDistributionError({
+                                getDetailError({
                                     error
                                 })
                             )
@@ -86,13 +77,13 @@ export class PowerFactorDistributionEffects {
     constructor(
         private actions$: Actions,
         private store: Store<AppState>,
-        @Inject(POWER_FACTOR_CLIENT)
-        private client: IPowerFactorClient
+        @Inject(COSTS_CLIENT)
+        private client: ICostsClient
     ) {}
 }
 
 function validateItems(
-    items: PowerFactorDistributionItem[] | null | undefined
-): items is PowerFactorDistributionItem[] {
+    items: CostlyQuantitiesDetailItem[] | null | undefined
+): items is CostlyQuantitiesDetailItem[] {
     return true;
 }

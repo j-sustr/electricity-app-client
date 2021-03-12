@@ -23,7 +23,7 @@ import {
 } from './costs-overview.actions';
 
 @Injectable()
-export class CostsOveviewEffects {
+export class CostsOverviewEffects {
     getData$ = createEffect(() =>
         this.actions$.pipe(
             ofType(getOverview),
