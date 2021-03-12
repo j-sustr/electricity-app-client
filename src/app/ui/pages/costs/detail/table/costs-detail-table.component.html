@@ -1,1 +1,53 @@
-<p>costs-detail-table works!</p>
+<ng-container *ngIf="table$ | async as table">
+    <dx-data-grid
+        *ngIf="table"
+        [dataSource]="table.items"
+        [rowAlternationEnabled]="false"
+        [showBorders]="true"
+        rowTemplate="rowTemplateName"
+    >
+        <dxi-column
+            dataField="itemName"
+            caption="Item Name"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="quantity"
+            caption="Quantity"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="unit"
+            caption="Unit"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="currency"
+            caption="Currency"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="costPerUnit"
+            caption="Cost Per Unit"
+            dataType="number"
+        ></dxi-column>
+        <dxi-column
+            dataField="cost"
+            caption="Cost"
+            dataType="number"
+        ></dxi-column>
+
+        <tr
+            class="dx-row data-table-row"
+            [ngClass]="{'for-comparison': item.data.isForComparison }"
+            *dxTemplate="let item of 'rowTemplateName'"
+        >
+            <td>{{item.data.itemName}}</td>
+            <td>{{item.data.quantity}}</td>
+            <td>{{item.data.unit}}</td>
+            <td>{{item.data.currency}}</td>
+            <td style="text-align: right">{{item.data.costPerUnit}}</td>
+            <td style="text-align: right">{{item.data.cost}}</td>
+        </tr>
+    </dx-data-grid>
+</ng-container>

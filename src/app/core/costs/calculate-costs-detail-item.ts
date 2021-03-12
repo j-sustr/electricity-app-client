@@ -1,9 +1,19 @@
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
 import { getMonthName } from 'src/app/common/temporal/temporal-utils';
-import { CostsDetailItem } from 'src/app/ui/store/costs-detail/costs-detail.model';
 import { CostlyQuantitiesDetailItem } from 'src/app/web-api-client';
 import { calcCosFi, calcTanFi, calcTanFiOverrunPercent } from './costs-utils';
 import ERUCalculator from './ERUCalculator';
+
+export interface CostsDetailItem {
+    year: number;
+    month: string;
+    itemName: string;
+    quantity: string;
+    unit?: string;
+    currency?: string;
+    costPerUnit?: number;
+    cost?: number;
+}
 
 export function calculateCostsDetailItems(
     source: CostlyQuantitiesDetailItem[],

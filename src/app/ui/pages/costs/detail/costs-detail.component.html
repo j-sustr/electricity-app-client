@@ -1,1 +1,30 @@
-<p>costs-detail works!</p>
+<div class="container" *ngIf="state$ | async as state">
+    <div class="app-content-header">
+        <div class="left">
+            <app-page-title title="Costs Detail"></app-page-title>
+            <app-detail-view-controls></app-detail-view-controls>
+        </div>
+        <div class="right">
+            <div class="ranges-container">
+                <app-datetime-range-comparison-input-container></app-datetime-range-comparison-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <app-view-control-bar
+            [phasesPicker]="true"
+            [viewTypeControl]="true"
+        ></app-view-control-bar>
+        <dx-load-indicator
+            *ngIf="state.loading"
+            height="40"
+            width="40"
+        ></dx-load-indicator>
+        <ng-container *ngIf="!state.loading">
+            <app-costs-detail-table></app-costs-detail-table>
+        </ng-container>
+    </div>
+
+    <div class="content-footer"></div>
+</div>
