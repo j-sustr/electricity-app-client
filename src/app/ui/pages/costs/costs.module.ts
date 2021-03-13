@@ -10,6 +10,7 @@ import { DxNumberBoxModule } from 'devextreme-angular/ui/number-box';
 import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DatetimeRangePickerModule } from '../../components/datetime-range-picker/datetime-range-picker.module';
+import { DetailViewControlsModule } from '../../components/detail-view-controls/detail-view-controls.module';
 import { PageTitleModule } from '../../components/page-title/page-title.module';
 import { ViewControlBarModule } from '../../components/view-control-bar/view-control-bar.module';
 import { CostsRoutingModule } from './costs-routing.module';
@@ -36,6 +37,7 @@ const DX = [
         ReactiveFormsModule,
         PageTitleModule,
         DatetimeRangePickerModule,
+        DetailViewControlsModule,
         ViewControlBarModule,
         ...DX,
         CostsRoutingModule
