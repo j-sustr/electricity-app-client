@@ -30,7 +30,8 @@ import {
 import {
     getInfoError,
     getInfoSuccess,
-    setIntervals
+    setIntervals,
+    setPhases
 } from './data-source.actions';
 import { selectIntervals } from './data-source.selectors';
 
@@ -75,7 +76,7 @@ export class DataSourceEffects {
     getData$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(setIntervals),
+                ofType(setIntervals, setPhases),
                 withLatestFrom(
                     combineLatest([
                         this.store.pipe(
