@@ -10,6 +10,7 @@ import {
 import { DataSourceState } from './data-source.model';
 
 export const initialState: DataSourceState = {
+    datasourceName: null,
     interval1: {
         start: -Infinity,
         end: Infinity

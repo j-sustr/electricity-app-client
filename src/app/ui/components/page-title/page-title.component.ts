@@ -1,4 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppState } from '../../store/app-store.state';
+import { selectDataSourceName } from '../../store/data-source/data-source.selectors';
 
 @Component({
     selector: 'app-page-title',
@@ -9,7 +13,15 @@ export class PageTitleComponent {
     @Input()
     title = '';
 
-    dataName = 'No data';
+    dataName$: Observable<string>;
 
-    constructor() {}
+    pickerOpen = false;
+
+    constructor(private store: Store<AppState>) {
+        this.dataName$ = this.store.pipe(select(selectDataSourceName));
+    }
+
+    openPicker(): void {
+        this.pickerOpen = true;
+    }
 }

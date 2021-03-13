@@ -8,6 +8,7 @@ export type Phases = {
 };
 
 export interface DataSourceState {
+    datasourceName: string | null;
     interval1: Interval;
     interval2?: Interval;
     phases: Phases;

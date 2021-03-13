@@ -1,3 +1,8 @@
 <h1 class="page-name">{{title}}</h1>
 <span class="separator">/</span>
-<a class="data-name">{{dataName}}</a>
+<a class="data-name" (click)="openPicker()">{{dataName$ | async}}</a>
+
+<app-data-source-picker
+    [visible]="pickerOpen"
+    (visibleChange)="pickerOpen = $event"
+></app-data-source-picker>

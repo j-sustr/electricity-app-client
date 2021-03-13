@@ -7,6 +7,11 @@ const selectDataSource = createFeatureSelector<AppState, DataSourceState>(
     'dataSource'
 );
 
+export const selectDataSourceName = createSelector(
+    selectDataSource,
+    (state) => state.datasourceName ?? 'No data'
+);
+
 export const selectIntervals = createSelector(
     selectDataSource,
     (state: DataSourceState) => ({
