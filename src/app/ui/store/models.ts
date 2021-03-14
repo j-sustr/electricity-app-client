@@ -4,6 +4,8 @@ export interface SeriesParams {
     unit: string;
     color: string;
     stack: 1 | 2;
+    axis?: string;
+    type?: string;
     // filter: string;
 }
 

@@ -12,6 +12,8 @@
                 [name]="s.name"
                 [color]="s.color"
                 [stack]="s.stack"
+                [axis]="s.axis"
+                [type]="s.type"
             >
             </dxi-series>
         </ng-container>
@@ -19,6 +21,10 @@
         </dxo-tooltip>
         <dxi-value-axis>
             <dxo-label [customizeText]="customizeLabel"></dxo-label>
+        </dxi-value-axis>
+        <dxi-value-axis name="cosFi" position="right">
+            <dxo-grid [visible]="true"></dxo-grid>
+            <dxo-title text="Cos FI"></dxo-title>
         </dxi-value-axis>
         <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
             <dxo-margin [left]="50"></dxo-margin>
