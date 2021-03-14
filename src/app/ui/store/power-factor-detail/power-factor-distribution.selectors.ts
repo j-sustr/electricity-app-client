@@ -1,12 +1,15 @@
 import { createSelector } from '@ngrx/store';
-import { PowerFactorDistributionItem } from 'src/app/web-api-client';
+import {
+    calculatePowerFactorDistribution,
+    PowerFactorDistributionCalculatedItem
+} from 'src/app/core/power-factor/calculate-power-factor-distribution';
 import { Phases } from '../data-source/data-source.model';
 import {
     selectIsComparisonMode,
     selectPhases
 } from '../data-source/data-source.selectors';
 import { SeriesParams } from '../models';
-import { selectDistribution } from './power-factor-detail.selectors';
+import { selectDetail } from './power-factor-detail.selectors';
 
 export interface PowerFactorDistributionChartItem {
     range: string;
@@ -41,6 +44,23 @@ export interface PowerFactorDistributionTable {
     phases: Phases;
 }
 
+export const selectDistribution = createSelector(selectDetail, (state) => {
+    const dist = state.distribution;
+    if (!dist) {
+        return null;
+    }
+    const items1 = dist.items1
+        ? calculatePowerFactorDistribution(dist.items1)
+        : null;
+    const items2 = dist.items2
+        ? calculatePowerFactorDistribution(dist.items2)
+        : null;
+    return {
+        items1,
+        items2
+    };
+});
+
 export const selectDistributionTableItems = createSelector(
     selectDistribution,
     (data): PowerFactorDistributionTableItem[] | null => {
@@ -64,7 +84,7 @@ export const selectDistributionTableItems = createSelector(
         return null;
 
         function mapToTableItem(
-            item: PowerFactorDistributionItem,
+            item: PowerFactorDistributionCalculatedItem,
             stack?: 1 | 2
         ): PowerFactorDistributionTableItem {
             return {
@@ -113,8 +133,8 @@ export const selectDistributionChartItems = createSelector(
         return null;
 
         function mapToChartItem(
-            item1: PowerFactorDistributionItem,
-            item2?: PowerFactorDistributionItem
+            item1: PowerFactorDistributionCalculatedItem,
+            item2?: PowerFactorDistributionCalculatedItem
         ): PowerFactorDistributionChartItem {
             return {
                 range: item1.range ?? '(unlabeled range)',

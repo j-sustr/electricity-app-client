@@ -19,15 +19,20 @@ export class PowerFactorOverviewChartComponent {
         this.chart$ = this.store.pipe(select(selectOverviewChart));
     }
 
-    customizeTooltip = (args: unknown) => {
-        console.log(args);
+    customizeTooltip = (args: { value: number }): { text: string } => {
         return {
-            text: ''
+            text: Math.abs(+args.value).toString()
         };
     };
 
-    customizeLabel = (args: unknown) => {
-        console.log(args);
-        return '';
+    customizeLabel = (args: { valueText: string }): string => {
+        const text = args.valueText;
+        if (text === '0') {
+            return text;
+        }
+        if (text.startsWith('-')) {
+            return text + 'VArh';
+        }
+        return text + 'Wh';
     };
 }

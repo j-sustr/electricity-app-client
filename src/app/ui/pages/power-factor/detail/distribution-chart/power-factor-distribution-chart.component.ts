@@ -19,15 +19,13 @@ export class PowerFactorDistributionChartComponent {
         this.chart$ = store.pipe(select(selectDistributionChart));
     }
 
-    customizeTooltip = (args: unknown) => {
-        console.log(args);
+    customizeTooltip = (args: { valueText: string }): { text: string } => {
         return {
-            text: ''
+            text: args.valueText
         };
     };
 
-    customizeLabel = (args: unknown) => {
-        console.log(args);
-        return '';
+    customizeLabel = (args: { valueText: string }): string => {
+        return args.valueText + '%';
     };
 }

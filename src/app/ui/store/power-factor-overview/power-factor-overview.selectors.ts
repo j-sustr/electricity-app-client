@@ -132,12 +132,16 @@ export const selectOverviewChartItems = createSelector(selectOverview, (state):
             groupId: item1.groupId ?? '(no id)',
             groupName: item1.groupName ?? '(no name)',
             activeEnergy_1: item1.activeEnergy ?? NaN,
-            reactiveEnergyL_1: item1.reactiveEnergyL ?? NaN,
-            reactiveEnergyC_1: item1.reactiveEnergyC ?? NaN,
+            reactiveEnergyL_1: -(item1.reactiveEnergyL ?? NaN),
+            reactiveEnergyC_1: -(item1.reactiveEnergyC ?? NaN),
             cosFi_1: item1.cosFi ?? NaN,
             activeEnergy_2: item2 ? item2.activeEnergy ?? NaN : undefined,
-            reactiveEnergyL_2: item2 ? item2.reactiveEnergyL ?? NaN : undefined,
-            reactiveEnergyC_2: item2 ? item2.reactiveEnergyC ?? NaN : undefined,
+            reactiveEnergyL_2: item2
+                ? -(item2.reactiveEnergyL ?? NaN)
+                : undefined,
+            reactiveEnergyC_2: item2
+                ? -(item2.reactiveEnergyC ?? NaN)
+                : undefined,
             cosFi_2: item2 ? item2.cosFi ?? NaN : undefined
         };
     }
