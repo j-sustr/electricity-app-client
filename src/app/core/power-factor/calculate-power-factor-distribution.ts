@@ -24,11 +24,21 @@ export function calculatePowerFactorDistribution(
 
     return items.map((item) => ({
         range: item.range ?? '(no range)',
-        valueMain: item.valueMain
-            ? (100 * item.valueMain) / valuesMainSum
-            : null,
-        valueL1: item.valueL1 ? (100 * item.valueL1) / valuesL1Sum : null,
-        valueL2: item.valueL2 ? (100 * item.valueL2) / valuesL2Sum : null,
-        valueL3: item.valueL3 ? (100 * item.valueL3) / valuesL3Sum : null
+        valueMain:
+            typeof item.valueMain === 'number'
+                ? (100 * item.valueMain) / valuesMainSum
+                : null,
+        valueL1:
+            typeof item.valueL1 === 'number'
+                ? (100 * item.valueL1) / valuesL1Sum
+                : null,
+        valueL2:
+            typeof item.valueL2 === 'number'
+                ? (100 * item.valueL2) / valuesL2Sum
+                : null,
+        valueL3:
+            typeof item.valueL3 === 'number'
+                ? (100 * item.valueL3) / valuesL3Sum
+                : null
     }));
 }
