@@ -1,5 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as d3 from 'd3-color';
 import { PowerFactorOverviewItem } from 'src/app/web-api-client';
+import * as colors from '../../common/colors/colors';
 import { AppState } from '../app-store.state';
 import { selectIsComparisonMode } from '../data-source/data-source.selectors';
 import { SeriesParams } from '../models';
@@ -173,28 +175,28 @@ function createSeriesParamsArray(isComparison: boolean) {
             name: 'Active Energy',
             valueField: 'activeEnergy_1',
             unit: 'kWh',
-            color: 'red',
+            color: colors.activeEnergy,
             stack: 1
         },
         {
             name: 'Reactive Energy L',
             valueField: 'reactiveEnergyL_1',
             unit: 'kvarh',
-            color: 'orange',
+            color: colors.reactiveEnergyL,
             stack: 1
         },
         {
             name: 'Reactive Energy C',
             valueField: 'reactiveEnergyC_1',
             unit: 'kvarh',
-            color: 'blue',
+            color: colors.reactiveEnergyC,
             stack: 1
         },
         {
             name: 'cos FI',
             valueField: 'cosFi_1',
             unit: '',
-            color: 'purple',
+            color: colors.cosFi,
             stack: 1
         }
     ];
@@ -208,9 +210,14 @@ function createSeriesParamsArray(isComparison: boolean) {
         item.name += ' (1)';
     });
     arr2.forEach((item) => {
+        let color = d3.hsl(item.color);
+        color = color.darker(1);
+        color.h -= 80;
+
         item.name += ' (2)';
         item.valueField = item.valueField.replace(/_1$/, '_2');
         item.stack = 2;
+        item.color = color.formatHex();
     });
 
     return arr.concat(...arr2);
