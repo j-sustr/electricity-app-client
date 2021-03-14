@@ -19,9 +19,12 @@ export class PowerFactorOverviewChartComponent {
         this.chart$ = this.store.pipe(select(selectOverviewChart));
     }
 
-    customizeTooltip = (args: { value: number }): { text: string } => {
+    customizeTooltip = (args: {
+        value: number;
+        seriesName: string;
+    }): { text: string } => {
         return {
-            text: Math.abs(+args.value).toString()
+            text: `${args.seriesName} = ${Math.abs(+args.value)}`
         };
     };
 

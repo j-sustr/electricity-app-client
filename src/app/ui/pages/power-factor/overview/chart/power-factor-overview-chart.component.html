@@ -20,10 +20,16 @@
         <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip">
         </dxo-tooltip>
         <dxi-value-axis>
+            <dxo-title text="Reactive Energy | Active Energy"></dxo-title>
             <dxo-label [customizeText]="customizeLabel"></dxo-label>
         </dxi-value-axis>
-        <dxi-value-axis name="cosFi" position="right">
-            <dxo-grid [visible]="true"></dxo-grid>
+        <dxi-value-axis
+            name="cosFi"
+            position="right"
+            [visualRange]="[0,1]"
+            [visualRangeUpdateMode]="keep"
+        >
+            <!-- <dxo-grid [visible]="true"></dxo-grid> -->
             <dxo-title text="Cos FI"></dxo-title>
         </dxi-value-axis>
         <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
