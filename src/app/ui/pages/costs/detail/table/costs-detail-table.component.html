@@ -52,8 +52,12 @@
             <td>{{item.data.quantity}}</td>
             <td>{{item.data.unit}}</td>
             <td>{{item.data.currency}}</td>
-            <td style="text-align: right">{{item.data.costPerUnit}}</td>
-            <td style="text-align: right">{{item.data.cost}}</td>
+            <td style="text-align: right">
+                {{item.data.costPerUnit | number: '1.2-2'}}
+            </td>
+            <td style="text-align: right">
+                {{item.data.cost | number: '1.2-2'}}
+            </td>
         </tr>
     </dx-data-grid>
 </ng-container>

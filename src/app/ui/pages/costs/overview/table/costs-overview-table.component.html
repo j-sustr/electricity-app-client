@@ -47,9 +47,13 @@
             <td>{{item.data.groupName}}</td>
             <td style="text-align: right">{{item.data.activeEnergy}}</td>
             <td style="text-align: right">{{item.data.reactiveEnergy}}</td>
-            <td style="text-align: right">{{item.data.cosFi}}</td>
+            <td style="text-align: right">
+                {{item.data.cosFi | number: '1.3-3'}}
+            </td>
             <td style="text-align: right">{{item.data.peakDemand}}</td>
-            <td style="text-align: right">{{item.data.cost}}</td>
+            <td style="text-align: right">
+                {{item.data.cost | number: '1.2-2'}}
+            </td>
         </tr>
     </dx-data-grid>
 </ng-container>
