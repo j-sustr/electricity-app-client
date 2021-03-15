@@ -38,8 +38,6 @@ function getAdjacentInterval(interval: Interval, next = true): Interval {
         start: addFn(interval.start, addAmount),
         end: addFn(interval.end, addAmount)
     };
-
-    throw Error('not implemented');
 }
 
 function getAddFunc(
@@ -57,5 +55,5 @@ function getAddFunc(
             return add ? addHours : subHours;
     }
 
-    throw Error('not implemented');
+    throw Error('not implemented (getAddFunc)');
 }

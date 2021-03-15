@@ -59,7 +59,9 @@ export function mapSectionPathToViewTypeSelector(
     switch (path) {
         case '/costs/overview':
         case '/costs/detail/:groupId':
-            throw new Error('not implemented');
+            throw new Error(
+                'not implemented (mapSectionPathToViewTypeSelector)'
+            );
         case '/power-factor/overview':
             return pfoSelectors.selectViewType;
         case '/power-factor/detail/:groupId':
@@ -74,7 +76,9 @@ export function mapSectionPathToSetViewTypeAction(
     switch (path) {
         case '/costs/overview':
         case '/costs/detail/:groupId':
-            throw new Error('not implemented');
+            throw new Error(
+                'not implemented (mapSectionPathToSetViewTypeAction)'
+            );
         case '/power-factor/overview':
             return pfoActions.setViewType;
         case '/power-factor/detail/:groupId':

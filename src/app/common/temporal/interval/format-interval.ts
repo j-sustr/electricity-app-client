@@ -23,7 +23,7 @@ export function formatInterval(interval: Interval): string {
         return formatNiceInterval(interval);
     }
 
-    throw new Error('not implemented');
+    throw new Error('not implemented (formatInterval)');
 }
 
 function isUnboundedInterval(interval: Interval): boolean {
@@ -41,7 +41,7 @@ function formatUnboundedInterval(interval: Interval): string {
         return 'everything';
     }
 
-    throw Error('not implemented');
+    throw Error('not implemented (formatUnboundedInterval)');
 }
 
 function formatNiceInterval(interval: Interval) {
@@ -60,5 +60,5 @@ function formatNiceInterval(interval: Interval) {
         return `${time}, ${date}`;
     }
 
-    throw Error('not implemented');
+    throw Error('not implemented (formatNiceInterval)');
 }

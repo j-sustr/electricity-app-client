@@ -11,7 +11,7 @@ export function intervalToDto(interval: Interval): IntervalDto {
     assertValidInterval(interval);
     if (interval.start === -Infinity || interval.end === Infinity) {
         if (interval.start !== -Infinity || interval.end !== Infinity) {
-            throw Error('not implemented');
+            throw Error('not implemented (intervalToDto)');
         }
         return { isInfinite: true };
     }

@@ -21,7 +21,7 @@ export function getCountableIntervalType(
         return 'hours';
     }
 
-    throw Error('not implemented');
+    throw Error('not implemented (getCountableIntervalType)');
 }
 
 export function getCountableInterval(
@@ -37,5 +37,5 @@ export function getCountableInterval(
         case 'hours':
             return d3.timeHour;
     }
-    throw new Error('invalid interval type');
+    throw new Error('invalid interval type (getCountableInterval)');
 }

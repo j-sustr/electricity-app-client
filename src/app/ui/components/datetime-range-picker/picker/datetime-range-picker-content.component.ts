@@ -53,7 +53,7 @@ export class DatetimeRangePickerContentComponent implements OnInit {
     }
 
     _startExitAnimation() {
-        throw Error('not implemented');
+        throw Error('not implemented (_startExitAnimation)');
     }
 
     selectTarget(value: DatetimeRangePickerTarget): void {
