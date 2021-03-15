@@ -49,12 +49,16 @@ export const selectDistribution = createSelector(selectDetail, (state) => {
     if (!dist) {
         return null;
     }
-    const items1 = dist.items1
+    let items1 = dist.items1
         ? calculatePowerFactorDistribution(dist.items1)
         : null;
-    const items2 = dist.items2
+    let items2 = dist.items2
         ? calculatePowerFactorDistribution(dist.items2)
         : null;
+
+    items1 = items1?.filter((item) => item.range !== 'outlier') ?? null;
+    items2 = items2?.filter((item) => item.range !== 'outlier') ?? null;
+
     return {
         items1,
         items2
