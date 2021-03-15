@@ -35,6 +35,7 @@
                 formControlName="reservedPowerKW"
                 [isValid]="reservedPowerControl?.valid === true || reservedPowerControl?.pristine === true"
                 [validationError]="{ message: 'is invalid'}"
+                valueChangeEvent="keyup"
             ></dx-number-box>
         </div>
         <div class="dx-field">
@@ -43,6 +44,7 @@
                 formControlName="yearlyReservedCapacityKW"
                 [isValid]="yearlyReservedCapacityControl?.valid === true || yearlyReservedCapacityControl?.pristine === true"
                 [validationError]="{ message: 'is invalid'}"
+                valueChangeEvent="keyup"
             ></dx-number-box>
         </div>
         <div class="dx-field">
@@ -51,6 +53,7 @@
                 formControlName="monthlyReservedCapacityKW"
                 [isValid]="monthlyReservedCapacityControl?.valid === true || monthlyReservedCapacityControl?.pristine === true"
                 [validationError]="{ message: 'is invalid'}"
+                valueChangeEvent="keyup"
             ></dx-number-box>
         </div>
         <div class="actions">
