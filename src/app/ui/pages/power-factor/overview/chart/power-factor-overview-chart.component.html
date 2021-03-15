@@ -3,6 +3,7 @@
         [dataSource]="chart.items"
         [rotated]="false"
         [title]="chart.title"
+        (onPointClick)="handleClick($event)"
     >
         <dxo-common-series-settings argumentField="groupName" type="stackedbar">
         </dxo-common-series-settings>
