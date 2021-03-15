@@ -76,7 +76,12 @@ export class DatetimeRangeInputComponent {
 
     get valueLabel(): string {
         if (this._model?.selection) {
-            return formatInterval(this._model.selection.toInterval());
+            // temporary fix
+            try {
+                return formatInterval(this._model.selection.toInterval());
+            } catch (error) {
+                console.error(error);
+            }
         }
         return '(nothing)';
     }

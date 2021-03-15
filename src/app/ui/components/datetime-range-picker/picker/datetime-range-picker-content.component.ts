@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { startAndDurationToInterval } from 'src/app/common/temporal/temporal-utils';
+import {
+    floorDay,
+    startAndDurationToInterval
+} from 'src/app/common/temporal/temporal-utils';
 import {
     DatetimeRange,
     DatetimeRangeSelectionModel
@@ -83,7 +86,8 @@ export class DatetimeRangePickerContentComponent implements OnInit {
             throw new Error('currentDate is not set');
         }
         const interval = startAndDurationToInterval(
-            this._currentDate,
+            // temporary fix
+            floorDay(this._currentDate),
             this._getSelectedDuration()
         );
         this._model.updateSelection(DatetimeRange.fromInterval(interval), this);

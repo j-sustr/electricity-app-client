@@ -33,3 +33,7 @@ export function isDay(date: Date): boolean {
 export function isHour(date: Date): boolean {
     return isEqual(d3.timeHour.floor(date), date);
 }
+
+export function floorDay(date: Date): Date {
+    return d3.timeDay.floor(date);
+}
