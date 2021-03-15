@@ -47,13 +47,26 @@ export const selectComputedDetailItems = createSelector<
             customerParams !== null && calculatorFactory
                 ? calculatorFactory.create(customerParams)
                 : null;
+
+        const calculatedItems1 = items1
+            ? calculateCostsDetailItems(items1, calculator)
+            : null;
+        const calculatedItems2 = items2
+            ? calculateCostsDetailItems(items2, calculator)
+            : null;
+
+        if (calculatedItems2 && calculatedItems1) {
+            for (let i = 0; i < calculatedItems2.length; i++) {
+                const item2 = calculatedItems2[i];
+                const item1 = calculatedItems1[i];
+                item2.year = item1.year;
+                item2.month = item1.month;
+            }
+        }
+
         return {
-            items1: items1
-                ? calculateCostsDetailItems(items1, calculator)
-                : null,
-            items2: items2
-                ? calculateCostsDetailItems(items2, calculator)
-                : null
+            items1: calculatedItems1,
+            items2: calculatedItems2
         };
     }
 );

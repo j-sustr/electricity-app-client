@@ -55,7 +55,7 @@ export function calculateCostsItemsForMonth(
 
     const yearMonth = {
         year: src.year ?? NaN,
-        month: getMonthName(src.month ?? NaN)
+        month: getMonthName((src.month ?? NaN) - 1)
     };
     const currency = 'CZK';
 
