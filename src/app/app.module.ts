@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HttpErrorInterceptor } from './ui/common/http-interceptors/http-error.interceptor';
 import { AppErrorHandler } from './ui/common/services/app-error-handler';
 import { AppBarComponent } from './ui/components/app-bar/app-bar.component';
-import { AppStoreModule } from './ui/store/app-store.module';
+import { AppStoreModule } from './store/app-store.module';
 
 @NgModule({
     declarations: [AppComponent, AppBarComponent],

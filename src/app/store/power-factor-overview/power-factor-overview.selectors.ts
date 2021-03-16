@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as d3 from 'd3-color';
 import { PowerFactorOverviewItem } from 'src/app/web-api-client';
-import * as colors from '../../common/colors/colors';
+import * as colors from '../../ui/common/colors/colors';
 import { AppState } from '../app-store.state';
 import { selectIsComparisonMode } from '../data-source/data-source.selectors';
 import { SeriesParams } from '../models';

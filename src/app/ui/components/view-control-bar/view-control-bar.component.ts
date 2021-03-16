@@ -3,17 +3,17 @@ import { Action, select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { selectOnce } from 'src/app/common/observable/selectOnce';
-import { AppState } from '../../store/app-store.state';
-import { setPhases } from '../../store/data-source/data-source.actions';
-import { Phases } from '../../store/data-source/data-source.model';
-import { selectPhases } from '../../store/data-source/data-source.selectors';
-import { selectRouterPath } from '../../store/router/router.selectors';
+import { AppState } from '../../../store/app-store.state';
+import { setPhases } from '../../../store/data-source/data-source.actions';
+import { Phases } from '../../../store/data-source/data-source.model';
+import { selectPhases } from '../../../store/data-source/data-source.selectors';
+import { selectRouterPath } from '../../../store/router/router.selectors';
 import {
     isSectionPath,
     mapSectionPathToSetViewTypeAction,
     mapSectionPathToViewTypeSelector,
     SectionPath
-} from '../../store/router/section-path-utils';
+} from '../../../store/router/section-path-utils';
 
 type ViewTypeOption = {
     text: string;

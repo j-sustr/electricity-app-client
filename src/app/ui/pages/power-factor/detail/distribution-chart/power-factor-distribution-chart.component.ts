@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from 'src/app/ui/store/app-store.state';
+import { AppState } from 'src/app/store/app-store.state';
 import {
     PowerFactorDistributionChart,
     selectDistributionChart
-} from 'src/app/ui/store/power-factor-detail/power-factor-distribution.selectors';
+} from 'src/app/store/power-factor-detail/power-factor-distribution.selectors';
 
 @Component({
     selector: 'app-power-factor-distribution-chart',

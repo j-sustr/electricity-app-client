@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from 'src/app/ui/store/app-store.state';
-import { CostsOverviewState } from 'src/app/ui/store/costs-overview/costs-overview.model';
-import { selectOverview } from 'src/app/ui/store/costs-overview/costs-overview.selectors';
-import { selectHasCustomerParams } from 'src/app/ui/store/costs/costs.selectors';
+import { AppState } from 'src/app/store/app-store.state';
+import { CostsOverviewState } from 'src/app/store/costs-overview/costs-overview.model';
+import { selectOverview } from 'src/app/store/costs-overview/costs-overview.selectors';
+import { selectHasCustomerParams } from 'src/app/store/costs/costs.selectors';
 
 @Component({
     selector: 'app-costs-overview',

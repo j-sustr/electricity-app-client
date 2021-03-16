@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../../store/app-store.state';
-import { getUserGroups } from '../../store/groups/groups.actions';
+import { AppState } from '../../../store/app-store.state';
+import { getUserGroups } from '../../../store/groups/groups.actions';
 import {
     GroupTreeView,
     selectGroupTreeView,
     selectSelectedGroupName
-} from '../../store/groups/groups.selectors';
+} from '../../../store/groups/groups.selectors';
 
 @Component({
     selector: 'app-detail-view-controls',
