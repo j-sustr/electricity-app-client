@@ -16,7 +16,10 @@ import {
     tap,
     withLatestFrom
 } from 'rxjs/operators';
-import { IDataSourceClient } from 'src/app/web-api-client';
+import {
+    IDataSourceClient,
+    OpenDataSourceCommand
+} from 'src/app/web-api-client';
 import { DATA_SOURCE_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
 import { selectGroupId, selectRouterPath } from '../router/router.selectors';
@@ -30,6 +33,8 @@ import {
 import {
     getInfoError,
     getInfoSuccess,
+    openDataSource,
+    openDataSourceSuccess,
     setIntervals,
     setPhases
 } from './data-source.actions';
@@ -37,6 +42,34 @@ import { selectIntervals } from './data-source.selectors';
 
 @Injectable()
 export class DataSourceEffects {
+    openDataSource$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(openDataSource),
+            switchMap(({ tenant }) =>
+                this.client
+                    .open(
+                        new OpenDataSourceCommand({
+                            tenant
+                        })
+                    )
+                    .pipe(
+                        map(() => {
+                            return openDataSourceSuccess({
+                                name: '(no name)'
+                            });
+                        }),
+                        catchError((error: HttpErrorResponse) =>
+                            of(
+                                openDataSourceSuccessError({
+                                    error
+                                })
+                            )
+                        )
+                    )
+            )
+        )
+    );
+
     getInfo$ = createEffect(() =>
         merge(this.actions$.pipe(ofType(routerNavigatedAction))).pipe(
             withLatestFrom(
@@ -130,4 +163,7 @@ export class DataSourceEffects {
         @Inject(DATA_SOURCE_CLIENT)
         private client: IDataSourceClient
     ) {}
+}
+function openDataSourceSuccessError(arg0: { error: HttpErrorResponse }): any {
+    throw new Error('Function not implemented.');
 }

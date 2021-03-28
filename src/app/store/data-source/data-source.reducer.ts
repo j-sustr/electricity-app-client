@@ -4,6 +4,9 @@ import {
     getInfo,
     getInfoError,
     getInfoSuccess,
+    openDataSource,
+    openDataSourceError,
+    openDataSourceSuccess,
     setIntervals,
     setPhases
 } from './data-source.actions';
@@ -48,6 +51,28 @@ const reducer = createReducer(
                 l2: action.l2,
                 l3: action.l3
             }
+        };
+    }),
+    on(openDataSource, (state) => {
+        return {
+            ...state,
+            datasourceName: null,
+            loading: true,
+            error: undefined
+        };
+    }),
+    on(openDataSourceSuccess, (state, { name }) => {
+        return {
+            ...state,
+            datasourceName: name,
+            loading: false
+        };
+    }),
+    on(openDataSourceError, (state, { error }) => {
+        return {
+            ...state,
+            loading: false,
+            error
         };
     }),
     on(getInfo, (state) => {
