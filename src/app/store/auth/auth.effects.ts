@@ -12,29 +12,27 @@ export const AUTH_KEY = 'AUTH';
 
 @Injectable()
 export class AuthEffects {
-    login = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(login),
-                switchMap(({ username, password }) =>
-                    this.userClient.login(username, password).pipe(
-                        map(() => {
-                            this.localStorageService.setItem(AUTH_KEY, {
-                                isAuthenticated: true
-                            });
-                            return loginSuccess();
-                        }),
-                        catchError((error: HttpErrorResponse) =>
-                            of(
-                                loginError({
-                                    error
-                                })
-                            )
+    login$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(login),
+            switchMap(({ username, password }) =>
+                this.userClient.login(username, password).pipe(
+                    map(() => {
+                        this.localStorageService.setItem(AUTH_KEY, {
+                            isAuthenticated: true
+                        });
+                        return loginSuccess();
+                    }),
+                    catchError((error: HttpErrorResponse) =>
+                        of(
+                            loginError({
+                                error
+                            })
                         )
                     )
                 )
-            ),
-        { dispatch: false }
+            )
+        )
     );
 
     constructor(
