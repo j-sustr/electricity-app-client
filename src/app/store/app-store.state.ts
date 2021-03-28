@@ -1,5 +1,7 @@
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
+import { AuthState } from './auth/auth.model';
+import { authReducer } from './auth/auth.reducer';
 import { CostsDetailState } from './costs-detail/costs-detail.model';
 import { costsDetailReducer } from './costs-detail/costs-detail.reducer';
 import { CostsOverviewState } from './costs-overview/costs-overview.model';
@@ -17,6 +19,7 @@ import { powerFactorOverviewReducer } from './power-factor-overview/power-factor
 import { RouterStateUrl } from './router/router.store';
 
 export interface AppState {
+    auth: AuthState;
     dataSource: DataSourceState;
     groups: GroupsState;
     costs: CostsState;
@@ -28,6 +31,7 @@ export interface AppState {
 }
 
 export const reducers: ActionReducerMap<AppState> = {
+    auth: authReducer,
     dataSource: dataSourceReducer,
     groups: groupsReducer,
     costs: costsReducer,
