@@ -7,10 +7,10 @@ import { Component } from '@angular/core';
 })
 export class UnauthenticatedContentComponent {
     get title(): string | undefined {
-        return 'Hello';
+        return 'Open Data Source';
     }
 
     get description(): string | undefined {
-        return 'World';
+        return undefined;
     }
 }
