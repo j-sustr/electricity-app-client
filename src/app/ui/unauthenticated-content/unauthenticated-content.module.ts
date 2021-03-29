@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { SingleCardModule } from '../layouts/single-card/single-card.module';
 
 @NgModule({
-    imports: [CommonModule, RouterModule, SingleCardModule],
-    declarations: [UnauthenticatedContentComponent]
+    imports: [CommonModule, SingleCardModule, RouterModule],
+    declarations: [UnauthenticatedContentComponent],
+    exports: [UnauthenticatedContentComponent]
 })
 export class UnauthenticatedContentModule {}

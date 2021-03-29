@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-unauthenticated-content',
-    template: `
-        <app-single-card [title]="title" [description]="description">
-            <router-outlet></router-outlet>
-        </app-single-card>
-    `,
-    styleUrls: ['./unauthenticated-content.component.ts']
+    templateUrl: './unauthenticated-content.component.html',
+    styleUrls: ['./unauthenticated-content.component.scss']
 })
-export class UnauthenticatedContentComponent {}
+export class UnauthenticatedContentComponent {
+    get title(): string | undefined {
+        return 'Hello';
+    }
+
+    get description(): string | undefined {
+        return 'World';
+    }
+}

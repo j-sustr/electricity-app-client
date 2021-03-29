@@ -1,2 +1,8 @@
-<app-bar class="app-header"></app-bar>
-<router-outlet></router-outlet>
+<ng-container *ngIf="(isAuthenticated$ | async); else unauthenticated">
+    <app-bar class="app-header"></app-bar>
+    <router-outlet></router-outlet>
+</ng-container>
+
+<ng-template #unauthenticated>
+    <app-unauthenticated-content></app-unauthenticated-content>
+</ng-template>
