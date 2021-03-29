@@ -4,6 +4,7 @@ import { login, loginError, loginSuccess } from './auth.actions';
 
 export const initialState: AuthState = {
     isAuthenticated: false,
+    username: '',
     loading: false
 };
 

@@ -20,6 +20,11 @@ const routes: Routes = [
             )
     },
     {
+        path: 'login-form',
+        loadChildren: () =>
+            import('./ui/pages/login/login.module').then((m) => m.LoginModule)
+    },
+    {
         path: '**',
         redirectTo: 'costs'
     }
@@ -29,8 +34,8 @@ const routes: Routes = [
     imports: [
         RouterModule.forRoot(routes, {
             scrollPositionRestoration: 'enabled',
-            preloadingStrategy: PreloadAllModules
-            // enableTracing: true
+            preloadingStrategy: PreloadAllModules,
+            enableTracing: true
         })
     ],
     exports: [RouterModule]
