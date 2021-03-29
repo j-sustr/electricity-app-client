@@ -1,34 +1,88 @@
-<form class="login-form" (submit)="onSubmit($event)">
-    <dx-form [formData]="formData" [disabled]="loading">
-        <dxi-item
-            dataField="username"
-            editorType="dxTextBox"
-            [editorOptions]="{ stylingMode: 'filled', placeholder: 'Username', mode: 'username' }"
-        >
-            <dxi-validation-rule
-                type="required"
-                message="Username is required"
-            ></dxi-validation-rule>
-            <dxi-validation-rule
-                type="username"
-                message="Username is invalid"
-            ></dxi-validation-rule>
-            <dxo-label [visible]="false"></dxo-label>
-        </dxi-item>
+<form class="login-form" [formGroup]="form">
+    <div class="dx-fieldset">
+        <div class="dx-fieldset-header">Tenant</div>
+        <div class="dx-field">
+            <div class="dx-field-label">Data Source Type</div>
+            <div class="dx-field-value">
+                <dx-radio-group
+                    formControlName="dataSourceType"
+                    [items]="dataSourceTypes"
+                    layout="horizontal"
+                >
+                </dx-radio-group>
+            </div>
+        </div>
 
-        <dxi-item
-            dataField="password"
-            editorType="dxTextBox"
-            [editorOptions]="{ stylingMode: 'filled', placeholder: 'Password', mode: 'password' }"
-        >
-            <dxi-validation-rule
-                type="required"
-                message="Password is required"
-            ></dxi-validation-rule>
-            <dxo-label [visible]="false"></dxo-label>
-        </dxi-item>
+        <ng-container [ngSwitch]="dataSourceTypeControl?.valueChanges | async">
+            <div *ngSwitchCase="0" formGroupName="dbConnectionParams">
+                <div class="dx-field">
+                    <div class="dx-field-label">Server</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                            formControlName="server"
+                            [isValid]="dbConnectionServerControl?.valid === true || dbConnectionServerControl?.pristine === true"
+                            [validationError]="{ message: 'is invalid'}"
+                            valueChangeEvent="keyup"
+                        >
+                        </dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">DB Name</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                            formControlName="server"
+                            [isValid]="dbConnectionDBNameControl?.valid === true || dbConnectionDBNameControl?.pristine === true"
+                            [validationError]="{ message: 'is invalid'}"
+                            valueChangeEvent="keyup"
+                        >
+                        </dx-text-box>
+                    </div>
+                </div>
+            </div>
+            <div *ngSwitchCase="1">Not implemented</div>
+        </ng-container>
+    </div>
 
-        <dxi-item
+    <div class="dx-fieldset">
+        <div class="dx-fieldset-header">User</div>
+        <div class="dx-field">
+            <div class="dx-field-label">Username</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                    formControlName="username"
+                    [isValid]="usernameControl?.valid === true || usernameControl?.pristine === true"
+                    [validationError]="{ message: 'is invalid'}"
+                    valueChangeEvent="keyup"
+                >
+                </dx-text-box>
+            </div>
+        </div>
+
+        <div class="dx-field">
+            <div class="dx-field-label">Password</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                    formControlName="password"
+                    [isValid]="passwordControl?.valid === true || passwordControl?.pristine === true"
+                    [validationError]="{ message: 'is invalid'}"
+                    valueChangeEvent="keyup"
+                >
+                </dx-text-box>
+            </div>
+        </div>
+
+        <div class="actions">
+            <dx-button
+                text="Open"
+                type="success"
+                (onClick)="open()"
+                [disabled]="!form.valid"
+            >
+            </dx-button>
+        </div>
+
+        <!-- <dxi-item
             dataField="rememberMe"
             editorType="dxCheckBox"
             [editorOptions]="{ text: 'Remember me', elementAttr: { class: 'form-text' } }"
@@ -44,7 +98,7 @@
                 [template]="'signInTemplate'"
             >
             </dxo-button-options>
-        </dxi-item>
+        </dxi-item> -->
 
         <!-- <dxi-item>
             <div class="link">
@@ -59,7 +113,7 @@
             ></dxo-button-options>
         </dxi-item> -->
 
-        <ng-container *dxTemplate="let item of 'signInTemplate'">
+        <!-- <ng-container *dxTemplate="let item of 'signInTemplate'">
             <span class="dx-button-text">
                 <ng-container *ngIf="loading; else notLoading">
                     <dx-load-indicator
@@ -70,6 +124,6 @@
                 </ng-container>
                 <ng-template #notLoading>Sign In</ng-template>
             </span>
-        </ng-container>
-    </dx-form>
+        </ng-container> -->
+    </div>
 </form>
