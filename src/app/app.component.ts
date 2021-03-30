@@ -3,6 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from './store/app-store.state';
 import { selectIsAuthenticated } from './store/auth/auth.selectors';
+import { DataSourceClient } from './web-api-client';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,13 @@ export class AppComponent {
 
     isAuthenticated$: Observable<boolean>;
 
-    constructor(private store: Store<AppState>) {
+    constructor(
+        private store: Store<AppState>,
+        private dataSourceClient: DataSourceClient
+    ) {
         this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (window as any).dataSourceClient = dataSourceClient;
     }
 }

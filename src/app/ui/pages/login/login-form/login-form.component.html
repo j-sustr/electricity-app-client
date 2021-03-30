@@ -39,6 +39,30 @@
                         </dx-text-box>
                     </div>
                 </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">Username</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                            formControlName="username"
+                            [isValid]="dbConnectionUsernameControl?.valid === true || dbConnectionUsernameControl?.pristine === true"
+                            [validationError]="{ message: 'is invalid'}"
+                            valueChangeEvent="keyup"
+                        >
+                        </dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">Password</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                            formControlName="password"
+                            [isValid]="dbConnectionPasswordControl?.valid === true || dbConnectionPasswordControl?.pristine === true"
+                            [validationError]="{ message: 'is invalid'}"
+                            valueChangeEvent="keyup"
+                        >
+                        </dx-text-box>
+                    </div>
+                </div>
             </div>
             <div *ngSwitchCase="'CEA File'">
                 <div class="dx-field">
@@ -97,56 +121,22 @@
 
         <div class="actions">
             <dx-button
-                text="Open"
                 type="success"
                 (onClick)="open()"
-                [disabled]="!form.valid"
+                [width]="180"
+                [disabled]="!form.valid || (loading$ | async)"
             >
+                <div *dxTemplate="let data of 'content'">
+                    <dx-load-indicator
+                        class="button-indicator"
+                        [visible]="(loading$ | async) === true"
+                    >
+                    </dx-load-indicator>
+                    <span class="dx-button-text"
+                        >{{(loading$ | async) ? '' : 'Open'}}</span
+                    >
+                </div>
             </dx-button>
         </div>
-
-        <!-- <dxi-item
-            dataField="rememberMe"
-            editorType="dxCheckBox"
-            [editorOptions]="{ text: 'Remember me', elementAttr: { class: 'form-text' } }"
-        >
-            <dxo-label [visible]="false"></dxo-label>
-        </dxi-item>
-
-        <dxi-item itemType="button">
-            <dxo-button-options
-                width="100%"
-                type="default"
-                [useSubmitBehavior]="true"
-                [template]="'signInTemplate'"
-            >
-            </dxo-button-options>
-        </dxi-item> -->
-
-        <!-- <dxi-item>
-            <div class="link">
-                <a routerLink="/reset-password">Forgot password?</a>
-            </div>
-        </dxi-item> -->
-
-        <!-- <dxi-item itemType="button">
-            <dxo-button-options
-                text="Create an account"
-                width="100%"
-            ></dxo-button-options>
-        </dxi-item> -->
-
-        <!-- <ng-container *dxTemplate="let item of 'signInTemplate'">
-            <span class="dx-button-text">
-                <ng-container *ngIf="loading; else notLoading">
-                    <dx-load-indicator
-                        width="24px"
-                        height="24px"
-                        [visible]="true"
-                    ></dx-load-indicator>
-                </ng-container>
-                <ng-template #notLoading>Sign In</ng-template>
-            </span>
-        </ng-container> -->
     </div>
 </form>

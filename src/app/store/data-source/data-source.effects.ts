@@ -34,6 +34,7 @@ import {
     getInfoError,
     getInfoSuccess,
     openDataSource,
+    openDataSourceError,
     openDataSourceSuccess,
     setIntervals,
     setPhases
@@ -60,7 +61,7 @@ export class DataSourceEffects {
                         }),
                         catchError((error: HttpErrorResponse) =>
                             of(
-                                openDataSourceSuccessError({
+                                openDataSourceError({
                                     error
                                 })
                             )
@@ -80,6 +81,8 @@ export class DataSourceEffects {
                 (v1, v2) => v2
             ),
             filter(([, routerPath]) => {
+                console.warn('trying to fetch info but action is disabled');
+                return false;
                 return isSectionPath(routerPath);
             }),
             distinctUntilChanged(
@@ -163,7 +166,4 @@ export class DataSourceEffects {
         @Inject(DATA_SOURCE_CLIENT)
         private client: IDataSourceClient
     ) {}
-}
-function openDataSourceSuccessError(arg0: { error: HttpErrorResponse }): any {
-    throw new Error('Function not implemented.');
 }

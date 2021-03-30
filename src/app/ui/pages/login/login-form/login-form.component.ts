@@ -3,8 +3,8 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ofType } from '@ngrx/effects';
 import { ActionsSubject, select, Store } from '@ngrx/store';
-import { Observable, of, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import { take, takeUntil, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/store/app-store.state';
 import { login } from 'src/app/store/auth/auth.actions';
 import {
@@ -28,8 +28,10 @@ const CEA_FILE = 'CEA File';
     templateUrl: './login-form.component.html',
     styleUrls: ['./login-form.component.scss']
 })
-export class LoginFormComponent implements AfterViewInit {
+export class LoginFormComponent implements AfterViewInit, OnDestroy {
     readonly dataSourceTypes = [DATABASE, CEA_FILE] as const;
+
+    destroy$ = new Subject();
 
     loading$: Observable<boolean>;
 
@@ -47,9 +49,9 @@ export class LoginFormComponent implements AfterViewInit {
         dataSourceType: [null, [Validators.required]],
         dbConnectionParams: this.fb.group({
             server: [null, this.dbConnectionParamValidator],
-            dbName: [null, this.dbConnectionParamValidator]
-            // username: [null, Validators.required],
-            // password: [null, Validators.required]
+            dbName: [null, this.dbConnectionParamValidator],
+            username: [null, Validators.required],
+            password: [null, Validators.required]
         }),
         ceaFilename: [null, [this.ceaFilenameValidator]],
         username: [null, [Validators.required]],
@@ -72,12 +74,28 @@ export class LoginFormComponent implements AfterViewInit {
         private fb: FormBuilder
     ) {
         this.loading$ = this.store.pipe(select(selectIsLoading));
+        this.loading$
+            .pipe(
+                takeUntil(this.destroy$),
+                tap((loading) => {
+                    if (loading) {
+                        this.form.disable();
+                        return;
+                    }
+                    this.form.enable();
+                })
+            )
+            .subscribe();
+
         this.ceaFiles$ = of(['not implemented']);
     }
 
     ngAfterViewInit(): void {
         setTimeout(() => {
             this.dataSourceTypeControl?.setValue(DATABASE);
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            (window as any).dsForm = this.form;
         }, 0);
 
         this.form.get('dataSourceType')?.valueChanges.subscribe((value) => {
@@ -89,7 +107,12 @@ export class LoginFormComponent implements AfterViewInit {
         });
     }
 
-    uploadNewFile() {
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    uploadNewFile(): void {
         throw new Error('not implemented');
     }
 
@@ -118,14 +141,16 @@ export class LoginFormComponent implements AfterViewInit {
         this.actionsSubject
             .pipe(ofType(openDataSourceSuccess, openDataSourceError), take(1))
             .subscribe((data) => {
-                console.log(data);
+                if (data.type !== openDataSourceSuccess.type) {
+                    return;
+                }
 
-                return;
-
-                login({
-                    username: this.form.get('username')?.value as string,
-                    password: this.form.get('password')?.value as string
-                });
+                this.store.dispatch(
+                    login({
+                        username: this.form.get('username')?.value as string,
+                        password: this.form.get('password')?.value as string
+                    })
+                );
             });
     }
 
