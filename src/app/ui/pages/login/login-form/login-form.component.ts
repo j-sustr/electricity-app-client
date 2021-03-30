@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/app-store.state';
@@ -21,7 +21,7 @@ interface FormData {
     templateUrl: './login-form.component.html',
     styleUrls: ['./login-form.component.scss']
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements AfterViewInit {
     dataSourceTypes = Object.freeze(['Database', 'CEA File']) as string[];
 
     loading = false;
@@ -52,6 +52,12 @@ export class LoginFormComponent {
     passwordControl = this.form.get('password');
 
     constructor(private store: Store<AppState>, private fb: FormBuilder) {}
+
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.dataSourceTypeControl?.setValue('Database');
+        }, 0);
+    }
 
     open(): void {
         this.store.dispatch(
