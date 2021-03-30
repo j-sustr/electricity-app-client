@@ -124,7 +124,7 @@
                 type="success"
                 (onClick)="open()"
                 [width]="180"
-                [disabled]="!form.valid || (loading$ | async)"
+                [disabled]="!form.valid || (loading$ | async) === true"
             >
                 <div *dxTemplate="let data of 'content'">
                     <dx-load-indicator
