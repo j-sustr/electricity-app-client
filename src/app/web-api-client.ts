@@ -156,8 +156,8 @@ export class CostsClient implements ICostsClient {
 }
 
 export interface IDataSourceClient {
-    getInfo(groupId: string | null | undefined, arch: number | undefined): Observable<DataSourceInfoDto>;
     open(query: OpenDataSourceCommand): Observable<FileResponse>;
+    getInfo(groupId: string | null | undefined, arch: number | undefined): Observable<DataSourceInfoDto>;
 }
 
 @Injectable({
@@ -171,6 +171,56 @@ export class DataSourceClient implements IDataSourceClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    open(query: OpenDataSourceCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/DataSource/open";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(query);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOpen(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOpen(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processOpen(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
     }
 
     getInfo(groupId: string | null | undefined, arch: number | undefined): Observable<DataSourceInfoDto> {
@@ -225,56 +275,6 @@ export class DataSourceClient implements IDataSourceClient {
             }));
         }
         return _observableOf<DataSourceInfoDto>(<any>null);
-    }
-
-    open(query: OpenDataSourceCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/DataSource/open";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(query);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOpen(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processOpen(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processOpen(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
     }
 }
 
@@ -1184,46 +1184,6 @@ export interface ICostlyQuantitiesDetailItem {
     peakDemand?: number;
 }
 
-export class DataSourceInfoDto implements IDataSourceInfoDto {
-    minDatetime?: Date | null;
-    maxDatetime?: Date | null;
-
-    constructor(data?: IDataSourceInfoDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.minDatetime = _data["minDatetime"] ? new Date(_data["minDatetime"].toString()) : <any>null;
-            this.maxDatetime = _data["maxDatetime"] ? new Date(_data["maxDatetime"].toString()) : <any>null;
-        }
-    }
-
-    static fromJS(data: any): DataSourceInfoDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new DataSourceInfoDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["minDatetime"] = this.minDatetime ? this.minDatetime.toISOString() : <any>null;
-        data["maxDatetime"] = this.maxDatetime ? this.maxDatetime.toISOString() : <any>null;
-        return data; 
-    }
-}
-
-export interface IDataSourceInfoDto {
-    minDatetime?: Date | null;
-    maxDatetime?: Date | null;
-}
-
 export class OpenDataSourceCommand implements IOpenDataSourceCommand {
     tenant?: TenantDto | null;
 
@@ -1355,6 +1315,46 @@ export interface IDBConnectionParams {
     dbName?: string | null;
     username?: string | null;
     password?: string | null;
+}
+
+export class DataSourceInfoDto implements IDataSourceInfoDto {
+    minDatetime?: Date | null;
+    maxDatetime?: Date | null;
+
+    constructor(data?: IDataSourceInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.minDatetime = _data["minDatetime"] ? new Date(_data["minDatetime"].toString()) : <any>null;
+            this.maxDatetime = _data["maxDatetime"] ? new Date(_data["maxDatetime"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DataSourceInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DataSourceInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["minDatetime"] = this.minDatetime ? this.minDatetime.toISOString() : <any>null;
+        data["maxDatetime"] = this.maxDatetime ? this.maxDatetime.toISOString() : <any>null;
+        return data; 
+    }
+}
+
+export interface IDataSourceInfoDto {
+    minDatetime?: Date | null;
+    maxDatetime?: Date | null;
 }
 
 export class UserGroupsDto implements IUserGroupsDto {
