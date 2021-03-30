@@ -12,6 +12,11 @@ export const selectDataSourceName = createSelector(
     (state) => state.datasourceName ?? 'No data'
 );
 
+export const selectIsLoading = createSelector(
+    selectDataSource,
+    (state) => state.loading
+);
+
 export const selectIntervals = createSelector(
     selectDataSource,
     (state: DataSourceState) => ({

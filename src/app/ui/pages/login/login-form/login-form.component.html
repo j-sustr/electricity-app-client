@@ -6,7 +6,7 @@
             <div class="dx-field-value">
                 <dx-radio-group
                     formControlName="dataSourceType"
-                    [items]="dataSourceTypes"
+                    [items]="$any(dataSourceTypes)"
                     layout="horizontal"
                 >
                 </dx-radio-group>
@@ -31,7 +31,7 @@
                     <div class="dx-field-label">DB Name</div>
                     <div class="dx-field-value">
                         <dx-text-box
-                            formControlName="server"
+                            formControlName="dbName"
                             [isValid]="dbConnectionDBNameControl?.valid === true || dbConnectionDBNameControl?.pristine === true"
                             [validationError]="{ message: 'is invalid'}"
                             valueChangeEvent="keyup"
@@ -40,7 +40,30 @@
                     </div>
                 </div>
             </div>
-            <div *ngSwitchCase="'CEA File'">Not implemented</div>
+            <div *ngSwitchCase="'CEA File'">
+                <div class="dx-field">
+                    <div class="dx-field-label">CEA File</div>
+                    <div
+                        class="dx-field-value"
+                        *ngIf="ceaFiles$ | async as items"
+                    >
+                        <dx-select-box
+                            formControlName="ceaFilename"
+                            [items]="items"
+                            [isValid]="ceaFilenameControl?.valid === true || ceaFilenameControl?.pristine === true"
+                            [validationError]="{ message: 'is invalid'}"
+                        ></dx-select-box>
+                    </div>
+                </div>
+                <div class="actions">
+                    <dx-button
+                        text="Upload new CEA file"
+                        type="normal"
+                        (onClick)="uploadNewFile()"
+                    >
+                    </dx-button>
+                </div>
+            </div>
         </ng-container>
     </div>
 

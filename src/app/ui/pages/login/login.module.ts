@@ -5,15 +5,17 @@ import { DxTemplateModule } from 'devextreme-angular/core';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
 import { DxRadioGroupModule } from 'devextreme-angular/ui/radio-group';
+import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { LoginRoutingModule } from './login-routing.module';
 
 const DX = [
     DxTemplateModule,
+    DxLoadIndicatorModule,
     DxTextBoxModule,
     DxRadioGroupModule,
-    DxLoadIndicatorModule,
+    DxSelectBoxModule,
     DxButtonModule
 ];
 
