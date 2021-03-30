@@ -14,7 +14,7 @@
         </div>
 
         <ng-container [ngSwitch]="dataSourceTypeControl?.valueChanges | async">
-            <div *ngSwitchCase="0" formGroupName="dbConnectionParams">
+            <div *ngSwitchCase="'Database'" formGroupName="dbConnectionParams">
                 <div class="dx-field">
                     <div class="dx-field-label">Server</div>
                     <div class="dx-field-value">
@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngSwitchCase="1">Not implemented</div>
+            <div *ngSwitchCase="'CEA File'">Not implemented</div>
         </ng-container>
     </div>
 

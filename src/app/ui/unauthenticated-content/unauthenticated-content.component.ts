@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class UnauthenticatedContentComponent {
     get title(): string | undefined {
-        return 'Open Data Source';
+        return 'Data Source';
     }
 
     get description(): string | undefined {
