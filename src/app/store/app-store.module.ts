@@ -13,16 +13,19 @@ import {
     CostsClient,
     DataSourceClient,
     GroupsClient,
-    PowerFactorClient
+    PowerFactorClient,
+    UserClient
 } from 'src/app/web-api-client';
 import {
     COSTS_CLIENT,
     DATA_SOURCE_CLIENT,
     GROUPS_CLIENT,
-    POWER_FACTOR_CLIENT
+    POWER_FACTOR_CLIENT,
+    USER_CLIENT
 } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
+import { AuthEffects } from './auth/auth.effects';
 import { CostsDetailEffects } from './costs-detail/costs-detail.effects';
 import { CostsOverviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
@@ -44,6 +47,7 @@ function apiBaseUrlFactory(): string | undefined {
         StoreModule.forRoot(reducers),
         StoreRouterConnectingModule.forRoot(),
         EffectsModule.forRoot([
+            AuthEffects,
             DataSourceEffects,
             GroupsEffects,
             CostsOverviewEffects,
@@ -60,6 +64,10 @@ function apiBaseUrlFactory(): string | undefined {
     ],
     exports: [StoreModule],
     providers: [
+        {
+            provide: USER_CLIENT,
+            useClass: UserClient
+        },
         {
             provide: DATA_SOURCE_CLIENT,
             useClass: DataSourceClient

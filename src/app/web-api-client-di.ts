@@ -3,8 +3,11 @@ import {
     ICostsClient,
     IDataSourceClient,
     IGroupsClient,
-    IPowerFactorClient
+    IPowerFactorClient,
+    IUserClient
 } from './web-api-client';
+
+export const USER_CLIENT = new InjectionToken<IUserClient>('USER_CLIENT');
 
 export const DATA_SOURCE_CLIENT = new InjectionToken<IDataSourceClient>(
     'DATA_SOURCE_CLIENT'
