@@ -9,7 +9,6 @@ import {
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {
-    API_BASE_URL,
     CostsClient,
     DataSourceClient,
     GroupsClient,
@@ -35,10 +34,10 @@ import { PowerFactorDistributionEffects } from './power-factor-detail/power-fact
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
 import { CustomRouterSerializer } from './router/custom-router-serializer';
 
-function apiBaseUrlFactory(): string | undefined {
-    const url = 'https://localhost:44312';
-    return environment.production ? undefined : url;
-}
+// function apiBaseUrlFactory(): string | undefined {
+//     const url = 'https://localhost:44312';
+//     return environment.production ? undefined : url;
+// }
 
 @NgModule({
     imports: [
@@ -84,10 +83,10 @@ function apiBaseUrlFactory(): string | undefined {
             provide: POWER_FACTOR_CLIENT,
             useClass: PowerFactorClient
         },
-        {
-            provide: API_BASE_URL,
-            useFactory: apiBaseUrlFactory
-        },
+        // {
+        //     provide: API_BASE_URL,
+        //     useFactory: apiBaseUrlFactory
+        // },
         { provide: RouterStateSerializer, useClass: CustomRouterSerializer }
     ]
 })
