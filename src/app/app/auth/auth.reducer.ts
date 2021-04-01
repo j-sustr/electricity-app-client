@@ -41,11 +41,9 @@ const reducer = createReducer(
         loading: true,
         error: undefined
     })),
-    on(loginSuccess, (state, { username }) => ({
+    on(loginSuccess, (state, { user }) => ({
         ...state,
-        user: {
-            username
-        },
+        user,
         loading: false
     })),
     on(loginError, (state, { error }) => ({
