@@ -4,7 +4,7 @@ import { PowerFactorOverviewItem } from 'src/app/web-api-client';
 import * as colors from '../../ui/common/colors/colors';
 import { AppState } from '../app-store.state';
 import { selectIsComparisonMode } from '../data-source/data-source.selectors';
-import { SeriesParams } from '../models';
+import { SeriesParams } from '../common/models';
 import { PowerFactorOverviewState } from './power-factor-overview.model';
 
 export interface PowerFactorOverviewChartItem {

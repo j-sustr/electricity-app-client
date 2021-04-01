@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { PowerFactorDistributionItem } from 'src/app/web-api-client';
-import { ViewType } from '../models';
+import { ViewType } from '../common/models';
 
 const DETAIL_TYPES = ['distribution', 'time-series'] as const;
 export type DetailType = typeof DETAIL_TYPES[number];

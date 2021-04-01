@@ -8,7 +8,7 @@ import * as pfdActions from '../../power-factor-detail/power-factor-detail.actio
 import * as pfdSelectors from '../../power-factor-detail/power-factor-detail.selectors';
 import { Action, ActionCreator, Selector } from '@ngrx/store';
 import { AppState } from '../../app-store.state';
-import { ViewType } from '../../models';
+import { ViewType } from '../models';
 
 export const SECTION_PATHS = [
     '/costs/overview',

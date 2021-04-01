@@ -8,7 +8,7 @@ import {
     selectIsComparisonMode,
     selectPhases
 } from '../data-source/data-source.selectors';
-import { SeriesParams } from '../models';
+import { SeriesParams } from '../common/models';
 import { selectDetail } from './power-factor-detail.selectors';
 
 export interface PowerFactorDistributionChartItem {

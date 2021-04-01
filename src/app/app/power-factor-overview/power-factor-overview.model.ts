@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { PowerFactorOverviewItem } from 'src/app/web-api-client';
-import { ViewType } from '../models';
+import { ViewType } from '../common/models';
 
 export interface PowerFactorOverviewState {
     viewType: ViewType;
