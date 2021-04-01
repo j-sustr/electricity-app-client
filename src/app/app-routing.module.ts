@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
+import { AppGuard } from './router/guards/app.guard';
 
 const routes: Routes = [
     {
@@ -10,17 +11,19 @@ const routes: Routes = [
     {
         path: 'costs',
         loadChildren: () =>
-            import('./ui/pages/costs/costs.module').then((m) => m.CostsModule)
+            import('./ui/pages/costs/costs.module').then((m) => m.CostsModule),
+        canActivate: [AppGuard]
     },
     {
         path: 'power-factor',
         loadChildren: () =>
             import('./ui/pages/power-factor/power-factor.module').then(
                 (m) => m.PowerFactorModule
-            )
+            ),
+        canActivate: [AppGuard]
     },
     {
-        path: 'login-form',
+        path: 'login',
         loadChildren: () =>
             import('./ui/pages/login/login.module').then((m) => m.LoginModule)
     },
