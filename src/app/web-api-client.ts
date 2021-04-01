@@ -1039,7 +1039,7 @@ export class SeriesClient implements ISeriesClient {
 }
 
 export interface IUserClient {
-    getCurrentUser(): Observable<UserDto>;
+    getCurrentUser(): Observable<UserDto | null>;
 }
 
 @Injectable({
@@ -1055,7 +1055,7 @@ export class UserClient implements IUserClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getCurrentUser(): Observable<UserDto> {
+    getCurrentUser(): Observable<UserDto | null> {
         let url_ = this.baseUrl + "/api/User/current-user";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1074,14 +1074,14 @@ export class UserClient implements IUserClient {
                 try {
                     return this.processGetCurrentUser(<any>response_);
                 } catch (e) {
-                    return <Observable<UserDto>><any>_observableThrow(e);
+                    return <Observable<UserDto | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<UserDto>><any>_observableThrow(response_);
+                return <Observable<UserDto | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetCurrentUser(response: HttpResponseBase): Observable<UserDto> {
+    protected processGetCurrentUser(response: HttpResponseBase): Observable<UserDto | null> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1092,7 +1092,7 @@ export class UserClient implements IUserClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserDto.fromJS(resultData200);
+            result200 = resultData200 ? UserDto.fromJS(resultData200) : <any>null;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1100,7 +1100,7 @@ export class UserClient implements IUserClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<UserDto>(<any>null);
+        return _observableOf<UserDto | null>(<any>null);
     }
 }
 
