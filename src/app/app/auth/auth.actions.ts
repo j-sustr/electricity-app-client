@@ -9,7 +9,7 @@ export const getCurrentUserSuccess = createAction(
 );
 
 export const getCurrentUserError = createAction(
-    '[Auth] Get Current User',
+    '[Auth] Get Current User Error',
     props<{ error: HttpErrorResponse }>()
 );
 
