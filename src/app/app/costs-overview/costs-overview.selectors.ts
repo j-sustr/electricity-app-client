@@ -2,10 +2,10 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
     calculateCostsOverviewItem,
     CostsOverviewItem
-} from 'src/app/core/costs/calculate-costs-overview-item';
-import { CustomerParams } from 'src/app/core/costs/costs';
-import ERUCalculator from 'src/app/core/costs/ERUCalculator';
-import ERUCalculatorFactory from 'src/app/core/costs/ERUCalculatorFactory';
+} from 'src/app/domain/costs/calculate-costs-overview-item';
+import { CustomerParams } from 'src/app/domain/costs/costs';
+import ERUCalculator from 'src/app/domain/costs/ERUCalculator';
+import ERUCalculatorFactory from 'src/app/domain/costs/ERUCalculatorFactory';
 import { CostlyQuantitiesOverviewItem } from 'src/app/web-api-client';
 import { AppState } from '../app-store.state';
 import { selectCustomerParams } from '../costs/costs.selectors';

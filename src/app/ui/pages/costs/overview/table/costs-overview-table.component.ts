@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import ERUCalculatorFactory from 'src/app/core/costs/ERUCalculatorFactory';
+import ERUCalculatorFactory from 'src/app/domain/costs/ERUCalculatorFactory';
 import { AppState } from 'src/app/app/app-store.state';
 import {
     CostsOverviewTable,

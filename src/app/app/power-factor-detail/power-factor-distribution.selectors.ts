@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import {
     calculatePowerFactorDistribution,
     PowerFactorDistributionCalculatedItem
-} from 'src/app/core/power-factor/calculate-power-factor-distribution';
+} from 'src/app/domain/power-factor/calculate-power-factor-distribution';
 import { Phases } from '../data-source/data-source.model';
 import {
     selectIsComparisonMode,

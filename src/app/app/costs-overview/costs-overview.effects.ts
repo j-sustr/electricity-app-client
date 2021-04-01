@@ -8,7 +8,7 @@ import {
     IntervalDto,
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
-import ERUCalculatorFactory from 'src/app/core/costs/ERUCalculatorFactory';
+import ERUCalculatorFactory from 'src/app/domain/costs/ERUCalculatorFactory';
 import {
     CostlyQuantitiesDetailItem,
     ICostsClient

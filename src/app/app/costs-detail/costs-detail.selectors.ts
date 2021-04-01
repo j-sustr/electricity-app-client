@@ -2,9 +2,9 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
     calculateCostsDetailItems,
     CostsDetailItem
-} from 'src/app/core/costs/calculate-costs-detail-item';
-import { CustomerParams } from 'src/app/core/costs/costs';
-import ERUCalculatorFactory from 'src/app/core/costs/ERUCalculatorFactory';
+} from 'src/app/domain/costs/calculate-costs-detail-item';
+import { CustomerParams } from 'src/app/domain/costs/costs';
+import ERUCalculatorFactory from 'src/app/domain/costs/ERUCalculatorFactory';
 import { AppState } from '../app-store.state';
 import { selectCustomerParams } from '../costs/costs.selectors';
 import { CostsDetailState } from './costs-detail.model';
