@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ofType } from '@ngrx/effects';
 import { ActionsSubject, select, Store } from '@ngrx/store';
-import { Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/store/app-store.state';
 import { login } from 'src/app/store/auth/auth.actions';
