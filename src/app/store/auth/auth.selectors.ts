@@ -6,5 +6,10 @@ export const selectAuth = createFeatureSelector<AppState, AuthState>('auth');
 
 export const selectIsAuthenticated = createSelector(
     selectAuth,
-    (state: AuthState) => state.isAuthenticated
+    (state: AuthState) => typeof state.user === 'object'
+);
+
+export const selectCurrentUser = createSelector(
+    selectAuth,
+    (state: AuthState) => state.user
 );

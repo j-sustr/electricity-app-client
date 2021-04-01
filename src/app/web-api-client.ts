@@ -922,6 +922,7 @@ export class SeriesClient implements ISeriesClient {
 }
 
 export interface IUserClient {
+    getCurrentUser(): Observable<UserDto>;
     login(username: string | null | undefined, password: string | null | undefined): Observable<FileResponse>;
     logout(): Observable<FileResponse>;
 }
@@ -937,6 +938,54 @@ export class UserClient implements IUserClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getCurrentUser(): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/User/current-user";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentUser(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCurrentUser(response: HttpResponseBase): Observable<UserDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDto>(<any>null);
     }
 
     login(username: string | null | undefined, password: string | null | undefined): Observable<FileResponse> {
@@ -2089,6 +2138,42 @@ export enum AggregationMethod {
     Min = 0,
     Max = 1,
     Avg = 2,
+}
+
+export class UserDto implements IUserDto {
+    username?: string | null;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        return data; 
+    }
+}
+
+export interface IUserDto {
+    username?: string | null;
 }
 
 export interface FileParameter {

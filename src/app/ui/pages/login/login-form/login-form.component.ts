@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ofType } from '@ngrx/effects';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { Observable, of, Subject } from 'rxjs';
@@ -71,7 +72,8 @@ export class LoginFormComponent implements AfterViewInit, OnDestroy {
     constructor(
         private store: Store<AppState>,
         private actionsSubject: ActionsSubject,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private router: Router
     ) {
         this.loading$ = this.store.pipe(select(selectIsLoading));
         this.loading$
@@ -139,19 +141,26 @@ export class LoginFormComponent implements AfterViewInit, OnDestroy {
         );
 
         this.actionsSubject
-            .pipe(ofType(openDataSourceSuccess, openDataSourceError), take(1))
-            .subscribe((data) => {
-                if (data.type !== openDataSourceSuccess.type) {
-                    return;
-                }
+            .pipe(
+                ofType(openDataSourceSuccess, openDataSourceError),
+                take(1),
+                tap((action) => {
+                    if (action.type !== openDataSourceSuccess.type) {
+                        return;
+                    }
 
-                this.store.dispatch(
-                    login({
-                        username: this.form.get('username')?.value as string,
-                        password: this.form.get('password')?.value as string
-                    })
-                );
-            });
+                    const username = this.form.get('username')?.value as string;
+                    const password = this.form.get('password')?.value as string;
+
+                    this.store.dispatch(
+                        login({
+                            username,
+                            password
+                        })
+                    );
+                })
+            )
+            .subscribe();
     }
 
     submit(): void {

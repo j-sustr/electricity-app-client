@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
+import { CanActivate, CanLoad, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { AppState } from '../../store/app-store.state';
-import { selectIsAuthenticated } from '../../store/auth/auth.selectors';
-
-const defaultPath = '/';
+import { AuthService } from 'src/app/store/auth/auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
-    constructor(private store: Store<AppState>, private router: Router) {}
+export class AuthGuard implements CanActivate, CanLoad {
+    constructor(private authService: AuthService, private router: Router) {}
 
     canActivate(): Observable<boolean> {
         return this.canLoad();
     }
 
     canLoad(): Observable<boolean> {
-        return this.store.pipe(select(selectIsAuthenticated)).pipe(
+        return this.authService.getIsAuthenticated().pipe(
             tap((isAuthenticated) => {
                 if (isAuthenticated) {
-                    void this.router.navigate([defaultPath]);
+                    void this.router.navigate(['']);
                 }
             }),
             map((isAuthenticated) => !isAuthenticated)

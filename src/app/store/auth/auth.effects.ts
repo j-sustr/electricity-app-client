@@ -3,26 +3,75 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { LocalStorageService } from 'src/app/infrastructure/local-storage/local-storage.service';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { IUserClient } from 'src/app/web-api-client';
 import { USER_CLIENT } from 'src/app/web-api-client-di';
-import { login, loginError, loginSuccess } from './auth.actions';
-
-export const AUTH_KEY = 'AUTH';
+import {
+    getCurrentUser,
+    getCurrentUserError,
+    getCurrentUserSuccess,
+    loginError,
+    loginSuccess,
+    logout,
+    logoutError,
+    logoutSuccess
+} from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
+    getCurrentUser$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(getCurrentUser),
+            switchMap(() =>
+                this.userClient.getCurrentUser().pipe(
+                    map((user) => {
+                        return getCurrentUserSuccess({
+                            username: user.username ?? '(no name)'
+                        });
+                    }),
+                    catchError((error: HttpErrorResponse) =>
+                        of(
+                            getCurrentUserError({
+                                error
+                            })
+                        )
+                    )
+                )
+            )
+        )
+    );
+
     login$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(login),
+            ofType(logout),
+            switchMap(() =>
+                this.userClient.logout().pipe(
+                    map(() => {
+                        void this.router.navigate(['']);
+                        return logoutSuccess();
+                    }),
+                    catchError((error: HttpErrorResponse) =>
+                        of(
+                            logoutError({
+                                error
+                            })
+                        )
+                    )
+                )
+            )
+        )
+    );
+
+    logout$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(logout),
             switchMap(({ username, password }) =>
                 this.userClient.login(username, password).pipe(
                     map(() => {
-                        this.localStorageService.setItem(AUTH_KEY, {
-                            isAuthenticated: true
+                        void this.router.navigate(['']);
+                        return loginSuccess({
+                            username
                         });
-                        return loginSuccess();
                     }),
                     catchError((error: HttpErrorResponse) =>
                         of(
@@ -40,7 +89,6 @@ export class AuthEffects {
         private actions$: Actions,
         @Inject(USER_CLIENT)
         private userClient: IUserClient,
-        private localStorageService: LocalStorageService,
         private router: Router
     ) {}
 }
