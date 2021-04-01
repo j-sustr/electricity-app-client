@@ -1,6 +1,9 @@
 import { AuthState } from './auth.model';
 import { createReducer, on, Action } from '@ngrx/store';
 import {
+    getCurrentUser,
+    getCurrentUserError,
+    getCurrentUserSuccess,
     login,
     loginError,
     loginSuccess,
@@ -16,6 +19,22 @@ export const initialState: AuthState = {
 
 const reducer = createReducer(
     initialState,
+    on(getCurrentUser, (state) => ({
+        ...state,
+        user: null,
+        loading: true,
+        error: undefined
+    })),
+    on(getCurrentUserSuccess, (state, { user }) => ({
+        ...state,
+        user,
+        loading: false
+    })),
+    on(getCurrentUserError, (state, { error }) => ({
+        ...state,
+        loading: false,
+        error
+    })),
     on(login, (state) => ({
         ...state,
         user: null,
@@ -36,7 +55,8 @@ const reducer = createReducer(
     })),
     on(logout, (state) => ({
         ...state,
-        loading: true
+        loading: true,
+        error: undefined
     })),
     on(logoutSuccess, (state) => ({
         ...state,

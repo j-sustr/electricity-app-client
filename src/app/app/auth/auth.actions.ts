@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
+import { User } from './auth.model';
 
 export const getCurrentUser = createAction('[Auth] Get Current User');
 
 export const getCurrentUserSuccess = createAction(
     '[Auth] Get Current User Success',
-    props<{ username: string }>()
+    props<{ user: User | null }>()
 );
 
 export const getCurrentUserError = createAction(

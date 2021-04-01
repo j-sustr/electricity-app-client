@@ -24,9 +24,14 @@ export class AuthEffects {
             ofType(getCurrentUser),
             switchMap(() =>
                 this.userClient.getCurrentUser().pipe(
-                    map((user) => {
+                    map((userDto) => {
+                        const user = userDto
+                            ? {
+                                  username: userDto.username ?? '(no name)'
+                              }
+                            : null;
                         return getCurrentUserSuccess({
-                            username: user.username ?? '(no name)'
+                            user
                         });
                     }),
                     catchError((error: HttpErrorResponse) =>
