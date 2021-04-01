@@ -105,14 +105,6 @@ export class LoginFormComponent implements AfterViewInit, OnDestroy {
                 this.ceaFilenameControl?.updateValueAndValidity();
             }
         });
-
-        this.form.valueChanges.subscribe(() => {
-            console.log('_'.repeat(30));
-            const controls = this.form.controls;
-            for (const key in controls) {
-                console.log(key, ' is valid: ', controls[key].valid);
-            }
-        });
     }
 
     ngOnDestroy(): void {
