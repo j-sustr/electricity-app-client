@@ -122,7 +122,7 @@
         <div class="actions">
             <dx-button
                 type="success"
-                (onClick)="open()"
+                (onClick)="submit()"
                 [width]="180"
                 [disabled]="!form.valid || (loading$ | async) === true"
             >
