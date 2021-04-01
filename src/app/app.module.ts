@@ -7,16 +7,10 @@ import { HttpErrorInterceptor } from './core/common/http-interceptors/http-error
 import { AppErrorHandler } from './core/common/services/app-error-handler';
 import { AppStoreModule } from './store/app-store.module';
 import { AppBarComponent } from './ui/components/app-bar/app-bar.component';
-import { UnauthenticatedContentModule } from './ui/unauthenticated-content/unauthenticated-content.module';
 
 @NgModule({
     declarations: [AppComponent, AppBarComponent],
-    imports: [
-        BrowserModule,
-        UnauthenticatedContentModule,
-        AppStoreModule,
-        AppRoutingModule
-    ],
+    imports: [BrowserModule, AppStoreModule, AppRoutingModule],
     bootstrap: [AppComponent],
     providers: [
         {
