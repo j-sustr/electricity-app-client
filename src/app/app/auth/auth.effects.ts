@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { IUserClient } from 'src/app/web-api-client';
-import { USER_CLIENT } from 'src/app/web-api-client-di';
+import { IAuthClient, IUserClient } from 'src/app/web-api-client';
+import { AUTH_CLIENT, USER_CLIENT } from 'src/app/web-api-client-di';
 import {
     getCurrentUser,
     getCurrentUserError,
     getCurrentUserSuccess,
+    login,
     loginError,
     loginSuccess,
     logout,
@@ -48,9 +49,34 @@ export class AuthEffects {
 
     login$ = createEffect(() =>
         this.actions$.pipe(
+            ofType(login),
+            switchMap(({ username, password }) =>
+                this.authClient.login(username, password).pipe(
+                    map((userDto) => {
+                        void this.router.navigate(['']);
+                        return loginSuccess({
+                            user: {
+                                username: userDto.username ?? '(no name)'
+                            }
+                        });
+                    }),
+                    catchError((error: HttpErrorResponse) =>
+                        of(
+                            loginError({
+                                error
+                            })
+                        )
+                    )
+                )
+            )
+        )
+    );
+
+    logout$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(logout),
             switchMap(() =>
-                this.userClient.logout().pipe(
+                this.authClient.logout().pipe(
                     map(() => {
                         void this.router.navigate(['']);
                         return logoutSuccess();
@@ -67,33 +93,12 @@ export class AuthEffects {
         )
     );
 
-    logout$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(logout),
-            switchMap(({ username, password }) =>
-                this.userClient.login(username, password).pipe(
-                    map(() => {
-                        void this.router.navigate(['']);
-                        return loginSuccess({
-                            username
-                        });
-                    }),
-                    catchError((error: HttpErrorResponse) =>
-                        of(
-                            loginError({
-                                error
-                            })
-                        )
-                    )
-                )
-            )
-        )
-    );
-
     constructor(
         private actions$: Actions,
         @Inject(USER_CLIENT)
         private userClient: IUserClient,
+        @Inject(AUTH_CLIENT)
+        private authClient: IAuthClient,
         private router: Router
     ) {}
 }

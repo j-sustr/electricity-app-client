@@ -9,6 +9,7 @@ import {
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {
+    AuthClient,
     CostsClient,
     DataSourceClient,
     GroupsClient,
@@ -16,6 +17,7 @@ import {
     UserClient
 } from 'src/app/web-api-client';
 import {
+    AUTH_CLIENT,
     COSTS_CLIENT,
     DATA_SOURCE_CLIENT,
     GROUPS_CLIENT,
@@ -66,6 +68,10 @@ import { CustomRouterSerializer } from './common/router/custom-router-serializer
         {
             provide: USER_CLIENT,
             useClass: UserClient
+        },
+        {
+            provide: AUTH_CLIENT,
+            useClass: AuthClient
         },
         {
             provide: DATA_SOURCE_CLIENT,

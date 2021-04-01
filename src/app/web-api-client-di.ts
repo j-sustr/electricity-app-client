@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import {
+    IAuthClient,
     ICostsClient,
     IDataSourceClient,
     IGroupsClient,
@@ -8,6 +9,8 @@ import {
 } from './web-api-client';
 
 export const USER_CLIENT = new InjectionToken<IUserClient>('USER_CLIENT');
+
+export const AUTH_CLIENT = new InjectionToken<IAuthClient>('AUTH_CLIENT');
 
 export const DATA_SOURCE_CLIENT = new InjectionToken<IDataSourceClient>(
     'DATA_SOURCE_CLIENT'
