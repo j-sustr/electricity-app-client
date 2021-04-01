@@ -1,14 +1,14 @@
-import * as cdActions from '../costs-detail/costs-detail.actions';
-import * as cdSelectors from '../costs-detail/costs-detail.selectors';
-import * as coActions from '../costs-overview/costs-overview.actions';
-import * as coSelectors from '../costs-overview/costs-overview.selectors';
-import * as pfoActions from '../power-factor-overview/power-factor-overview.actions';
-import * as pfoSelectors from '../power-factor-overview/power-factor-overview.selectors';
-import * as pfdActions from '../power-factor-detail/power-factor-detail.actions';
-import * as pfdSelectors from '../power-factor-detail/power-factor-detail.selectors';
+import * as cdActions from '../../costs-detail/costs-detail.actions';
+import * as cdSelectors from '../../costs-detail/costs-detail.selectors';
+import * as coActions from '../../costs-overview/costs-overview.actions';
+import * as coSelectors from '../../costs-overview/costs-overview.selectors';
+import * as pfoActions from '../../power-factor-overview/power-factor-overview.actions';
+import * as pfoSelectors from '../../power-factor-overview/power-factor-overview.selectors';
+import * as pfdActions from '../../power-factor-detail/power-factor-detail.actions';
+import * as pfdSelectors from '../../power-factor-detail/power-factor-detail.selectors';
 import { Action, ActionCreator, Selector } from '@ngrx/store';
-import { AppState } from '../app-store.state';
-import { ViewType } from '../models';
+import { AppState } from '../../app-store.state';
+import { ViewType } from '../../models';
 
 export const SECTION_PATHS = [
     '/costs/overview',

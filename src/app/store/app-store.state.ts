@@ -16,7 +16,7 @@ import { PowerFactorDetailState } from './power-factor-detail/power-factor-detai
 import { powerFactorDetailReducer } from './power-factor-detail/power-factor-detail.reducer';
 import { PowerFactorOverviewState } from './power-factor-overview/power-factor-overview.model';
 import { powerFactorOverviewReducer } from './power-factor-overview/power-factor-overview.reducer';
-import { RouterStateUrl } from './router/router.store';
+import { RouterStateUrl } from './common/router/router.store';
 
 export interface AppState {
     auth: AuthState;

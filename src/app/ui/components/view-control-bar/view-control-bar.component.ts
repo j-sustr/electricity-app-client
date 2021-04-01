@@ -7,13 +7,13 @@ import { AppState } from '../../../store/app-store.state';
 import { setPhases } from '../../../store/data-source/data-source.actions';
 import { Phases } from '../../../store/data-source/data-source.model';
 import { selectPhases } from '../../../store/data-source/data-source.selectors';
-import { selectRouterPath } from '../../../store/router/router.selectors';
+import { selectRouterPath } from '../../../store/common/router/router.selectors';
 import {
     isSectionPath,
     mapSectionPathToSetViewTypeAction,
     mapSectionPathToViewTypeSelector,
     SectionPath
-} from '../../../store/router/section-path-utils';
+} from '../../../store/common/router/section-path-utils';
 
 type ViewTypeOption = {
     text: string;

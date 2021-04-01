@@ -32,7 +32,7 @@ import { GroupsEffects } from './groups/groups.effects';
 import { PowerFactorDetailEffects } from './power-factor-detail/power-factor-detail.effects';
 import { PowerFactorDistributionEffects } from './power-factor-detail/power-factor-distribution.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
-import { CustomRouterSerializer } from './router/custom-router-serializer';
+import { CustomRouterSerializer } from './common/router/custom-router-serializer';
 
 // function apiBaseUrlFactory(): string | undefined {
 //     const url = 'https://localhost:44312';

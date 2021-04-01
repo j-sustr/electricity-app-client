@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../app-store.state';
-import { selectGroupId } from '../router/router.selectors';
+import { selectGroupId } from '../common/router/router.selectors';
 import { GroupsState } from './groups.model';
 
 export interface GroupTreeView {

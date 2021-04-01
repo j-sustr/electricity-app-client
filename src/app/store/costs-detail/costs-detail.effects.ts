@@ -15,7 +15,7 @@ import {
 import { COSTS_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
 import { selectIntervals } from '../data-source/data-source.selectors';
-import { selectGroupId } from '../router/router.selectors';
+import { selectGroupId } from '../common/router/router.selectors';
 import {
     getDetail,
     getDetailError,

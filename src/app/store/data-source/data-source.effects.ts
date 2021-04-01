@@ -22,14 +22,17 @@ import {
 } from 'src/app/web-api-client';
 import { DATA_SOURCE_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
-import { selectGroupId, selectRouterPath } from '../router/router.selectors';
+import {
+    selectGroupId,
+    selectRouterPath
+} from '../common/router/router.selectors';
 import {
     isSectionPath,
     mapSectionPathToArch,
     mapSectionPathToGetDataAction,
     mapSectionPathToHasDataSelector,
     SectionPath
-} from '../router/section-path-utils';
+} from '../common/router/section-path-utils';
 import {
     getInfoError,
     getInfoSuccess,

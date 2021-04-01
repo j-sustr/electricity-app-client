@@ -18,7 +18,7 @@ import {
     selectIntervals,
     selectPhases
 } from '../data-source/data-source.selectors';
-import { selectGroupId } from '../router/router.selectors';
+import { selectGroupId } from '../common/router/router.selectors';
 import {
     getDistribution,
     getDistributionError,
