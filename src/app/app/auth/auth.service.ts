@@ -7,7 +7,9 @@ import { AppState } from '../app-store.state';
 import {
     getCurrentUser,
     getCurrentUserError,
-    getCurrentUserSuccess
+    getCurrentUserSuccess,
+    login,
+    logout
 } from './auth.actions';
 import { User } from './auth.model';
 import { selectCurrentUser } from './auth.selectors';
@@ -43,5 +45,19 @@ export class AuthService {
                 );
             })
         );
+    }
+
+    // --- DEBUG ---
+    login(username: string, password: string): void {
+        this.store.dispatch(
+            login({
+                username,
+                password
+            })
+        );
+    }
+
+    logout(): void {
+        this.store.dispatch(logout());
     }
 }
