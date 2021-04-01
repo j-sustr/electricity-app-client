@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from 'src/app/store/app-store.state';
-import { dataSourceReducer } from 'src/app/store/data-source/data-source.reducer';
+import { AppState } from 'src/app/app/app-store.state';
+import { dataSourceReducer } from 'src/app/app/data-source/data-source.reducer';
 import {
     PowerFactorOverviewChart,
     selectOverviewChart
-} from 'src/app/store/power-factor-overview/power-factor-overview.selectors';
+} from 'src/app/app/power-factor-overview/power-factor-overview.selectors';
 
 @Component({
     selector: 'app-power-factor-overview-chart',

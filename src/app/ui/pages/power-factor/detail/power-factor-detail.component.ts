@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from 'src/app/store/app-store.state';
-import { PowerFactorDetailState } from 'src/app/store/power-factor-detail/power-factor-detail.model';
-import { selectDetail } from 'src/app/store/power-factor-detail/power-factor-detail.selectors';
+import { AppState } from 'src/app/app/app-store.state';
+import { PowerFactorDetailState } from 'src/app/app/power-factor-detail/power-factor-detail.model';
+import { selectDetail } from 'src/app/app/power-factor-detail/power-factor-detail.selectors';
 
 @Component({
     selector: 'app-power-factor-detail',

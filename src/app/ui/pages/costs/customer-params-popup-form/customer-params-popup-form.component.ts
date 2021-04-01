@@ -8,9 +8,9 @@ import {
     DS_OPERATORS,
     VOLTAGE_LEVELS
 } from 'src/app/core/costs/costs';
-import { AppState } from 'src/app/store/app-store.state';
-import { setCustomerParams } from 'src/app/store/costs/costs.actions';
-import { selectCustomerParams } from 'src/app/store/costs/costs.selectors';
+import { AppState } from 'src/app/app/app-store.state';
+import { setCustomerParams } from 'src/app/app/costs/costs.actions';
+import { selectCustomerParams } from 'src/app/app/costs/costs.selectors';
 
 @Component({
     selector: 'app-customer-params-popup-form',

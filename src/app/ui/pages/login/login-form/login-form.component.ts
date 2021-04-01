@@ -6,14 +6,14 @@ import { ofType } from '@ngrx/effects';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { Observable, of, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';
-import { AppState } from 'src/app/store/app-store.state';
-import { login } from 'src/app/store/auth/auth.actions';
+import { AppState } from 'src/app/app/app-store.state';
+import { login } from 'src/app/app/auth/auth.actions';
 import {
     openDataSource,
     openDataSourceError,
     openDataSourceSuccess
-} from 'src/app/store/data-source/data-source.actions';
-import { selectIsLoading } from 'src/app/store/data-source/data-source.selectors';
+} from 'src/app/app/data-source/data-source.actions';
+import { selectIsLoading } from 'src/app/app/data-source/data-source.selectors';
 import { conditionalValidator } from 'src/app/ui/common/validators/conditionalValidator';
 import {
     DataSourceType,

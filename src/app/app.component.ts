@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from './store/app-store.state';
-import { selectIsAuthenticated } from './store/auth/auth.selectors';
+import { AppState } from './app/app-store.state';
+import { selectIsAuthenticated } from './app/auth/auth.selectors';
 import { DataSourceClient } from './web-api-client';
 
 @Component({

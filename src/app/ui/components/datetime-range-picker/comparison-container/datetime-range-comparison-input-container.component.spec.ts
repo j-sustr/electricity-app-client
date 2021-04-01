@@ -3,7 +3,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
     selectInfo,
     selectIntervals
-} from 'src/app/store/data-source/data-source.selectors';
+} from 'src/app/app/data-source/data-source.selectors';
 import { DatetimeRangePickerModule } from '../datetime-range-picker.module';
 
 import { DatetimeRangeComparisonInputContainerComponent } from './datetime-range-comparison-input-container.component';

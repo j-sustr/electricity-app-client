@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import ERUCalculatorFactory from 'src/app/core/costs/ERUCalculatorFactory';
-import { AppState } from 'src/app/store/app-store.state';
+import { AppState } from 'src/app/app/app-store.state';
 import {
     CostsDetailTable,
     selectDetailTable
-} from 'src/app/store/costs-detail/costs-detail.selectors';
+} from 'src/app/app/costs-detail/costs-detail.selectors';
 
 @Component({
     selector: 'app-costs-detail-table',
