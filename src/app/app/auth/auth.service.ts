@@ -21,7 +21,7 @@ export class AuthService {
 
     getIsAuthenticated(): Observable<boolean> {
         return this.getCurrentUser().pipe(
-            map((user) => typeof user === 'object')
+            map((user) => user !== null && typeof user === 'object')
         );
     }
 
