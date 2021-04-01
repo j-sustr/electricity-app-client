@@ -13,6 +13,10 @@ export class AuthGuard implements CanActivate {
     constructor(private store: Store<AppState>, private router: Router) {}
 
     canActivate(): Observable<boolean> {
+        return this.canLoad();
+    }
+
+    canLoad(): Observable<boolean> {
         return this.store.pipe(select(selectIsAuthenticated)).pipe(
             tap((isAuthenticated) => {
                 if (isAuthenticated) {
