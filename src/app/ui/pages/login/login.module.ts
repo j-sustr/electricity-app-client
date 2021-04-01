@@ -7,8 +7,10 @@ import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
 import { DxRadioGroupModule } from 'devextreme-angular/ui/radio-group';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
+import { SingleCardModule } from '../../layouts/single-card/single-card.module';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { LoginRoutingModule } from './login-routing.module';
+import { LoginComponent } from './login.component';
 
 const DX = [
     DxTemplateModule,
@@ -20,7 +22,13 @@ const DX = [
 ];
 
 @NgModule({
-    imports: [CommonModule, ReactiveFormsModule, ...DX, LoginRoutingModule],
-    declarations: [LoginFormComponent]
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ...DX,
+        SingleCardModule,
+        LoginRoutingModule
+    ],
+    declarations: [LoginComponent, LoginFormComponent]
 })
 export class LoginModule {}
