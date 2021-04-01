@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpErrorInterceptor } from './store/common/http-interceptors/http-error.interceptor';
-import { AppErrorHandler } from './core/common/services/app-error-handler';
+import { AppErrorHandler } from './store/common/error-handler/app-error-handler';
 import { AppStoreModule } from './store/app-store.module';
 import { AppBarComponent } from './ui/components/app-bar/app-bar.component';
 
