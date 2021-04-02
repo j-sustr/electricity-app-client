@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
@@ -78,7 +78,11 @@ export class AuthEffects {
             switchMap(() =>
                 this.authClient.logout().pipe(
                     map(() => {
-                        void this.router.navigate(['']);
+                        setTimeout(() => {
+                            this.zone.run(() => {
+                                void this.router.navigate(['/login']);
+                            });
+                        }, 0);
                         return logoutSuccess();
                     }),
                     catchError((error: HttpErrorResponse) =>
@@ -99,6 +103,7 @@ export class AuthEffects {
         private userClient: IUserClient,
         @Inject(AUTH_CLIENT)
         private authClient: IAuthClient,
-        private router: Router
+        private router: Router,
+        private zone: NgZone
     ) {}
 }
