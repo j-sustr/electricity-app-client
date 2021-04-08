@@ -8,7 +8,6 @@ import {
     IntervalDto,
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
-import ERUCalculatorFactory from 'src/app/domain/costs/ERUCalculatorFactory';
 import {
     CostlyQuantitiesDetailItem,
     ICostsClient
@@ -74,8 +73,7 @@ export class CostsOverviewEffects {
         private actions$: Actions,
         private store: Store<AppState>,
         @Inject(COSTS_CLIENT)
-        private client: ICostsClient,
-        private calculatorFactory: ERUCalculatorFactory
+        private client: ICostsClient
     ) {}
 }
 
