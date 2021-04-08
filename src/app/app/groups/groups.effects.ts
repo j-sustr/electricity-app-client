@@ -8,18 +8,19 @@ import { GROUPS_CLIENT } from 'src/app/web-api-client-di';
 import { getOverviewError } from '../costs-overview/costs-overview.actions';
 import { createGroupInfoFromDto } from '../common/dto-mapping';
 import { getUserGroupTree, getUserGroupTreeSuccess } from './groups.actions';
+import { loginSuccess } from '../auth/auth.actions';
 
 @Injectable()
 export class GroupsEffects {
-    getUserGroupInfoTree$ = createEffect(() => {
+    getUserGroupTree$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getUserGroupTree),
+            ofType(getUserGroupTree, loginSuccess),
             switchMap(() => {
                 return this.client.getUserGroupInfoTree().pipe(
                     map((dto) => {
-                        const root = createGroupInfoFromDto(dto);
+                        const tree = createGroupInfoFromDto(dto);
                         return getUserGroupTreeSuccess({
-                            root
+                            tree
                         });
                     }),
                     catchError((error: HttpErrorResponse) =>

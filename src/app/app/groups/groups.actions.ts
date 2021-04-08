@@ -6,7 +6,7 @@ export const getUserGroupTree = createAction('[Groups] Get User Group Tree');
 
 export const getUserGroupTreeSuccess = createAction(
     '[Groups] Get User Group Tree Success',
-    props<{ root: GroupInfo }>()
+    props<{ tree: GroupInfo }>()
 );
 
 export const getUserGroupTreeError = createAction(

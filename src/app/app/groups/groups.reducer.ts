@@ -20,9 +20,9 @@ const reducer = createReducer(
         loading: true,
         error: null
     })),
-    on(getUserGroupTreeSuccess, (state, { root }) => ({
+    on(getUserGroupTreeSuccess, (state, { tree }) => ({
         ...state,
-        userGroupTree: root,
+        userGroupTree: tree,
         loading: false,
         error: null
     })),
