@@ -1962,7 +1962,7 @@ export class GroupInfoDto implements IGroupInfoDto {
     id?: string | null;
     name?: string | null;
     archives?: ArchiveInfoDto[] | null;
-    subgroups?: GroupInfo[] | null;
+    subgroups?: GroupInfoDto[] | null;
 
     constructor(data?: IGroupInfoDto) {
         if (data) {
@@ -1985,7 +1985,7 @@ export class GroupInfoDto implements IGroupInfoDto {
             if (Array.isArray(_data["subgroups"])) {
                 this.subgroups = [] as any;
                 for (let item of _data["subgroups"])
-                    this.subgroups!.push(GroupInfo.fromJS(item));
+                    this.subgroups!.push(GroupInfoDto.fromJS(item));
             }
         }
     }
@@ -2019,7 +2019,7 @@ export interface IGroupInfoDto {
     id?: string | null;
     name?: string | null;
     archives?: ArchiveInfoDto[] | null;
-    subgroups?: GroupInfo[] | null;
+    subgroups?: GroupInfoDto[] | null;
 }
 
 export class ArchiveInfoDto implements IArchiveInfoDto {
@@ -2120,174 +2120,6 @@ export class DateRangeDto implements IDateRangeDto {
 export interface IDateRangeDto {
     dateMin?: Date;
     dateMax?: Date;
-}
-
-export class GroupInfo implements IGroupInfo {
-    id?: string;
-    name?: string | null;
-    archives?: ArchiveInfo[] | null;
-    subgroups?: GroupInfo[] | null;
-
-    constructor(data?: IGroupInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            if (Array.isArray(_data["archives"])) {
-                this.archives = [] as any;
-                for (let item of _data["archives"])
-                    this.archives!.push(ArchiveInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["subgroups"])) {
-                this.subgroups = [] as any;
-                for (let item of _data["subgroups"])
-                    this.subgroups!.push(GroupInfo.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): GroupInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new GroupInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        if (Array.isArray(this.archives)) {
-            data["archives"] = [];
-            for (let item of this.archives)
-                data["archives"].push(item.toJSON());
-        }
-        if (Array.isArray(this.subgroups)) {
-            data["subgroups"] = [];
-            for (let item of this.subgroups)
-                data["subgroups"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IGroupInfo {
-    id?: string;
-    name?: string | null;
-    archives?: ArchiveInfo[] | null;
-    subgroups?: GroupInfo[] | null;
-}
-
-export class ArchiveInfo implements IArchiveInfo {
-    arch?: number;
-    count?: number;
-    range?: DateRange | null;
-    intervals?: DateRange[] | null;
-    name?: string | null;
-
-    constructor(data?: IArchiveInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.arch = _data["arch"] !== undefined ? _data["arch"] : <any>null;
-            this.count = _data["count"] !== undefined ? _data["count"] : <any>null;
-            this.range = _data["range"] ? DateRange.fromJS(_data["range"]) : <any>null;
-            if (Array.isArray(_data["intervals"])) {
-                this.intervals = [] as any;
-                for (let item of _data["intervals"])
-                    this.intervals!.push(DateRange.fromJS(item));
-            }
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): ArchiveInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ArchiveInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["arch"] = this.arch !== undefined ? this.arch : <any>null;
-        data["count"] = this.count !== undefined ? this.count : <any>null;
-        data["range"] = this.range ? this.range.toJSON() : <any>null;
-        if (Array.isArray(this.intervals)) {
-            data["intervals"] = [];
-            for (let item of this.intervals)
-                data["intervals"].push(item.toJSON());
-        }
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        return data; 
-    }
-}
-
-export interface IArchiveInfo {
-    arch?: number;
-    count?: number;
-    range?: DateRange | null;
-    intervals?: DateRange[] | null;
-    name?: string | null;
-}
-
-export class DateRange implements IDateRange {
-    dateMin?: Date;
-    dateMax?: Date;
-    timeSpan?: string;
-
-    constructor(data?: IDateRange) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.dateMin = _data["dateMin"] ? new Date(_data["dateMin"].toString()) : <any>null;
-            this.dateMax = _data["dateMax"] ? new Date(_data["dateMax"].toString()) : <any>null;
-            this.timeSpan = _data["timeSpan"] !== undefined ? _data["timeSpan"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): DateRange {
-        data = typeof data === 'object' ? data : {};
-        let result = new DateRange();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["dateMin"] = this.dateMin ? this.dateMin.toISOString() : <any>null;
-        data["dateMax"] = this.dateMax ? this.dateMax.toISOString() : <any>null;
-        data["timeSpan"] = this.timeSpan !== undefined ? this.timeSpan : <any>null;
-        return data; 
-    }
-}
-
-export interface IDateRange {
-    dateMin?: Date;
-    dateMax?: Date;
-    timeSpan?: string;
 }
 
 export class GroupTreeNodeDto implements IGroupTreeNodeDto {
