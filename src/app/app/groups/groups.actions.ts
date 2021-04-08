@@ -1,15 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { Group } from './groups.model';
+import { GroupInfo } from './groups.model';
 
-export const getUserGroups = createAction('[Groups] Get User Groups');
+export const getUserGroupTree = createAction('[Groups] Get User Group Tree');
 
-export const getUserGroupsSuccess = createAction(
-    '[Groups] Get User Groups Success',
-    props<{ userGroups: Group[] }>()
+export const getUserGroupTreeSuccess = createAction(
+    '[Groups] Get User Group Tree Success',
+    props<{ root: GroupInfo }>()
 );
 
-export const getUserGroupsError = createAction(
-    '[Groups] Get User Groups Error',
+export const getUserGroupTreeError = createAction(
+    '[Groups] Get User Group Tree Error',
     props<{ error: HttpErrorResponse }>()
 );

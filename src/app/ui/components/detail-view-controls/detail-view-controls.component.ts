@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { GroupInfo } from 'src/app/app/groups/groups.model';
 import { AppState } from '../../../app/app-store.state';
-import { getUserGroups } from '../../../app/groups/groups.actions';
+import { getUserGroupTree } from '../../../app/groups/groups.actions';
 import {
     GroupTreeView,
     selectGroupTreeView,
-    selectSelectedGroupName
+    selectSelectedGroup
 } from '../../../app/groups/groups.selectors';
 
 @Component({
@@ -17,18 +18,16 @@ import {
 export class DetailViewControlsComponent implements OnInit {
     groupPickerPopupVisible = false;
 
-    selectedGroupName$: Observable<string | null>;
-    groupTree$: Observable<GroupTreeView | null>;
+    selectedGroup$: Observable<GroupInfo | null>;
+    groupTree$: Observable<GroupTreeView>;
 
     constructor(private store: Store<AppState>) {
-        this.selectedGroupName$ = this.store.pipe(
-            select(selectSelectedGroupName)
-        );
+        this.selectedGroup$ = this.store.pipe(select(selectSelectedGroup));
         this.groupTree$ = this.store.pipe(select(selectGroupTreeView));
     }
 
     ngOnInit(): void {
-        this.store.dispatch(getUserGroups());
+        this.store.dispatch(getUserGroupTree());
     }
 
     openGroupPicker(): void {

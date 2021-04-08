@@ -1,32 +1,32 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import {
-    getUserGroups,
-    getUserGroupsError,
-    getUserGroupsSuccess
+    getUserGroupTree,
+    getUserGroupTreeError,
+    getUserGroupTreeSuccess
 } from './groups.actions';
 import { GroupsState } from './groups.model';
 
 const initialState: GroupsState = {
-    userGroups: null,
+    userGroupTree: null,
     loading: false,
     error: null
 };
 
 const reducer = createReducer(
     initialState,
-    on(getUserGroups, (state) => ({
+    on(getUserGroupTree, (state) => ({
         ...state,
-        userGroups: null,
+        userGroupTree: null,
         loading: true,
         error: null
     })),
-    on(getUserGroupsSuccess, (state, { userGroups }) => ({
+    on(getUserGroupTreeSuccess, (state, { root }) => ({
         ...state,
-        userGroups,
+        userGroupTree: root,
         loading: false,
         error: null
     })),
-    on(getUserGroupsError, (state, { error }) => ({
+    on(getUserGroupTreeError, (state, { error }) => ({
         ...state,
         loading: false,
         error

@@ -6,30 +6,20 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { IGroupsClient } from 'src/app/web-api-client';
 import { GROUPS_CLIENT } from 'src/app/web-api-client-di';
 import { getOverviewError } from '../costs-overview/costs-overview.actions';
-import { getUserGroups, getUserGroupsSuccess } from './groups.actions';
-import { Group } from './groups.model';
+import { createGroupInfoFromDto } from '../common/dto-mapping';
+import { getUserGroupTree, getUserGroupTreeSuccess } from './groups.actions';
 
 @Injectable()
 export class GroupsEffects {
-    getUserGroups$ = createEffect(() => {
+    getUserGroupInfoTree$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getUserGroups),
+            ofType(getUserGroupTree),
             switchMap(() => {
-                return this.client.getUserGroups().pipe(
+                return this.client.getUserGroupInfoTree().pipe(
                     map((dto) => {
-                        const userGroups = dto.groups?.map((g) => {
-                            return {
-                                id: g.id ?? '(no id)',
-                                name: g.name ?? '(no name)'
-                            } as Group;
-                        });
-
-                        if (!Array.isArray(userGroups)) {
-                            throw new Error('no user groups');
-                        }
-
-                        return getUserGroupsSuccess({
-                            userGroups
+                        const root = createGroupInfoFromDto(dto);
+                        return getUserGroupTreeSuccess({
+                            root
                         });
                     }),
                     catchError((error: HttpErrorResponse) =>

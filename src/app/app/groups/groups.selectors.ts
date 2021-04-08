@@ -1,74 +1,63 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../app-store.state';
 import { selectGroupId } from '../common/router/router.selectors';
-import { GroupsState } from './groups.model';
+import { GroupInfo, GroupsState } from './groups.model';
 
 export interface GroupTreeView {
-    items: GroupTreeViewItem[];
+    tree: GroupInfoView | null;
     loading: boolean;
 }
 
-export interface GroupTreeViewItem {
+export interface GroupInfoView {
     id: string;
     text: string;
     expanded?: boolean;
-    items?: GroupTreeViewItem[];
+    items?: GroupInfoView[];
 }
 
 export const selectGroups = createFeatureSelector<AppState, GroupsState>(
     'groups'
 );
 
-export const selectUserGroups = createSelector(
+export const selectUserGroupTree = createSelector(
     selectGroups,
-    (state: GroupsState) => state.userGroups
+    (state: GroupsState) => state.userGroupTree
 );
 
-export const selectSelectedGroupName = createSelector(
+export const selectSelectedGroup = createSelector(
     selectGroupId,
-    selectUserGroups,
-    (groupId, userGroups): string | null => {
-        if (groupId && Array.isArray(userGroups)) {
-            const g = userGroups.find((g) => g.id === groupId);
-            if (g) return g.name;
-        }
-        return null;
-    }
-);
-
-export const selectGroupTreeViewItems = createSelector(
-    selectUserGroups,
-    (userGroups) => {
-        if (!userGroups) {
-            return null;
-        }
-
-        return userGroups.map((g) => {
-            return {
-                id: g.id,
-                text: g.name,
-                expanded: false
-            } as GroupTreeViewItem;
-        });
+    selectUserGroupTree,
+    (groupId, groupTree): GroupInfo | null => {
+        if (!groupTree) return null;
+        const groupArr = flattenGroupInfoTree(groupTree);
+        const selectedGroup = groupArr.find((g) => g.id === groupId);
+        return selectedGroup ?? null;
     }
 );
 
 export const selectGroupTreeView = createSelector(
     selectGroups,
-    selectGroupTreeViewItems,
-    (state, items): GroupTreeView | null => {
-        if (!items) {
-            if (state.loading) {
-                return {
-                    items: [],
-                    loading: true
-                };
-            }
-            return null;
-        }
+    selectUserGroupTree,
+    (state, tree): GroupTreeView => {
         return {
-            items,
-            loading: false
+            tree: tree ? createGroupInfoView(tree) : null,
+            loading: state.loading
         };
     }
 );
+
+function createGroupInfoView(info: GroupInfo): GroupInfoView {
+    return {
+        id: info.id,
+        text: info.name,
+        expanded: true,
+        items: info.subgroups?.map((g) => createGroupInfoView(g))
+    };
+}
+
+function flattenGroupInfoTree(groupInfo: GroupInfo): GroupInfo[] {
+    const arr = groupInfo.subgroups?.map((g) => flattenGroupInfoTree(g)) ?? [];
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const flatArr = arr.flat() as GroupInfo[];
+    return [groupInfo, ...flatArr];
+}
