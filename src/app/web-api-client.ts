@@ -14,6 +14,78 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface IArchiveClient {
+    getQuantities(groupId: string | null | undefined, arch: number | undefined): Observable<QuantitiesDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ArchiveClient implements IArchiveClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getQuantities(groupId: string | null | undefined, arch: number | undefined): Observable<QuantitiesDto> {
+        let url_ = this.baseUrl + "/api/Archive/quantities?";
+        if (groupId !== undefined && groupId !== null)
+            url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
+        if (arch === null)
+            throw new Error("The parameter 'arch' cannot be null.");
+        else if (arch !== undefined)
+            url_ += "arch=" + encodeURIComponent("" + arch) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetQuantities(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetQuantities(<any>response_);
+                } catch (e) {
+                    return <Observable<QuantitiesDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuantitiesDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetQuantities(response: HttpResponseBase): Observable<QuantitiesDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QuantitiesDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuantitiesDto>(<any>null);
+    }
+}
+
 export interface IAuthClient {
     login(username: string | null | undefined, password: string | null | undefined): Observable<UserDto>;
     logout(): Observable<FileResponse>;
@@ -277,6 +349,7 @@ export interface IDataSourceClient {
     setTenant(identifier: string | null | undefined): Observable<FileResponse>;
     open(query: OpenDataSourceCommand): Observable<FileResponse>;
     getInfo(groupId: string | null | undefined, arch: number | undefined): Observable<DataSourceInfoDto>;
+    clearCache(): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -489,6 +562,122 @@ export class DataSourceClient implements IDataSourceClient {
         }
         return _observableOf<DataSourceInfoDto>(<any>null);
     }
+
+    clearCache(): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/DataSource/cache";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processClearCache(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processClearCache(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processClearCache(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+}
+
+export interface IDBDataSourceClient {
+    getRecords(): Observable<SmpMeasNameDBDto[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class DBDataSourceClient implements IDBDataSourceClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getRecords(): Observable<SmpMeasNameDBDto[]> {
+        let url_ = this.baseUrl + "/api/DBDataSource/records";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRecords(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRecords(<any>response_);
+                } catch (e) {
+                    return <Observable<SmpMeasNameDBDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SmpMeasNameDBDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetRecords(response: HttpResponseBase): Observable<SmpMeasNameDBDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SmpMeasNameDBDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SmpMeasNameDBDto[]>(<any>null);
+    }
 }
 
 export interface IFileClient {
@@ -615,8 +804,10 @@ export class FileClient implements IFileClient {
 }
 
 export interface IGroupsClient {
-    getUserGroups(): Observable<UserGroupsDto>;
+    getUserGroupInfoTree(): Observable<GroupInfoDto>;
+    getUserRecordGroupInfos(): Observable<GroupInfoDto[]>;
     getUserGroupTree(): Observable<GroupTreeNodeDto>;
+    getGroupInfo(id: string | null | undefined, recurseSubgroups: boolean | undefined, archs: number[] | null | undefined, infoType: ArchiveInfoType | undefined, range_DateMin: Date | undefined, range_DateMax: Date | undefined, iDisGroup: boolean | undefined): Observable<GroupInfoDto>;
 }
 
 @Injectable({
@@ -632,8 +823,8 @@ export class GroupsClient implements IGroupsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getUserGroups(): Observable<UserGroupsDto> {
-        let url_ = this.baseUrl + "/api/Groups";
+    getUserGroupInfoTree(): Observable<GroupInfoDto> {
+        let url_ = this.baseUrl + "/api/Groups/user-group-info-tree";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -645,20 +836,20 @@ export class GroupsClient implements IGroupsClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetUserGroups(response_);
+            return this.processGetUserGroupInfoTree(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetUserGroups(<any>response_);
+                    return this.processGetUserGroupInfoTree(<any>response_);
                 } catch (e) {
-                    return <Observable<UserGroupsDto>><any>_observableThrow(e);
+                    return <Observable<GroupInfoDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<UserGroupsDto>><any>_observableThrow(response_);
+                return <Observable<GroupInfoDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetUserGroups(response: HttpResponseBase): Observable<UserGroupsDto> {
+    protected processGetUserGroupInfoTree(response: HttpResponseBase): Observable<GroupInfoDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -669,7 +860,7 @@ export class GroupsClient implements IGroupsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserGroupsDto.fromJS(resultData200);
+            result200 = GroupInfoDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -677,11 +868,63 @@ export class GroupsClient implements IGroupsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<UserGroupsDto>(<any>null);
+        return _observableOf<GroupInfoDto>(<any>null);
+    }
+
+    getUserRecordGroupInfos(): Observable<GroupInfoDto[]> {
+        let url_ = this.baseUrl + "/api/Groups/user-record-group-infos";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserRecordGroupInfos(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserRecordGroupInfos(<any>response_);
+                } catch (e) {
+                    return <Observable<GroupInfoDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GroupInfoDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserRecordGroupInfos(response: HttpResponseBase): Observable<GroupInfoDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GroupInfoDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GroupInfoDto[]>(<any>null);
     }
 
     getUserGroupTree(): Observable<GroupTreeNodeDto> {
-        let url_ = this.baseUrl + "/api/Groups/tree";
+        let url_ = this.baseUrl + "/api/Groups/user-tree";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -726,6 +969,78 @@ export class GroupsClient implements IGroupsClient {
             }));
         }
         return _observableOf<GroupTreeNodeDto>(<any>null);
+    }
+
+    getGroupInfo(id: string | null | undefined, recurseSubgroups: boolean | undefined, archs: number[] | null | undefined, infoType: ArchiveInfoType | undefined, range_DateMin: Date | undefined, range_DateMax: Date | undefined, iDisGroup: boolean | undefined): Observable<GroupInfoDto> {
+        let url_ = this.baseUrl + "/api/Groups/info?";
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (recurseSubgroups === null)
+            throw new Error("The parameter 'recurseSubgroups' cannot be null.");
+        else if (recurseSubgroups !== undefined)
+            url_ += "RecurseSubgroups=" + encodeURIComponent("" + recurseSubgroups) + "&";
+        if (archs !== undefined && archs !== null)
+            archs && archs.forEach(item => { url_ += "Archs=" + encodeURIComponent("" + item) + "&"; });
+        if (infoType === null)
+            throw new Error("The parameter 'infoType' cannot be null.");
+        else if (infoType !== undefined)
+            url_ += "infoType=" + encodeURIComponent("" + infoType) + "&";
+        if (range_DateMin === null)
+            throw new Error("The parameter 'range_DateMin' cannot be null.");
+        else if (range_DateMin !== undefined)
+            url_ += "range.DateMin=" + encodeURIComponent(range_DateMin ? "" + range_DateMin.toJSON() : "") + "&";
+        if (range_DateMax === null)
+            throw new Error("The parameter 'range_DateMax' cannot be null.");
+        else if (range_DateMax !== undefined)
+            url_ += "range.DateMax=" + encodeURIComponent(range_DateMax ? "" + range_DateMax.toJSON() : "") + "&";
+        if (iDisGroup === null)
+            throw new Error("The parameter 'iDisGroup' cannot be null.");
+        else if (iDisGroup !== undefined)
+            url_ += "IDisGroup=" + encodeURIComponent("" + iDisGroup) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGroupInfo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGroupInfo(<any>response_);
+                } catch (e) {
+                    return <Observable<GroupInfoDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GroupInfoDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetGroupInfo(response: HttpResponseBase): Observable<GroupInfoDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GroupInfoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GroupInfoDto>(<any>null);
     }
 }
 
@@ -880,80 +1195,6 @@ export class PowerFactorClient implements IPowerFactorClient {
     }
 }
 
-export interface IQuantitiesClient {
-    getQuantities(groupId: string | undefined, arch: number | undefined): Observable<QuantitiesDto>;
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class QuantitiesClient implements IQuantitiesClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
-
-    getQuantities(groupId: string | undefined, arch: number | undefined): Observable<QuantitiesDto> {
-        let url_ = this.baseUrl + "/api/Quantities?";
-        if (groupId === null)
-            throw new Error("The parameter 'groupId' cannot be null.");
-        else if (groupId !== undefined)
-            url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
-        if (arch === null)
-            throw new Error("The parameter 'arch' cannot be null.");
-        else if (arch !== undefined)
-            url_ += "arch=" + encodeURIComponent("" + arch) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetQuantities(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetQuantities(<any>response_);
-                } catch (e) {
-                    return <Observable<QuantitiesDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<QuantitiesDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetQuantities(response: HttpResponseBase): Observable<QuantitiesDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = QuantitiesDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<QuantitiesDto>(<any>null);
-    }
-}
-
 export interface ISeriesClient {
     getQuantity(groupId: string | undefined, arch: number | undefined, qty: string | null | undefined, aggMeth: AggregationMethod | undefined, aggInt: number | undefined): Observable<TimeSeriesDtoOfSingle>;
 }
@@ -1102,6 +1343,102 @@ export class UserClient implements IUserClient {
         }
         return _observableOf<UserDto | null>(<any>null);
     }
+}
+
+export class QuantitiesDto implements IQuantitiesDto {
+    list?: QuantityDto[] | null;
+
+    constructor(data?: IQuantitiesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["list"])) {
+                this.list = [] as any;
+                for (let item of _data["list"])
+                    this.list!.push(QuantityDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): QuantitiesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuantitiesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.list)) {
+            data["list"] = [];
+            for (let item of this.list)
+                data["list"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IQuantitiesDto {
+    list?: QuantityDto[] | null;
+}
+
+export class QuantityDto implements IQuantityDto {
+    propName?: string | null;
+    unit?: string | null;
+    returnType?: string | null;
+    prop?: string | null;
+    value?: any | null;
+
+    constructor(data?: IQuantityDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.propName = _data["propName"] !== undefined ? _data["propName"] : <any>null;
+            this.unit = _data["unit"] !== undefined ? _data["unit"] : <any>null;
+            this.returnType = _data["returnType"] !== undefined ? _data["returnType"] : <any>null;
+            this.prop = _data["prop"] !== undefined ? _data["prop"] : <any>null;
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): QuantityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuantityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["propName"] = this.propName !== undefined ? this.propName : <any>null;
+        data["unit"] = this.unit !== undefined ? this.unit : <any>null;
+        data["returnType"] = this.returnType !== undefined ? this.returnType : <any>null;
+        data["prop"] = this.prop !== undefined ? this.prop : <any>null;
+        data["value"] = this.value !== undefined ? this.value : <any>null;
+        return data; 
+    }
+}
+
+export interface IQuantityDto {
+    propName?: string | null;
+    unit?: string | null;
+    returnType?: string | null;
+    prop?: string | null;
+    value?: any | null;
 }
 
 export class UserDto implements IUserDto {
@@ -1557,10 +1894,17 @@ export interface IDataSourceInfoDto {
     maxDatetime?: Date | null;
 }
 
-export class UserGroupsDto implements IUserGroupsDto {
-    groups?: GroupDto[] | null;
+export class SmpMeasNameDBDto implements ISmpMeasNameDBDto {
+    id?: number;
+    measName?: string | null;
+    userName?: string | null;
+    measurementPathNoAlias?: string | null;
+    measurementPath?: string | null;
+    recordAndObject?: string | null;
+    measurementPathFull?: string | null;
+    alias?: string | null;
 
-    constructor(data?: IUserGroupsDto) {
+    constructor(data?: ISmpMeasNameDBDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1571,41 +1915,56 @@ export class UserGroupsDto implements IUserGroupsDto {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["groups"])) {
-                this.groups = [] as any;
-                for (let item of _data["groups"])
-                    this.groups!.push(GroupDto.fromJS(item));
-            }
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.measName = _data["measName"] !== undefined ? _data["measName"] : <any>null;
+            this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
+            this.measurementPathNoAlias = _data["measurementPathNoAlias"] !== undefined ? _data["measurementPathNoAlias"] : <any>null;
+            this.measurementPath = _data["measurementPath"] !== undefined ? _data["measurementPath"] : <any>null;
+            this.recordAndObject = _data["recordAndObject"] !== undefined ? _data["recordAndObject"] : <any>null;
+            this.measurementPathFull = _data["measurementPathFull"] !== undefined ? _data["measurementPathFull"] : <any>null;
+            this.alias = _data["alias"] !== undefined ? _data["alias"] : <any>null;
         }
     }
 
-    static fromJS(data: any): UserGroupsDto {
+    static fromJS(data: any): SmpMeasNameDBDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UserGroupsDto();
+        let result = new SmpMeasNameDBDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.groups)) {
-            data["groups"] = [];
-            for (let item of this.groups)
-                data["groups"].push(item.toJSON());
-        }
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["measName"] = this.measName !== undefined ? this.measName : <any>null;
+        data["userName"] = this.userName !== undefined ? this.userName : <any>null;
+        data["measurementPathNoAlias"] = this.measurementPathNoAlias !== undefined ? this.measurementPathNoAlias : <any>null;
+        data["measurementPath"] = this.measurementPath !== undefined ? this.measurementPath : <any>null;
+        data["recordAndObject"] = this.recordAndObject !== undefined ? this.recordAndObject : <any>null;
+        data["measurementPathFull"] = this.measurementPathFull !== undefined ? this.measurementPathFull : <any>null;
+        data["alias"] = this.alias !== undefined ? this.alias : <any>null;
         return data; 
     }
 }
 
-export interface IUserGroupsDto {
-    groups?: GroupDto[] | null;
+export interface ISmpMeasNameDBDto {
+    id?: number;
+    measName?: string | null;
+    userName?: string | null;
+    measurementPathNoAlias?: string | null;
+    measurementPath?: string | null;
+    recordAndObject?: string | null;
+    measurementPathFull?: string | null;
+    alias?: string | null;
 }
 
-export class GroupDto implements IGroupDto {
-    id?: string;
+export class GroupInfoDto implements IGroupInfoDto {
+    id?: string | null;
     name?: string | null;
+    archives?: ArchiveInfoDto[] | null;
+    subgroups?: GroupInfo[] | null;
 
-    constructor(data?: IGroupDto) {
+    constructor(data?: IGroupInfoDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1618,12 +1977,22 @@ export class GroupDto implements IGroupDto {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            if (Array.isArray(_data["archives"])) {
+                this.archives = [] as any;
+                for (let item of _data["archives"])
+                    this.archives!.push(ArchiveInfoDto.fromJS(item));
+            }
+            if (Array.isArray(_data["subgroups"])) {
+                this.subgroups = [] as any;
+                for (let item of _data["subgroups"])
+                    this.subgroups!.push(GroupInfo.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): GroupDto {
+    static fromJS(data: any): GroupInfoDto {
         data = typeof data === 'object' ? data : {};
-        let result = new GroupDto();
+        let result = new GroupInfoDto();
         result.init(data);
         return result;
     }
@@ -1632,13 +2001,293 @@ export class GroupDto implements IGroupDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
         data["name"] = this.name !== undefined ? this.name : <any>null;
+        if (Array.isArray(this.archives)) {
+            data["archives"] = [];
+            for (let item of this.archives)
+                data["archives"].push(item.toJSON());
+        }
+        if (Array.isArray(this.subgroups)) {
+            data["subgroups"] = [];
+            for (let item of this.subgroups)
+                data["subgroups"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
-export interface IGroupDto {
+export interface IGroupInfoDto {
+    id?: string | null;
+    name?: string | null;
+    archives?: ArchiveInfoDto[] | null;
+    subgroups?: GroupInfo[] | null;
+}
+
+export class ArchiveInfoDto implements IArchiveInfoDto {
+    arch?: number;
+    count?: number;
+    range?: DateRangeDto | null;
+    intervals?: DateRangeDto[] | null;
+    name?: string | null;
+
+    constructor(data?: IArchiveInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.arch = _data["arch"] !== undefined ? _data["arch"] : <any>null;
+            this.count = _data["count"] !== undefined ? _data["count"] : <any>null;
+            this.range = _data["range"] ? DateRangeDto.fromJS(_data["range"]) : <any>null;
+            if (Array.isArray(_data["intervals"])) {
+                this.intervals = [] as any;
+                for (let item of _data["intervals"])
+                    this.intervals!.push(DateRangeDto.fromJS(item));
+            }
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ArchiveInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArchiveInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["arch"] = this.arch !== undefined ? this.arch : <any>null;
+        data["count"] = this.count !== undefined ? this.count : <any>null;
+        data["range"] = this.range ? this.range.toJSON() : <any>null;
+        if (Array.isArray(this.intervals)) {
+            data["intervals"] = [];
+            for (let item of this.intervals)
+                data["intervals"].push(item.toJSON());
+        }
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        return data; 
+    }
+}
+
+export interface IArchiveInfoDto {
+    arch?: number;
+    count?: number;
+    range?: DateRangeDto | null;
+    intervals?: DateRangeDto[] | null;
+    name?: string | null;
+}
+
+export class DateRangeDto implements IDateRangeDto {
+    dateMin?: Date;
+    dateMax?: Date;
+
+    constructor(data?: IDateRangeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dateMin = _data["dateMin"] ? new Date(_data["dateMin"].toString()) : <any>null;
+            this.dateMax = _data["dateMax"] ? new Date(_data["dateMax"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DateRangeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DateRangeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dateMin"] = this.dateMin ? this.dateMin.toISOString() : <any>null;
+        data["dateMax"] = this.dateMax ? this.dateMax.toISOString() : <any>null;
+        return data; 
+    }
+}
+
+export interface IDateRangeDto {
+    dateMin?: Date;
+    dateMax?: Date;
+}
+
+export class GroupInfo implements IGroupInfo {
     id?: string;
     name?: string | null;
+    archives?: ArchiveInfo[] | null;
+    subgroups?: GroupInfo[] | null;
+
+    constructor(data?: IGroupInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            if (Array.isArray(_data["archives"])) {
+                this.archives = [] as any;
+                for (let item of _data["archives"])
+                    this.archives!.push(ArchiveInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["subgroups"])) {
+                this.subgroups = [] as any;
+                for (let item of _data["subgroups"])
+                    this.subgroups!.push(GroupInfo.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GroupInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        if (Array.isArray(this.archives)) {
+            data["archives"] = [];
+            for (let item of this.archives)
+                data["archives"].push(item.toJSON());
+        }
+        if (Array.isArray(this.subgroups)) {
+            data["subgroups"] = [];
+            for (let item of this.subgroups)
+                data["subgroups"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGroupInfo {
+    id?: string;
+    name?: string | null;
+    archives?: ArchiveInfo[] | null;
+    subgroups?: GroupInfo[] | null;
+}
+
+export class ArchiveInfo implements IArchiveInfo {
+    arch?: number;
+    count?: number;
+    range?: DateRange | null;
+    intervals?: DateRange[] | null;
+    name?: string | null;
+
+    constructor(data?: IArchiveInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.arch = _data["arch"] !== undefined ? _data["arch"] : <any>null;
+            this.count = _data["count"] !== undefined ? _data["count"] : <any>null;
+            this.range = _data["range"] ? DateRange.fromJS(_data["range"]) : <any>null;
+            if (Array.isArray(_data["intervals"])) {
+                this.intervals = [] as any;
+                for (let item of _data["intervals"])
+                    this.intervals!.push(DateRange.fromJS(item));
+            }
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ArchiveInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArchiveInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["arch"] = this.arch !== undefined ? this.arch : <any>null;
+        data["count"] = this.count !== undefined ? this.count : <any>null;
+        data["range"] = this.range ? this.range.toJSON() : <any>null;
+        if (Array.isArray(this.intervals)) {
+            data["intervals"] = [];
+            for (let item of this.intervals)
+                data["intervals"].push(item.toJSON());
+        }
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        return data; 
+    }
+}
+
+export interface IArchiveInfo {
+    arch?: number;
+    count?: number;
+    range?: DateRange | null;
+    intervals?: DateRange[] | null;
+    name?: string | null;
+}
+
+export class DateRange implements IDateRange {
+    dateMin?: Date;
+    dateMax?: Date;
+    timeSpan?: string;
+
+    constructor(data?: IDateRange) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dateMin = _data["dateMin"] ? new Date(_data["dateMin"].toString()) : <any>null;
+            this.dateMax = _data["dateMax"] ? new Date(_data["dateMax"].toString()) : <any>null;
+            this.timeSpan = _data["timeSpan"] !== undefined ? _data["timeSpan"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DateRange {
+        data = typeof data === 'object' ? data : {};
+        let result = new DateRange();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dateMin"] = this.dateMin ? this.dateMin.toISOString() : <any>null;
+        data["dateMax"] = this.dateMax ? this.dateMax.toISOString() : <any>null;
+        data["timeSpan"] = this.timeSpan !== undefined ? this.timeSpan : <any>null;
+        return data; 
+    }
+}
+
+export interface IDateRange {
+    dateMin?: Date;
+    dateMax?: Date;
+    timeSpan?: string;
 }
 
 export class GroupTreeNodeDto implements IGroupTreeNodeDto {
@@ -1687,6 +2336,53 @@ export class GroupTreeNodeDto implements IGroupTreeNodeDto {
 export interface IGroupTreeNodeDto {
     group?: GroupDto | null;
     nodes?: GroupTreeNodeDto[] | null;
+}
+
+export class GroupDto implements IGroupDto {
+    id?: string;
+    name?: string | null;
+
+    constructor(data?: IGroupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): GroupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        return data; 
+    }
+}
+
+export interface IGroupDto {
+    id?: string;
+    name?: string | null;
+}
+
+export enum ArchiveInfoType {
+    None = 0,
+    CountOnly = 1,
+    DateRange = 2,
+    All = 3,
 }
 
 export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
@@ -2007,102 +2703,6 @@ export interface IIntervalDto {
     start?: Date | null;
     end?: Date | null;
     isInfinite?: boolean | null;
-}
-
-export class QuantitiesDto implements IQuantitiesDto {
-    list?: QuantityDto[] | null;
-
-    constructor(data?: IQuantitiesDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["list"])) {
-                this.list = [] as any;
-                for (let item of _data["list"])
-                    this.list!.push(QuantityDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): QuantitiesDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new QuantitiesDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.list)) {
-            data["list"] = [];
-            for (let item of this.list)
-                data["list"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IQuantitiesDto {
-    list?: QuantityDto[] | null;
-}
-
-export class QuantityDto implements IQuantityDto {
-    propName?: string | null;
-    unit?: string | null;
-    returnType?: string | null;
-    prop?: string | null;
-    value?: any | null;
-
-    constructor(data?: IQuantityDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.propName = _data["propName"] !== undefined ? _data["propName"] : <any>null;
-            this.unit = _data["unit"] !== undefined ? _data["unit"] : <any>null;
-            this.returnType = _data["returnType"] !== undefined ? _data["returnType"] : <any>null;
-            this.prop = _data["prop"] !== undefined ? _data["prop"] : <any>null;
-            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): QuantityDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new QuantityDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["propName"] = this.propName !== undefined ? this.propName : <any>null;
-        data["unit"] = this.unit !== undefined ? this.unit : <any>null;
-        data["returnType"] = this.returnType !== undefined ? this.returnType : <any>null;
-        data["prop"] = this.prop !== undefined ? this.prop : <any>null;
-        data["value"] = this.value !== undefined ? this.value : <any>null;
-        return data; 
-    }
-}
-
-export interface IQuantityDto {
-    propName?: string | null;
-    unit?: string | null;
-    returnType?: string | null;
-    prop?: string | null;
-    value?: any | null;
 }
 
 export class TimeSeriesDtoOfSingle implements ITimeSeriesDtoOfSingle {
