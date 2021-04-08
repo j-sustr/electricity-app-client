@@ -1,7 +1,7 @@
 <dx-button
-    *ngIf="selectedGroupName$ | async as name"
+    *ngIf="selectedGroup$ | async as group"
     stylingMode="outlined"
-    [text]="name"
+    [text]="group.name"
     type="normal"
     [width]="200"
     (onClick)="openGroupPicker()"
@@ -19,7 +19,7 @@
 >
     <ng-container *ngIf="groupTree$ | async as tree">
         <dx-tree-view
-            [dataSource]="tree.items"
+            [dataSource]="$any(tree.items)"
             (onItemClick)="selectGroupTreeItem($event)"
         ></dx-tree-view>
     </ng-container>

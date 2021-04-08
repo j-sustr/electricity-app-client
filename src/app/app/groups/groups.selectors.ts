@@ -4,7 +4,7 @@ import { selectGroupId } from '../common/router/router.selectors';
 import { GroupInfo, GroupsState } from './groups.model';
 
 export interface GroupTreeView {
-    tree: GroupInfoView | null;
+    items: GroupInfoView[] | null;
     loading: boolean;
 }
 
@@ -39,8 +39,9 @@ export const selectGroupTreeView = createSelector(
     selectGroups,
     selectUserGroupTree,
     (state, tree): GroupTreeView => {
+        const root = tree ? createGroupInfoView(tree) : null;
         return {
-            tree: tree ? createGroupInfoView(tree) : null,
+            items: root?.items ?? null,
             loading: state.loading
         };
     }
