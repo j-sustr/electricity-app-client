@@ -74,44 +74,6 @@ export class DataSourceEffects {
         )
     );
 
-    getInfo$ = createEffect(() =>
-        merge(this.actions$.pipe(ofType(routerNavigatedAction))).pipe(
-            withLatestFrom(
-                combineLatest([
-                    this.store.pipe(select(selectGroupId)),
-                    this.store.pipe(select(selectRouterPath))
-                ]),
-                (v1, v2) => v2
-            ),
-            filter(([, routerPath]) => {
-                console.warn('trying to fetch info but action is disabled');
-                return false;
-                return isSectionPath(routerPath);
-            }),
-            distinctUntilChanged(
-                ([, prevPath], [, currPath]) => prevPath === currPath
-            ),
-            switchMap(([groupId, routerPath]) => {
-                const arch = mapSectionPathToArch(routerPath as SectionPath);
-                return this.client.getInfo(groupId, arch).pipe(
-                    map((info) =>
-                        getInfoSuccess({
-                            minDatetime: info.minDatetime ?? new Date(NaN),
-                            maxDatetime: info.maxDatetime ?? new Date(NaN)
-                        })
-                    ),
-                    catchError((error: HttpErrorResponse) =>
-                        of(
-                            getInfoError({
-                                error
-                            })
-                        )
-                    )
-                );
-            })
-        )
-    );
-
     getData$ = createEffect(
         () => {
             return this.actions$.pipe(
