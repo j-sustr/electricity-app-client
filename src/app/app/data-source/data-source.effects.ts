@@ -1,13 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { routerNavigatedAction } from '@ngrx/router-store';
 import { select, Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
-import { combineLatest, merge, of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import {
     catchError,
-    distinctUntilChanged,
     filter,
     first,
     map,
@@ -22,20 +20,13 @@ import {
 } from 'src/app/web-api-client';
 import { DATA_SOURCE_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
-import {
-    selectGroupId,
-    selectRouterPath
-} from '../common/router/router.selectors';
+import { selectRouterPath } from '../common/router/router.selectors';
 import {
     isSectionPath,
-    mapSectionPathToArch,
     mapSectionPathToGetDataAction,
-    mapSectionPathToHasDataSelector,
-    SectionPath
+    mapSectionPathToHasDataSelector
 } from '../common/router/section-path-utils';
 import {
-    getInfoError,
-    getInfoSuccess,
     openDataSource,
     openDataSourceError,
     openDataSourceSuccess,
