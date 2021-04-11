@@ -8,4 +8,28 @@
         <i class="{{item.icon}}"></i>
         <span>{{item.label}}</span>
     </a>
+
+    <button
+        class="user-button pill-btn"
+        (click)="isUserMenuOpen = !isUserMenuOpen"
+        type="button"
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+    >
+        {{ (currentUser$ | async)?.username }}
+    </button>
 </nav>
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isUserMenuOpen"
+>
+    <ul class="example-list">
+        <li>
+            <button class="pill-btn" (click)="handleLogoutClick()">
+                Logout
+            </button>
+        </li>
+    </ul>
+</ng-template>

@@ -2,6 +2,7 @@
 
 :host {
     padding-left: 200px;
+    padding-right: 40px;
 
     background-color: map-get($theme, primary);
     box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
@@ -30,4 +31,29 @@
             box-shadow: 0 8px 0 0 map-get($theme, base1);
         }
     }
+}
+
+.user-button {
+    margin-left: auto;
+    align-self: center;
+}
+
+.example-list {
+    width: 100px;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    background: #fff;
+    text-align: center;
+    padding: 10px;
+    margin: 0;
+}
+
+.example-list > li {
+    list-style-type: none;
+    border-bottom: solid 1px #8b8b8b;
+    padding: 8px 0;
+}
+
+.example-list > li:last-child {
+    border-bottom: none;
 }
