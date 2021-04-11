@@ -32,3 +32,17 @@
         background-color: gray;
     }
 }
+
+.pill-btn {
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 9999px;
+    background-color: #fff;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.1);
+
+    cursor: pointer;
+
+    &:focus {
+        outline: 0;
+    }
+}
