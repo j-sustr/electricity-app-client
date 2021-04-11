@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IArchiveClient {
-    getQuantities(groupId: string | null | undefined, arch: number | undefined): Observable<QuantitiesDto>;
+    getQuantities(groupId: string | undefined, arch: number | undefined): Observable<QuantitiesDto>;
 }
 
 @Injectable({
@@ -31,9 +31,11 @@ export class ArchiveClient implements IArchiveClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getQuantities(groupId: string | null | undefined, arch: number | undefined): Observable<QuantitiesDto> {
+    getQuantities(groupId: string | undefined, arch: number | undefined): Observable<QuantitiesDto> {
         let url_ = this.baseUrl + "/api/Archive/quantities?";
-        if (groupId !== undefined && groupId !== null)
+        if (groupId === null)
+            throw new Error("The parameter 'groupId' cannot be null.");
+        else if (groupId !== undefined)
             url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
         if (arch === null)
             throw new Error("The parameter 'arch' cannot be null.");
@@ -348,7 +350,6 @@ export interface IDataSourceClient {
     getTenant(): Observable<FileResponse>;
     setTenant(identifier: string | null | undefined): Observable<FileResponse>;
     open(query: OpenDataSourceCommand): Observable<FileResponse>;
-    getInfo(groupId: string | null | undefined, arch: number | undefined): Observable<DataSourceInfoDto>;
     clearCache(): Observable<FileResponse>;
 }
 
@@ -507,60 +508,6 @@ export class DataSourceClient implements IDataSourceClient {
             }));
         }
         return _observableOf<FileResponse>(<any>null);
-    }
-
-    getInfo(groupId: string | null | undefined, arch: number | undefined): Observable<DataSourceInfoDto> {
-        let url_ = this.baseUrl + "/api/DataSource/info?";
-        if (groupId !== undefined && groupId !== null)
-            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
-        if (arch === null)
-            throw new Error("The parameter 'arch' cannot be null.");
-        else if (arch !== undefined)
-            url_ += "Arch=" + encodeURIComponent("" + arch) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetInfo(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetInfo(<any>response_);
-                } catch (e) {
-                    return <Observable<DataSourceInfoDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<DataSourceInfoDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetInfo(response: HttpResponseBase): Observable<DataSourceInfoDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DataSourceInfoDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<DataSourceInfoDto>(<any>null);
     }
 
     clearCache(): Observable<FileResponse> {
@@ -1852,46 +1799,6 @@ export interface IDBConnectionParams {
     dbName?: string | null;
     username?: string | null;
     password?: string | null;
-}
-
-export class DataSourceInfoDto implements IDataSourceInfoDto {
-    minDatetime?: Date | null;
-    maxDatetime?: Date | null;
-
-    constructor(data?: IDataSourceInfoDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.minDatetime = _data["minDatetime"] ? new Date(_data["minDatetime"].toString()) : <any>null;
-            this.maxDatetime = _data["maxDatetime"] ? new Date(_data["maxDatetime"].toString()) : <any>null;
-        }
-    }
-
-    static fromJS(data: any): DataSourceInfoDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new DataSourceInfoDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["minDatetime"] = this.minDatetime ? this.minDatetime.toISOString() : <any>null;
-        data["maxDatetime"] = this.maxDatetime ? this.maxDatetime.toISOString() : <any>null;
-        return data; 
-    }
-}
-
-export interface IDataSourceInfoDto {
-    minDatetime?: Date | null;
-    maxDatetime?: Date | null;
 }
 
 export class SmpMeasNameDBDto implements ISmpMeasNameDBDto {
