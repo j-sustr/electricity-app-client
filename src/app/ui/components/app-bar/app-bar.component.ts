@@ -45,4 +45,8 @@ export class AppBarComponent {
     handleLogoutClick(): void {
         this.store.dispatch(logout());
     }
+
+    handleUserMenuOutsideClick(): void {
+        this.isUserMenuOpen = false;
+    }
 }

@@ -9,23 +9,24 @@
         <span>{{item.label}}</span>
     </a>
 
-    <button
-        class="user-button pill-btn"
-        (click)="isUserMenuOpen = !isUserMenuOpen"
-        type="button"
+    <dx-button
+        class="user-button"
+        icon="user"
+        [text]="(currentUser$ | async)?.username"
+        (onClick)="isUserMenuOpen = !isUserMenuOpen"
         cdkOverlayOrigin
         #trigger="cdkOverlayOrigin"
     >
-        {{ (currentUser$ | async)?.username }}
-    </button>
+    </dx-button>
 </nav>
 
 <ng-template
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="trigger"
     [cdkConnectedOverlayOpen]="isUserMenuOpen"
+    (overlayOutsideClick)="handleUserMenuOutsideClick()"
 >
-    <ul class="example-list">
+    <ul class="user-menu">
         <li>
             <button class="pill-btn" (click)="handleLogoutClick()">
                 Logout
