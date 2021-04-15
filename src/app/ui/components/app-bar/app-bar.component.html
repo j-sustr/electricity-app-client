@@ -12,7 +12,7 @@
     <dx-button
         class="user-button"
         icon="user"
-        [text]="(currentUser$ | async)?.username"
+        [text]="$any((currentUser$ | async)?.username)"
         (onClick)="isUserMenuOpen = !isUserMenuOpen"
         cdkOverlayOrigin
         #trigger="cdkOverlayOrigin"
