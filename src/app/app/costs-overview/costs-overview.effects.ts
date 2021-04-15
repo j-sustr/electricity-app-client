@@ -43,7 +43,8 @@ export class CostsOverviewEffects {
                         dto1.isInfinite,
                         dto2?.start,
                         dto2?.end,
-                        dto2?.isInfinite
+                        dto2?.isInfinite,
+                        10
                     )
                     .pipe(
                         map((dto) => {
