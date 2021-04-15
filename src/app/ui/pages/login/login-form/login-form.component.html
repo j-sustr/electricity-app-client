@@ -56,6 +56,8 @@
                     <div class="dx-field-value">
                         <dx-text-box
                             formControlName="password"
+                            mode="password"
+                            [showClearButton]="true"
                             [isValid]="dbConnectionPasswordControl?.valid === true || dbConnectionPasswordControl?.pristine === true"
                             [validationError]="{ message: 'is invalid'}"
                             valueChangeEvent="keyup"
@@ -111,6 +113,8 @@
             <div class="dx-field-value">
                 <dx-text-box
                     formControlName="password"
+                    mode="password"
+                    [showClearButton]="true"
                     [isValid]="passwordControl?.valid === true || passwordControl?.pristine === true"
                     [validationError]="{ message: 'is invalid'}"
                     valueChangeEvent="keyup"
