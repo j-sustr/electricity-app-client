@@ -206,7 +206,7 @@ export class AuthClient implements IAuthClient {
 }
 
 export interface ICostsClient {
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsOverviewDto>;
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<CostsOverviewDto>;
     getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsDetailDto>;
 }
 
@@ -223,7 +223,7 @@ export class CostsClient implements ICostsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<CostsOverviewDto> {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<CostsOverviewDto> {
         let url_ = this.baseUrl + "/api/Costs/overview?";
         if (interval1_Start !== undefined && interval1_Start !== null)
             url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
@@ -237,6 +237,8 @@ export class CostsClient implements ICostsClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        if (maxGroups !== undefined && maxGroups !== null)
+            url_ += "MaxGroups=" + encodeURIComponent("" + maxGroups) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -753,7 +755,6 @@ export class FileClient implements IFileClient {
 export interface IGroupsClient {
     getUserGroupInfoTree(): Observable<GroupInfoDto>;
     getUserRecordGroupInfos(): Observable<GroupInfoDto[]>;
-    getUserGroupTree(): Observable<GroupTreeNodeDto>;
     getGroupInfo(id: string | null | undefined, recurseSubgroups: boolean | undefined, archs: number[] | null | undefined, infoType: ArchiveInfoType | undefined, range_DateMin: Date | undefined, range_DateMax: Date | undefined, iDisGroup: boolean | undefined): Observable<GroupInfoDto>;
 }
 
@@ -870,54 +871,6 @@ export class GroupsClient implements IGroupsClient {
         return _observableOf<GroupInfoDto[]>(<any>null);
     }
 
-    getUserGroupTree(): Observable<GroupTreeNodeDto> {
-        let url_ = this.baseUrl + "/api/Groups/user-tree";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetUserGroupTree(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetUserGroupTree(<any>response_);
-                } catch (e) {
-                    return <Observable<GroupTreeNodeDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<GroupTreeNodeDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetUserGroupTree(response: HttpResponseBase): Observable<GroupTreeNodeDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GroupTreeNodeDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<GroupTreeNodeDto>(<any>null);
-    }
-
     getGroupInfo(id: string | null | undefined, recurseSubgroups: boolean | undefined, archs: number[] | null | undefined, infoType: ArchiveInfoType | undefined, range_DateMin: Date | undefined, range_DateMax: Date | undefined, iDisGroup: boolean | undefined): Observable<GroupInfoDto> {
         let url_ = this.baseUrl + "/api/Groups/info?";
         if (id !== undefined && id !== null)
@@ -988,6 +941,147 @@ export class GroupsClient implements IGroupsClient {
             }));
         }
         return _observableOf<GroupInfoDto>(<any>null);
+    }
+}
+
+export interface IPeakDemandClient {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandOverviewDto>;
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandDetailDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PeakDemandClient implements IPeakDemandClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandOverviewDto> {
+        let url_ = this.baseUrl + "/api/PeakDemand/overview?";
+        if (interval1_Start !== undefined && interval1_Start !== null)
+            url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
+        if (interval1_End !== undefined && interval1_End !== null)
+            url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval1_IsInfinite !== undefined && interval1_IsInfinite !== null)
+            url_ += "Interval1.IsInfinite=" + encodeURIComponent("" + interval1_IsInfinite) + "&";
+        if (interval2_Start !== undefined && interval2_Start !== null)
+            url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
+        if (interval2_End !== undefined && interval2_End !== null)
+            url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
+        if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
+            url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOverview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOverview(<any>response_);
+                } catch (e) {
+                    return <Observable<PeakDemandOverviewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PeakDemandOverviewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOverview(response: HttpResponseBase): Observable<PeakDemandOverviewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PeakDemandOverviewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PeakDemandOverviewDto>(<any>null);
+    }
+
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandDetailDto> {
+        let url_ = this.baseUrl + "/api/PeakDemand/detail?";
+        if (groupId !== undefined && groupId !== null)
+            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
+        if (interval1_Start !== undefined && interval1_Start !== null)
+            url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
+        if (interval1_End !== undefined && interval1_End !== null)
+            url_ += "Interval1.End=" + encodeURIComponent(interval1_End ? "" + interval1_End.toJSON() : "") + "&";
+        if (interval1_IsInfinite !== undefined && interval1_IsInfinite !== null)
+            url_ += "Interval1.IsInfinite=" + encodeURIComponent("" + interval1_IsInfinite) + "&";
+        if (interval2_Start !== undefined && interval2_Start !== null)
+            url_ += "Interval2.Start=" + encodeURIComponent(interval2_Start ? "" + interval2_Start.toJSON() : "") + "&";
+        if (interval2_End !== undefined && interval2_End !== null)
+            url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
+        if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
+            url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDetail(<any>response_);
+                } catch (e) {
+                    return <Observable<PeakDemandDetailDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PeakDemandDetailDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDetail(response: HttpResponseBase): Observable<PeakDemandDetailDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PeakDemandDetailDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PeakDemandDetailDto>(<any>null);
     }
 }
 
@@ -1486,6 +1580,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;
+    message?: string | null;
 
     constructor(data?: ICostlyQuantitiesOverviewItem) {
         if (data) {
@@ -1515,6 +1610,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
                 for (let item of _data["peakDemandInMonths"])
                     this.peakDemandInMonths!.push(item);
             }
+            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
         }
     }
 
@@ -1544,6 +1640,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
             for (let item of this.peakDemandInMonths)
                 data["peakDemandInMonths"].push(item);
         }
+        data["message"] = this.message !== undefined ? this.message : <any>null;
         return data; 
     }
 }
@@ -1554,6 +1651,7 @@ export interface ICostlyQuantitiesOverviewItem {
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;
+    message?: string | null;
 }
 
 export class CostsDetailDto implements ICostsDetailDto {
@@ -2029,99 +2127,203 @@ export interface IDateRangeDto {
     dateMax?: Date;
 }
 
-export class GroupTreeNodeDto implements IGroupTreeNodeDto {
-    group?: GroupDto | null;
-    nodes?: GroupTreeNodeDto[] | null;
-
-    constructor(data?: IGroupTreeNodeDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.group = _data["group"] ? GroupDto.fromJS(_data["group"]) : <any>null;
-            if (Array.isArray(_data["nodes"])) {
-                this.nodes = [] as any;
-                for (let item of _data["nodes"])
-                    this.nodes!.push(GroupTreeNodeDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): GroupTreeNodeDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GroupTreeNodeDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["group"] = this.group ? this.group.toJSON() : <any>null;
-        if (Array.isArray(this.nodes)) {
-            data["nodes"] = [];
-            for (let item of this.nodes)
-                data["nodes"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IGroupTreeNodeDto {
-    group?: GroupDto | null;
-    nodes?: GroupTreeNodeDto[] | null;
-}
-
-export class GroupDto implements IGroupDto {
-    id?: string;
-    name?: string | null;
-
-    constructor(data?: IGroupDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): GroupDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GroupDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        return data; 
-    }
-}
-
-export interface IGroupDto {
-    id?: string;
-    name?: string | null;
-}
-
 export enum ArchiveInfoType {
     None = 0,
     CountOnly = 1,
     DateRange = 2,
     All = 3,
+}
+
+export class PeakDemandOverviewDto implements IPeakDemandOverviewDto {
+    items1?: PeakDemandOverviewItem[] | null;
+    items2?: PeakDemandOverviewItem[] | null;
+
+    constructor(data?: IPeakDemandOverviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items1"])) {
+                this.items1 = [] as any;
+                for (let item of _data["items1"])
+                    this.items1!.push(PeakDemandOverviewItem.fromJS(item));
+            }
+            if (Array.isArray(_data["items2"])) {
+                this.items2 = [] as any;
+                for (let item of _data["items2"])
+                    this.items2!.push(PeakDemandOverviewItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PeakDemandOverviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PeakDemandOverviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items1)) {
+            data["items1"] = [];
+            for (let item of this.items1)
+                data["items1"].push(item.toJSON());
+        }
+        if (Array.isArray(this.items2)) {
+            data["items2"] = [];
+            for (let item of this.items2)
+                data["items2"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPeakDemandOverviewDto {
+    items1?: PeakDemandOverviewItem[] | null;
+    items2?: PeakDemandOverviewItem[] | null;
+}
+
+export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
+    groupId?: string | null;
+    groupName?: string | null;
+    month?: Date;
+    peakDemandTime?: Date;
+    peakDemandValue?: number;
+
+    constructor(data?: IPeakDemandOverviewItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
+            this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            this.month = _data["month"] ? new Date(_data["month"].toString()) : <any>null;
+            this.peakDemandTime = _data["peakDemandTime"] ? new Date(_data["peakDemandTime"].toString()) : <any>null;
+            this.peakDemandValue = _data["peakDemandValue"] !== undefined ? _data["peakDemandValue"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PeakDemandOverviewItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new PeakDemandOverviewItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
+        data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        data["month"] = this.month ? this.month.toISOString() : <any>null;
+        data["peakDemandTime"] = this.peakDemandTime ? this.peakDemandTime.toISOString() : <any>null;
+        data["peakDemandValue"] = this.peakDemandValue !== undefined ? this.peakDemandValue : <any>null;
+        return data; 
+    }
+}
+
+export interface IPeakDemandOverviewItem {
+    groupId?: string | null;
+    groupName?: string | null;
+    month?: Date;
+    peakDemandTime?: Date;
+    peakDemandValue?: number;
+}
+
+export class PeakDemandDetailDto implements IPeakDemandDetailDto {
+    data1?: PeakDemandDetailData | null;
+    data2?: PeakDemandDetailData | null;
+
+    constructor(data?: IPeakDemandDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data1 = _data["data1"] ? PeakDemandDetailData.fromJS(_data["data1"]) : <any>null;
+            this.data2 = _data["data2"] ? PeakDemandDetailData.fromJS(_data["data2"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PeakDemandDetailDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PeakDemandDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data1"] = this.data1 ? this.data1.toJSON() : <any>null;
+        data["data2"] = this.data2 ? this.data2.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IPeakDemandDetailDto {
+    data1?: PeakDemandDetailData | null;
+    data2?: PeakDemandDetailData | null;
+}
+
+export class PeakDemandDetailData implements IPeakDemandDetailData {
+    demandSeries?: any[][] | null;
+
+    constructor(data?: IPeakDemandDetailData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["demandSeries"])) {
+                this.demandSeries = [] as any;
+                for (let item of _data["demandSeries"])
+                    this.demandSeries!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): PeakDemandDetailData {
+        data = typeof data === 'object' ? data : {};
+        let result = new PeakDemandDetailData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.demandSeries)) {
+            data["demandSeries"] = [];
+            for (let item of this.demandSeries)
+                data["demandSeries"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IPeakDemandDetailData {
+    demandSeries?: any[][] | null;
 }
 
 export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
