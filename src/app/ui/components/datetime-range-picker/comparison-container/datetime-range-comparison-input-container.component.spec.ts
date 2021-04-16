@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { selectIntervals } from 'src/app/app/data-source/data-source.selectors';
 import { selectUserRecordGroupsInterval } from 'src/app/app/groups/groups.selectors';
@@ -12,7 +13,10 @@ describe('DatetimeRangeComparisonInputContainerComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DatetimeRangePickerModule],
+            imports: [
+                DatetimeRangePickerModule,
+                RouterTestingModule.withRoutes([])
+            ],
             declarations: [DatetimeRangeComparisonInputContainerComponent],
             providers: [provideMockStore()]
         }).compileComponents();

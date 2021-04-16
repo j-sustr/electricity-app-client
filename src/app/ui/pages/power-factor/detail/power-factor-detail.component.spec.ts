@@ -1,25 +1,40 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { selectDetail } from 'src/app/app/power-factor-detail/power-factor-detail.selectors';
 
 import { PowerFactorDetailComponent } from './power-factor-detail.component';
 
 describe('PowerFactorDetailComponent', () => {
-  let component: PowerFactorDetailComponent;
-  let fixture: ComponentFixture<PowerFactorDetailComponent>;
+    let component: PowerFactorDetailComponent;
+    let fixture: ComponentFixture<PowerFactorDetailComponent>;
+    let store: MockStore<unknown>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ PowerFactorDetailComponent ]
-    })
-    .compileComponents();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [PowerFactorDetailComponent],
+            providers: [provideMockStore()]
+        }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(PowerFactorDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        store = TestBed.inject<MockStore<unknown>>(MockStore);
+        store.overrideSelector(selectDetail, {
+            detailType: 'distribution',
+            viewType: 'table',
+            distribution: {
+                items1: [],
+                items2: []
+            },
+            showEnergy: true,
+            loading: false
+        });
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(PowerFactorDetailComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
