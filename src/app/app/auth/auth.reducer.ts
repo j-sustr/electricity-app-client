@@ -17,10 +17,6 @@ export const initialState: AuthState = {
     loading: false
 };
 
-initialState.user = {
-    username: 'fake user'
-};
-
 const reducer = createReducer(
     initialState,
     on(getCurrentUser, (state) => ({
