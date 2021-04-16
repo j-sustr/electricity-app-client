@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { selectCustomerParams } from 'src/app/app/costs/costs.selectors';
+import { CostsModule } from '../costs.module';
 import { CustomerParamsPopupFormComponent } from './customer-params-popup-form.component';
 
 describe('CustomerParamsPopupFormComponent', () => {
@@ -11,7 +11,7 @@ describe('CustomerParamsPopupFormComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule],
+            imports: [CostsModule],
             declarations: [CustomerParamsPopupFormComponent],
             providers: [provideMockStore()]
         }).compileComponents();
