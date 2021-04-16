@@ -13,16 +13,14 @@ import {
     CostsClient,
     DataSourceClient,
     GroupsClient,
-    PowerFactorClient,
-    UserClient
+    PowerFactorClient
 } from 'src/app/web-api-client';
 import {
     AUTH_CLIENT,
     COSTS_CLIENT,
     DATA_SOURCE_CLIENT,
     GROUPS_CLIENT,
-    POWER_FACTOR_CLIENT,
-    USER_CLIENT
+    POWER_FACTOR_CLIENT
 } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
@@ -65,10 +63,6 @@ import { CustomRouterSerializer } from './common/router/custom-router-serializer
     ],
     exports: [StoreModule],
     providers: [
-        {
-            provide: USER_CLIENT,
-            useClass: UserClient
-        },
         {
             provide: AUTH_CLIENT,
             useClass: AuthClient

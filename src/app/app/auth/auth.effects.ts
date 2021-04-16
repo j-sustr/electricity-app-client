@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { IAuthClient, IUserClient } from 'src/app/web-api-client';
-import { AUTH_CLIENT, USER_CLIENT } from 'src/app/web-api-client-di';
+import { IAuthClient } from 'src/app/web-api-client';
+import { AUTH_CLIENT } from 'src/app/web-api-client-di';
 import {
     getCurrentUser,
     getCurrentUserError,
@@ -24,7 +24,7 @@ export class AuthEffects {
         this.actions$.pipe(
             ofType(getCurrentUser),
             switchMap(() =>
-                this.userClient.getCurrentUser().pipe(
+                this.authClient.getCurrentUser().pipe(
                     map((userDto) => {
                         const user = userDto
                             ? {
@@ -99,8 +99,6 @@ export class AuthEffects {
 
     constructor(
         private actions$: Actions,
-        @Inject(USER_CLIENT)
-        private userClient: IUserClient,
         @Inject(AUTH_CLIENT)
         private authClient: IAuthClient,
         private router: Router,

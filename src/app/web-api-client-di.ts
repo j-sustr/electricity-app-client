@@ -4,11 +4,8 @@ import {
     ICostsClient,
     IDataSourceClient,
     IGroupsClient,
-    IPowerFactorClient,
-    IUserClient
+    IPowerFactorClient
 } from './web-api-client';
-
-export const USER_CLIENT = new InjectionToken<IUserClient>('USER_CLIENT');
 
 export const AUTH_CLIENT = new InjectionToken<IAuthClient>('AUTH_CLIENT');
 
