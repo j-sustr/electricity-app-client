@@ -91,6 +91,7 @@ export class ArchiveClient implements IArchiveClient {
 export interface IAuthClient {
     login(username: string | null | undefined, password: string | null | undefined): Observable<UserDto>;
     logout(): Observable<FileResponse>;
+    getCurrentUser(): Observable<UserDto | null>;
 }
 
 @Injectable({
@@ -202,6 +203,54 @@ export class AuthClient implements IAuthClient {
             }));
         }
         return _observableOf<FileResponse>(<any>null);
+    }
+
+    getCurrentUser(): Observable<UserDto | null> {
+        let url_ = this.baseUrl + "/api/Auth/current-user";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentUser(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDto | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDto | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCurrentUser(response: HttpResponseBase): Observable<UserDto | null> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? UserDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDto | null>(<any>null);
     }
 }
 
@@ -1317,72 +1366,6 @@ export class SeriesClient implements ISeriesClient {
             }));
         }
         return _observableOf<TimeSeriesDtoOfSingle>(<any>null);
-    }
-}
-
-export interface IUserClient {
-    getCurrentUser(): Observable<UserDto | null>;
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class UserClient implements IUserClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
-
-    getCurrentUser(): Observable<UserDto | null> {
-        let url_ = this.baseUrl + "/api/User/current-user";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentUser(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetCurrentUser(<any>response_);
-                } catch (e) {
-                    return <Observable<UserDto | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<UserDto | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetCurrentUser(response: HttpResponseBase): Observable<UserDto | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? UserDto.fromJS(resultData200) : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<UserDto | null>(<any>null);
     }
 }
 
