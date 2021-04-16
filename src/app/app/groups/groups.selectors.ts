@@ -58,7 +58,6 @@ function createGroupInfoView(info: GroupInfo): GroupInfoView {
 
 function flattenGroupInfoTree(groupInfo: GroupInfo): GroupInfo[] {
     const arr = groupInfo.subgroups?.map((g) => flattenGroupInfoTree(g)) ?? [];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const flatArr = arr.flat() as GroupInfo[];
+    const flatArr = arr.flat();
     return [groupInfo, ...flatArr];
 }
