@@ -9,10 +9,7 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { map, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/app/app-store.state';
 import { setIntervals } from 'src/app/app/data-source/data-source.actions';
-import {
-    selectInfo,
-    selectIntervals
-} from 'src/app/app/data-source/data-source.selectors';
+import { selectIntervals } from 'src/app/app/data-source/data-source.selectors';
 import {
     DatetimeRangeComparisonInputComponent,
     DatetimeRangeComparisonInputValueChange

@@ -30,11 +30,6 @@ export const selectPhases = createSelector(
     (state: DataSourceState) => state.phases
 );
 
-export const selectInfo = createSelector(
-    selectDataSource,
-    (state: DataSourceState) => state.info
-);
-
 export const selectIsComparisonMode = createSelector(
     selectDataSource,
     (state) => isDate(state.interval2?.start)

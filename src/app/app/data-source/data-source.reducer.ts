@@ -1,9 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
 import {
-    getInfo,
-    getInfoError,
-    getInfoSuccess,
     openDataSource,
     openDataSourceError,
     openDataSourceSuccess,
@@ -73,31 +70,6 @@ const reducer = createReducer(
             ...state,
             loading: false,
             error
-        };
-    }),
-    on(getInfo, (state) => {
-        return {
-            ...state,
-            info: undefined,
-            loading: true,
-            error: undefined
-        };
-    }),
-    on(getInfoSuccess, (state, action) => {
-        return {
-            ...state,
-            info: {
-                minDatetime: action.minDatetime,
-                maxDatetime: action.maxDatetime
-            },
-            loading: false
-        };
-    }),
-    on(getInfoError, (state, action) => {
-        return {
-            ...state,
-            loading: false,
-            error: action.error
         };
     })
 );

@@ -12,10 +12,6 @@ export interface DataSourceState {
     interval1: Interval;
     interval2?: Interval;
     phases: Phases;
-    info?: {
-        minDatetime: Date;
-        maxDatetime: Date;
-    };
     loading: boolean;
     error?: HttpErrorResponse;
 }
