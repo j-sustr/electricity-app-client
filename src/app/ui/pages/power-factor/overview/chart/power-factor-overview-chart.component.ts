@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/app/app-store.state';
-import { dataSourceReducer } from 'src/app/app/data-source/data-source.reducer';
 import {
     PowerFactorOverviewChart,
     selectOverviewChart
