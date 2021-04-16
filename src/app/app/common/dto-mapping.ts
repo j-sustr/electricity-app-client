@@ -16,7 +16,12 @@ export function createGroupInfoFromDto(dto: GroupInfoDto): GroupInfo {
     };
 }
 
-export function createArchiveInfoFromDto(dto: ArchiveInfoDto): ArchiveInfo {
+export function createArchiveInfoFromDto(
+    dto: ArchiveInfoDto | null
+): ArchiveInfo | null {
+    if (!isArchiveInfoDto(dto)) {
+        return null;
+    }
     dto.intervals = isEmptyArray(dto.intervals) ? null : dto.intervals;
     return {
         arch: dto.arch ?? -1,
@@ -33,6 +38,15 @@ export function createIntervalFromDateRangeDto(dto: DateRangeDto): Interval {
         start: dto.dateMin ?? NaN,
         end: dto.dateMin ?? NaN
     };
+}
+
+function isArchiveInfoDto(value: unknown): value is ArchiveInfoDto {
+    if (typeof value === 'object' && value !== null) {
+        if ('arch' in value) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function isEmptyArray(value: unknown): value is Array<never> {

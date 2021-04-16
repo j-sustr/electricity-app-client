@@ -10,7 +10,7 @@ export interface ArchiveInfo {
 export interface GroupInfo {
     id: string;
     name: string;
-    archives: ArchiveInfo[] | null;
+    archives: Array<ArchiveInfo | null> | null;
     subgroups: GroupInfo[] | null;
 }
 
