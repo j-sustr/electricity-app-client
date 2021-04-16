@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { selectOverviewChart } from 'src/app/app/power-factor-overview/power-factor-overview.selectors';
-
 import { PowerFactorOverviewChartComponent } from './power-factor-overview-chart.component';
 
 describe('PowerFactorOverviewChartComponent', () => {
@@ -11,7 +11,9 @@ describe('PowerFactorOverviewChartComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [PowerFactorOverviewChartComponent]
+            imports: [RouterTestingModule],
+            declarations: [PowerFactorOverviewChartComponent],
+            providers: [provideMockStore()]
         }).compileComponents();
 
         store = TestBed.inject<MockStore<unknown>>(MockStore);

@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { selectIsLoading } from 'src/app/app/data-source/data-source.selectors';
 
@@ -11,6 +13,7 @@ describe('LoginFormComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, RouterTestingModule.withRoutes([])],
             declarations: [LoginFormComponent],
             providers: [provideMockStore()]
         }).compileComponents();
