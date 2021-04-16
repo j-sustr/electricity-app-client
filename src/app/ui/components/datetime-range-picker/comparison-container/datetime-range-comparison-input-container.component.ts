@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { parseJSON } from 'date-fns';
+import { parseJSON, toDate } from 'date-fns';
 import isValid from 'date-fns/fp/isValid';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/internal/operators/take';
@@ -10,6 +10,7 @@ import { map, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/app/app-store.state';
 import { setIntervals } from 'src/app/app/data-source/data-source.actions';
 import { selectIntervals } from 'src/app/app/data-source/data-source.selectors';
+import { selectUserRecordGroupsInterval } from 'src/app/app/groups/groups.selectors';
 import {
     DatetimeRangeComparisonInputComponent,
     DatetimeRangeComparisonInputValueChange
@@ -64,11 +65,14 @@ export class DatetimeRangeComparisonInputContainerComponent
             .subscribe();
 
         this.store
-            .pipe(select(selectInfo), takeUntil(this.destroy$))
-            .subscribe((info) => {
-                if (info) {
-                    this.input.min = info.minDatetime;
-                    this.input.max = info.maxDatetime;
+            .pipe(
+                select(selectUserRecordGroupsInterval),
+                takeUntil(this.destroy$)
+            )
+            .subscribe((interval) => {
+                if (interval) {
+                    this.input.min = toDate(interval.start) ?? null;
+                    this.input.max = toDate(interval.end) ?? null;
                 }
             });
 

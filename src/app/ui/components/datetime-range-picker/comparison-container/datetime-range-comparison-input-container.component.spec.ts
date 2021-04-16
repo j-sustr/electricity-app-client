@@ -1,11 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-    selectInfo,
-    selectIntervals
-} from 'src/app/app/data-source/data-source.selectors';
+import { selectIntervals } from 'src/app/app/data-source/data-source.selectors';
+import { selectUserRecordGroupsInterval } from 'src/app/app/groups/groups.selectors';
 import { DatetimeRangePickerModule } from '../datetime-range-picker.module';
-
 import { DatetimeRangeComparisonInputContainerComponent } from './datetime-range-comparison-input-container.component';
 
 describe('DatetimeRangeComparisonInputContainerComponent', () => {
@@ -25,9 +22,9 @@ describe('DatetimeRangeComparisonInputContainerComponent', () => {
             interval1: { start: -Infinity, end: Infinity },
             interval2: { start: -Infinity, end: Infinity }
         });
-        store.overrideSelector(selectInfo, {
-            minDatetime: new Date(2021, 0, 1),
-            maxDatetime: new Date(2021, 1, 1)
+        store.overrideSelector(selectUserRecordGroupsInterval, {
+            start: new Date(2021, 0, 1),
+            end: new Date(2021, 1, 1)
         });
     });
 
