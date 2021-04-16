@@ -1,20 +1,26 @@
 import { Action } from '@ngrx/store';
 import { setIntervals } from './data-source.actions';
-import {
-    dataSourceReducer,
-    DataSourceState,
-    initialState
-} from './data-source.reducer';
+import { DataSourceState } from './data-source.model';
+import { dataSourceReducer, initialState } from './data-source.reducer';
 
-describe('AppReducer', () => {
+describe('DataSource Reducer', () => {
     const TEST_INITIAL_STATE: DataSourceState = {
+        datasourceName: null,
         interval1: {
             start: -Infinity,
             end: Infinity
-        }
+        },
+        phases: {
+            main: true,
+            l1: false,
+            l2: false,
+            l3: false
+        },
+        loading: false
     };
 
     const TEST_INITIAL_STATE_2: DataSourceState = {
+        datasourceName: null,
         interval1: {
             start: -Infinity,
             end: Infinity
@@ -22,7 +28,14 @@ describe('AppReducer', () => {
         interval2: {
             start: -Infinity,
             end: Infinity
-        }
+        },
+        phases: {
+            main: true,
+            l1: false,
+            l2: false,
+            l3: false
+        },
+        loading: false
     };
 
     it('should return the default state', () => {
@@ -59,11 +72,19 @@ describe('AppReducer', () => {
         const state = dataSourceReducer(TEST_INITIAL_STATE_2, action);
 
         expect(state).toEqual({
+            datasourceName: null,
             interval1: {
                 start: -Infinity,
                 end: Infinity
             },
-            interval2: undefined
+            interval2: undefined,
+            phases: {
+                main: true,
+                l1: false,
+                l2: false,
+                l3: false
+            },
+            loading: false
         });
     });
 });
