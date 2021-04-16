@@ -29,6 +29,9 @@ describe('getIntervalsOverlap()', () => {
 
         const result = getIntervalsOverlap([interval1, interval2, interval3]);
 
-        expect(result).toBeNull();
+        expect(result).toEqual({
+            start: new Date(2021, 3, 16, 11),
+            end: new Date(2021, 3, 17, 12)
+        });
     });
 });
