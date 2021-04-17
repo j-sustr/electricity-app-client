@@ -1,1 +1,30 @@
-<p>peak-demand-overview works!</p>
+<div class="container" *ngIf="state$ | async as state">
+    <div class="app-content-header">
+        <div class="left">
+            <app-page-title title="Peak Demand Overview"></app-page-title>
+        </div>
+        <div class="right">
+            <div class="ranges-container">
+                <app-datetime-range-comparison-input-container></app-datetime-range-comparison-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <app-view-control-bar [viewTypeControl]="true"></app-view-control-bar>
+        <dx-load-indicator
+            *ngIf="state.loading"
+            height="40"
+            width="40"
+        ></dx-load-indicator>
+        <ng-container *ngIf="!state.loading">
+            <app-peak-demand-overview-table
+                *ngIf="state.viewType === 'table'"
+            ></app-peak-demand-overview-table>
+            <!-- <app-peak-demand-overview-chart *ngIf="state.viewType === 'chart'">
+            </app-peak-demand-overview-chart> -->
+        </ng-container>
+    </div>
+
+    <div class="content-footer"></div>
+</div>

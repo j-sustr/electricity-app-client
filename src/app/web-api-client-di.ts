@@ -4,6 +4,7 @@ import {
     ICostsClient,
     IDataSourceClient,
     IGroupsClient,
+    IPeakDemandClient,
     IPowerFactorClient
 } from './web-api-client';
 
@@ -19,4 +20,8 @@ export const COSTS_CLIENT = new InjectionToken<ICostsClient>('COSTS_CLIENT');
 
 export const POWER_FACTOR_CLIENT = new InjectionToken<IPowerFactorClient>(
     'POWER_FACTOR_CLIENT'
+);
+
+export const PEAK_DEMAND_CLIENT = new InjectionToken<IPeakDemandClient>(
+    'PEAK_DEMAND_CLIENT'
 );

@@ -17,6 +17,10 @@ import { powerFactorDetailReducer } from './power-factor-detail/power-factor-det
 import { PowerFactorOverviewState } from './power-factor-overview/power-factor-overview.model';
 import { powerFactorOverviewReducer } from './power-factor-overview/power-factor-overview.reducer';
 import { RouterStateUrl } from './common/router/router.store';
+import { PeakDemandOverviewState } from './peak-demand-overview/peak-demand-overview.model';
+import { PeakDemandDetailState } from './peak-demand-detail/peak-demand-detail.model';
+import { peakDemandOverviewReducer } from './peak-demand-overview/peak-demand-overview.reducer';
+import { peakDemandDetailReducer } from './peak-demand-detail/peak-demand-detail.reducer';
 
 export interface AppState {
     auth: AuthState;
@@ -27,6 +31,8 @@ export interface AppState {
     costsDetail: CostsDetailState;
     powerFactorOverview: PowerFactorOverviewState;
     powerFactorDetail: PowerFactorDetailState;
+    peakDemandOverview: PeakDemandOverviewState;
+    peakDemandDetail: PeakDemandDetailState;
     router: RouterReducerState<RouterStateUrl>;
 }
 
@@ -39,5 +45,7 @@ export const reducers: ActionReducerMap<AppState> = {
     costsDetail: costsDetailReducer,
     powerFactorOverview: powerFactorOverviewReducer,
     powerFactorDetail: powerFactorDetailReducer,
+    peakDemandOverview: peakDemandOverviewReducer,
+    peakDemandDetail: peakDemandDetailReducer,
     router: routerReducer
 };

@@ -13,6 +13,7 @@ import {
     CostsClient,
     DataSourceClient,
     GroupsClient,
+    PeakDemandClient,
     PowerFactorClient
 } from 'src/app/web-api-client';
 import {
@@ -20,6 +21,7 @@ import {
     COSTS_CLIENT,
     DATA_SOURCE_CLIENT,
     GROUPS_CLIENT,
+    PEAK_DEMAND_CLIENT,
     POWER_FACTOR_CLIENT
 } from 'src/app/web-api-client-di';
 import { environment } from 'src/environments/environment';
@@ -82,6 +84,10 @@ import { CustomRouterSerializer } from './common/router/custom-router-serializer
         {
             provide: POWER_FACTOR_CLIENT,
             useClass: PowerFactorClient
+        },
+        {
+            provide: PEAK_DEMAND_CLIENT,
+            useClass: PeakDemandClient
         },
         // {
         //     provide: API_BASE_URL,
