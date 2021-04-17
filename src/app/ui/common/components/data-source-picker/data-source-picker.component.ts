@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../app/app-store.state';
+import { AppState } from '../../../../app/app-store.state';
 
 @Component({
     selector: 'app-data-source-picker',

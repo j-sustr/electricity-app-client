@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GroupInfo } from 'src/app/app/groups/groups.model';
-import { AppState } from '../../../app/app-store.state';
+import { AppState } from '../../../../app/app-store.state';
 import {
     GroupTreeView,
     selectGroupTreeView,
     selectSelectedGroup
-} from '../../../app/groups/groups.selectors';
+} from '../../../../app/groups/groups.selectors';
 
 @Component({
     selector: 'app-detail-view-controls',

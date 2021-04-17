@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../../../app/app-store.state';
-import { selectDataSourceName } from '../../../app/data-source/data-source.selectors';
+import { AppState } from '../../../../app/app-store.state';
+import { selectDataSourceName } from '../../../../app/data-source/data-source.selectors';
 
 @Component({
     selector: 'app-page-title',
