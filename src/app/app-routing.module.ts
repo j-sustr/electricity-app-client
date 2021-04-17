@@ -18,7 +18,7 @@ const routes: Routes = [
     {
         path: 'power-factor',
         loadChildren: () =>
-            import('./ui/pages/power-factor/power-factor.module').then(
+            import('./ui/power-factor/power-factor.module').then(
                 (m) => m.PowerFactorModule
             ),
         canActivate: [AppGuard]
@@ -26,7 +26,7 @@ const routes: Routes = [
     {
         path: 'login',
         loadChildren: () =>
-            import('./ui/pages/login/login.module').then((m) => m.LoginModule),
+            import('./ui/login/login.module').then((m) => m.LoginModule),
         canActivate: [AuthGuard]
     },
     {
