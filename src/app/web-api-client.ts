@@ -400,7 +400,7 @@ export class CostsClient implements ICostsClient {
 export interface IDataSourceClient {
     getTenant(): Observable<FileResponse>;
     setTenant(identifier: string | null | undefined): Observable<FileResponse>;
-    open(query: OpenDataSourceCommand): Observable<FileResponse>;
+    open(command: OpenDataSourceCommand): Observable<DataSourceInfoDto>;
     clearCache(): Observable<FileResponse>;
 }
 
@@ -511,11 +511,11 @@ export class DataSourceClient implements IDataSourceClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    open(query: OpenDataSourceCommand): Observable<FileResponse> {
+    open(command: OpenDataSourceCommand): Observable<DataSourceInfoDto> {
         let url_ = this.baseUrl + "/api/DataSource/open";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(query);
+        const content_ = JSON.stringify(command);
 
         let options_ : any = {
             body: content_,
@@ -523,7 +523,7 @@ export class DataSourceClient implements IDataSourceClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
+                "Accept": "application/json"
             })
         };
 
@@ -534,31 +534,33 @@ export class DataSourceClient implements IDataSourceClient {
                 try {
                     return this.processOpen(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
+                    return <Observable<DataSourceInfoDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
+                return <Observable<DataSourceInfoDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processOpen(response: HttpResponseBase): Observable<FileResponse> {
+    protected processOpen(response: HttpResponseBase): Observable<DataSourceInfoDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DataSourceInfoDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse>(<any>null);
+        return _observableOf<DataSourceInfoDto>(<any>null);
     }
 
     clearCache(): Observable<FileResponse> {
@@ -1747,6 +1749,42 @@ export interface ICostlyQuantitiesDetailItem {
     activeEnergy?: number;
     reactiveEnergy?: number;
     peakDemand?: number;
+}
+
+export class DataSourceInfoDto implements IDataSourceInfoDto {
+    name?: string | null;
+
+    constructor(data?: IDataSourceInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DataSourceInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DataSourceInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        return data; 
+    }
+}
+
+export interface IDataSourceInfoDto {
+    name?: string | null;
 }
 
 export class OpenDataSourceCommand implements IOpenDataSourceCommand {
