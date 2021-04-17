@@ -36,7 +36,7 @@ export function createArchiveInfoFromDto(
 export function createIntervalFromDateRangeDto(dto: DateRangeDto): Interval {
     return {
         start: dto.dateMin ?? NaN,
-        end: dto.dateMin ?? NaN
+        end: dto.dateMax ?? NaN
     };
 }
 
