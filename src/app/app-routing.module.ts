@@ -24,6 +24,14 @@ const routes: Routes = [
         canActivate: [AppGuard]
     },
     {
+        path: 'peak-demand',
+        loadChildren: () =>
+            import('./ui/peak-demand/peak-demand.module').then(
+                (m) => m.PeakDemandModule
+            ),
+        canActivate: [AppGuard]
+    },
+    {
         path: 'login',
         loadChildren: () =>
             import('./ui/login/login.module').then((m) => m.LoginModule),
