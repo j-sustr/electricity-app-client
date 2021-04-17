@@ -48,9 +48,9 @@ export class DataSourceEffects {
                         })
                     )
                     .pipe(
-                        map(() => {
+                        map((dto) => {
                             return openDataSourceSuccess({
-                                name: '(no name)'
+                                name: dto.name ?? '(no name)'
                             });
                         }),
                         catchError((error: HttpErrorResponse) =>
