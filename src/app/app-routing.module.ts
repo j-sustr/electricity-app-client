@@ -12,7 +12,7 @@ const routes: Routes = [
     {
         path: 'costs',
         loadChildren: () =>
-            import('./ui/pages/costs/costs.module').then((m) => m.CostsModule),
+            import('./ui/costs/costs.module').then((m) => m.CostsModule),
         canActivate: [AppGuard]
     },
     {
