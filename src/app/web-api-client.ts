@@ -996,7 +996,7 @@ export class GroupsClient implements IGroupsClient {
 }
 
 export interface IPeakDemandClient {
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandOverviewDto>;
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | undefined): Observable<PeakDemandOverviewDto>;
     getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandDetailDto>;
 }
 
@@ -1013,7 +1013,7 @@ export class PeakDemandClient implements IPeakDemandClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandOverviewDto> {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | undefined): Observable<PeakDemandOverviewDto> {
         let url_ = this.baseUrl + "/api/PeakDemand/overview?";
         if (interval1_Start !== undefined && interval1_Start !== null)
             url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
@@ -1027,6 +1027,10 @@ export class PeakDemandClient implements IPeakDemandClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        if (maxGroups === null)
+            throw new Error("The parameter 'maxGroups' cannot be null.");
+        else if (maxGroups !== undefined)
+            url_ += "MaxGroups=" + encodeURIComponent("" + maxGroups) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2214,9 +2218,7 @@ export interface IPeakDemandOverviewDto {
 export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
-    month?: Date;
-    peakDemandTime?: Date;
-    peakDemandValue?: number;
+    peakDemands?: PeakDemandItemDto[] | null;
 
     constructor(data?: IPeakDemandOverviewItem) {
         if (data) {
@@ -2231,9 +2233,11 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
         if (_data) {
             this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
             this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
-            this.month = _data["month"] ? new Date(_data["month"].toString()) : <any>null;
-            this.peakDemandTime = _data["peakDemandTime"] ? new Date(_data["peakDemandTime"].toString()) : <any>null;
-            this.peakDemandValue = _data["peakDemandValue"] !== undefined ? _data["peakDemandValue"] : <any>null;
+            if (Array.isArray(_data["peakDemands"])) {
+                this.peakDemands = [] as any;
+                for (let item of _data["peakDemands"])
+                    this.peakDemands!.push(PeakDemandItemDto.fromJS(item));
+            }
         }
     }
 
@@ -2248,9 +2252,11 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
         data = typeof data === 'object' ? data : {};
         data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
         data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
-        data["month"] = this.month ? this.month.toISOString() : <any>null;
-        data["peakDemandTime"] = this.peakDemandTime ? this.peakDemandTime.toISOString() : <any>null;
-        data["peakDemandValue"] = this.peakDemandValue !== undefined ? this.peakDemandValue : <any>null;
+        if (Array.isArray(this.peakDemands)) {
+            data["peakDemands"] = [];
+            for (let item of this.peakDemands)
+                data["peakDemands"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -2258,9 +2264,47 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
 export interface IPeakDemandOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
-    month?: Date;
-    peakDemandTime?: Date;
-    peakDemandValue?: number;
+    peakDemands?: PeakDemandItemDto[] | null;
+}
+
+export class PeakDemandItemDto implements IPeakDemandItemDto {
+    start?: Date;
+    value?: number;
+
+    constructor(data?: IPeakDemandItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PeakDemandItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PeakDemandItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start ? this.start.toISOString() : <any>null;
+        data["value"] = this.value !== undefined ? this.value : <any>null;
+        return data; 
+    }
+}
+
+export interface IPeakDemandItemDto {
+    start?: Date;
+    value?: number;
 }
 
 export class PeakDemandDetailDto implements IPeakDemandDetailDto {
