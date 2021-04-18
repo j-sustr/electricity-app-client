@@ -4,7 +4,6 @@ import { ViewType } from '../common/models';
 
 export interface PeakDemandOverviewState {
     viewType: ViewType;
-    showEnergy: boolean;
     items1: PeakDemandOverviewItem[] | null;
     items2: PeakDemandOverviewItem[] | null;
     loading: boolean;

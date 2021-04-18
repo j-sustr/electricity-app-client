@@ -3,14 +3,12 @@ import {
     getOverview,
     getOverviewError,
     getOverviewSuccess,
-    setViewType,
-    toggleEnergy
+    setViewType
 } from './peak-demand-overview.actions';
 import { PeakDemandOverviewState } from './peak-demand-overview.model';
 
 export const initialState: PeakDemandOverviewState = {
     viewType: 'table',
-    showEnergy: false,
     items1: null,
     items2: null,
     loading: false,
@@ -22,10 +20,6 @@ const reducer = createReducer(
     on(setViewType, (state, action) => ({
         ...state,
         viewType: action.viewType
-    })),
-    on(toggleEnergy, (state) => ({
-        ...state,
-        showEnergy: !state.showEnergy
     })),
     on(getOverview, (state) => ({
         ...state,
