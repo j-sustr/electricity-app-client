@@ -1,12 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { parseJSON, toDate } from 'date-fns';
-import isValid from 'date-fns/fp/isValid';
+import { isValid, parseJSON, toDate } from 'date-fns';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs/internal/operators/take';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { map, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/app/app-store.state';
 import { setIntervals } from 'src/app/app/data-source/data-source.actions';
 import { selectIntervals } from 'src/app/app/data-source/data-source.selectors';
