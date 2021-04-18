@@ -1,1 +1,35 @@
-<p>peak-demand-overview-table works!</p>
+<ng-container *ngIf="table$ | async as table">
+    <dx-data-grid
+        [dataSource]="table.items"
+        [columnAutoWidth]="true"
+        [showBorders]="true"
+        rowTemplate="rowTemplateName"
+    >
+        <dxi-column
+            dataField="groupName"
+            caption="Device Name"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="peakDemandTime"
+            caption="Peak Demand Time"
+            dataType="date"
+        ></dxi-column>
+        <dxi-column
+            dataField="peakDemandValue"
+            caption="Peak Demand Value [kW]"
+            dataType="number"
+        ></dxi-column>
+
+        <tr
+            class="dx-row data-table-row"
+            [ngClass]="{'for-comparison': item.data.isForComparison }"
+            *dxTemplate="let item of 'rowTemplateName'"
+            routerLink="/peak-demand/detail/{{item.data.groupId}}"
+        >
+            <td>{{item.data.groupName}}</td>
+            <td style="text-align: right">{{item.data.peakDemandTime}}</td>
+            <td style="text-align: right">{{item.data.peakDemandValue}}</td>
+        </tr>
+    </dx-data-grid>
+</ng-container>

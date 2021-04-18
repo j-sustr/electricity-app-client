@@ -27,14 +27,16 @@ import {
 import { environment } from 'src/environments/environment';
 import { reducers } from './app-store.state';
 import { AuthEffects } from './auth/auth.effects';
+import { CustomRouterSerializer } from './common/router/custom-router-serializer';
 import { CostsDetailEffects } from './costs-detail/costs-detail.effects';
 import { CostsOverviewEffects } from './costs-overview/costs-overview.effects';
 import { DataSourceEffects } from './data-source/data-source.effects';
 import { GroupsEffects } from './groups/groups.effects';
+import { PeakDemandDetailEffects } from './peak-demand-detail/peak-demand-detail.effects';
+import { PeakDemandOverviewEffects } from './peak-demand-overview/peak-demand-overview.effects';
 import { PowerFactorDetailEffects } from './power-factor-detail/power-factor-detail.effects';
 import { PowerFactorDistributionEffects } from './power-factor-detail/power-factor-distribution.effects';
 import { PowerFactorOverviewEffects } from './power-factor-overview/power-factor-overview.effects';
-import { CustomRouterSerializer } from './common/router/custom-router-serializer';
 
 // function apiBaseUrlFactory(): string | undefined {
 //     const url = 'https://localhost:44312';
@@ -55,7 +57,9 @@ import { CustomRouterSerializer } from './common/router/custom-router-serializer
             CostsDetailEffects,
             PowerFactorOverviewEffects,
             PowerFactorDetailEffects,
-            PowerFactorDistributionEffects
+            PowerFactorDistributionEffects,
+            PeakDemandOverviewEffects,
+            PeakDemandDetailEffects
         ]),
         environment.production
             ? []

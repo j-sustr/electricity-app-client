@@ -6,7 +6,6 @@ import { PeakDemandOverviewState } from './peak-demand-overview.model';
 export interface PeakDemandOverviewTableItem {
     groupId: string;
     groupName: string;
-    month: Date;
     peakDemandTime: Date;
     peakDemandValue: number;
     isForComparison?: boolean;
@@ -60,9 +59,8 @@ export const selectOverviewTableItems = createSelector(
             return {
                 groupId: item.groupId ?? '(no id)',
                 groupName: (item.groupName ?? '(no name)') + suffix,
-                month: item.month ?? new Date(NaN),
-                peakDemandTime: item.peakDemandTime ?? new Date(NaN),
-                peakDemandValue: item.peakDemandValue ?? NaN
+                peakDemandTime: item.peakDemands?.[0]?.start ?? new Date(NaN),
+                peakDemandValue: item.peakDemands?.[0]?.value ?? NaN
             };
         }
     }

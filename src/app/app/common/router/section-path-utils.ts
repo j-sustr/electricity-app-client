@@ -6,6 +6,10 @@ import * as pfoActions from '../../power-factor-overview/power-factor-overview.a
 import * as pfoSelectors from '../../power-factor-overview/power-factor-overview.selectors';
 import * as pfdActions from '../../power-factor-detail/power-factor-detail.actions';
 import * as pfdSelectors from '../../power-factor-detail/power-factor-detail.selectors';
+import * as pdoActions from '../../peak-demand-overview/peak-demand-overview.actions';
+import * as pdoSelectors from '../../peak-demand-overview/peak-demand-overview.selectors';
+import * as pddActions from '../../peak-demand-detail/peak-demand-detail.actions';
+import * as pddSelectors from '../../peak-demand-detail/peak-demand-detail.selectors';
 import { Action, ActionCreator, Selector } from '@ngrx/store';
 import { AppState } from '../../app-store.state';
 import { ViewType } from '../models';
@@ -14,7 +18,9 @@ export const SECTION_PATHS = [
     '/costs/overview',
     '/costs/detail/:groupId',
     '/power-factor/overview',
-    '/power-factor/detail/:groupId'
+    '/power-factor/detail/:groupId',
+    '/peak-demand/overview',
+    '/peak-demand/detail/:groupId'
 ] as const;
 
 export type SectionPath = typeof SECTION_PATHS[number];
@@ -33,6 +39,10 @@ export function mapSectionPathToGetDataAction(path: SectionPath): Action {
             return pfoActions.getOverview();
         case '/power-factor/detail/:groupId':
             return pfdActions.getDetail();
+        case '/peak-demand/overview':
+            return pdoActions.getOverview();
+        case '/peak-demand/detail/:groupId':
+            return pddActions.getDetail();
     }
     throw new Error('invalid section url');
 }
@@ -49,6 +59,10 @@ export function mapSectionPathToHasDataSelector(
             return pfoSelectors.selectHasData;
         case '/power-factor/detail/:groupId':
             return pfdSelectors.selectHasData;
+        case '/peak-demand/overview':
+            return pdoSelectors.selectHasData;
+        case '/peak-demand/detail/:groupId':
+            return pddSelectors.selectHasData;
     }
     throw new Error('invalid section path');
 }
@@ -66,6 +80,10 @@ export function mapSectionPathToViewTypeSelector(
             return pfoSelectors.selectViewType;
         case '/power-factor/detail/:groupId':
             return pfdSelectors.selectViewType;
+        case '/peak-demand/overview':
+            return pdoSelectors.selectViewType;
+        case '/peak-demand/detail/:groupId':
+            return pddSelectors.selectViewType;
     }
     throw new Error('invalid section path');
 }
@@ -83,6 +101,10 @@ export function mapSectionPathToSetViewTypeAction(
             return pfoActions.setViewType;
         case '/power-factor/detail/:groupId':
             return pfdActions.setViewType;
+        case '/peak-demand/overview':
+            return pdoActions.setViewType;
+        case '/peak-demand/detail/:groupId':
+            return pddActions.setViewType;
     }
     throw new Error('invalid section path');
 }

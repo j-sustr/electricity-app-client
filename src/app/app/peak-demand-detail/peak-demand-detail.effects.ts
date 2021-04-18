@@ -1,64 +1,74 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { createEffect, ofType, Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { withLatestFrom, switchMap, catchError, map } from 'rxjs/operators';
 import {
     IntervalDto,
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
 import {
     IPeakDemandClient,
-    PeakDemandOverviewItem
+    PeakDemandDetailData
 } from 'src/app/web-api-client';
 import { PEAK_DEMAND_CLIENT } from 'src/app/web-api-client-di';
-import { OVERVIEW_MAX_GROUPS } from '../app-constants';
 import { AppState } from '../app-store.state';
-import { selectIntervals } from '../data-source/data-source.selectors';
+import { selectGroupId } from '../common/router/router.selectors';
 import {
-    getOverview,
-    getOverviewError,
-    getOverviewSuccess
-} from './peak-demand-overview.actions';
+    selectIntervals,
+    selectPhases
+} from '../data-source/data-source.selectors';
+import {
+    getDetail,
+    getDetailError,
+    getDetailSuccess
+} from './peak-demand-detail.actions';
 
 @Injectable()
-export class PeakDemandOverviewEffects {
-    getData$ = createEffect(() => {
+export class PeakDemandDetailEffects {
+    getDetail$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getOverview),
-            withLatestFrom(this.store.pipe(select(selectIntervals))),
-            switchMap(([, { interval1, interval2 }]) => {
+            ofType(getDetail),
+            withLatestFrom(
+                combineLatest([
+                    this.store.pipe(select(selectGroupId)),
+                    this.store.pipe(select(selectIntervals)),
+                    this.store.pipe(select(selectPhases))
+                ]),
+                (v1, v2) => v2
+            ),
+            switchMap(([groupId, { interval1, interval2 }, phases]) => {
                 const dto1 = intervalToDto(interval1);
                 let dto2: IntervalDto | undefined = undefined;
                 if (interval2) {
                     dto2 = intervalToDto(interval2);
                 }
                 return this.client
-                    .getOverview(
+                    .getDetail(
+                        groupId,
                         dto1.start,
                         dto1.end,
                         dto1.isInfinite,
                         dto2?.start,
                         dto2?.end,
-                        dto2?.isInfinite,
-                        OVERVIEW_MAX_GROUPS
+                        dto2?.isInfinite
                     )
                     .pipe(
                         map((dto) => {
-                            validateItems(dto.items1);
-                            if (dto.items2) {
-                                validateItems(dto.items2);
+                            validateData(dto.data1);
+                            if (dto.data2) {
+                                validateData(dto.data2);
                             }
 
-                            return getOverviewSuccess({
-                                items1: dto.items1 as PeakDemandOverviewItem[],
-                                items2: dto.items2 ?? null
+                            return getDetailSuccess({
+                                data1: dto.data1 as PeakDemandDetailData,
+                                data2: dto.data2 ?? null
                             });
                         }),
                         catchError((error: HttpErrorResponse) =>
                             of(
-                                getOverviewError({
+                                getDetailError({
                                     error
                                 })
                             )
@@ -76,8 +86,8 @@ export class PeakDemandOverviewEffects {
     ) {}
 }
 
-function validateItems(
-    items: PeakDemandOverviewItem[] | null | undefined
-): items is PeakDemandOverviewItem[] {
+function validateData(
+    data: PeakDemandDetailData | null | undefined
+): data is PeakDemandDetailData {
     return true;
 }

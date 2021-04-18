@@ -1,1 +1,34 @@
-<p>peak-demand-detail works!</p>
+<div class="container" *ngIf="state$ | async as state">
+    <div class="app-content-header">
+        <div class="left">
+            <app-page-title title="Power Factor Detail"></app-page-title>
+            <app-detail-view-controls></app-detail-view-controls>
+        </div>
+        <div class="right">
+            <div class="ranges-container">
+                <app-datetime-range-comparison-input-container></app-datetime-range-comparison-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <app-view-control-bar
+            [phasesPicker]="true"
+            [viewTypeControl]="true"
+        ></app-view-control-bar>
+        <dx-load-indicator
+            *ngIf="state.loading"
+            height="40"
+            width="40"
+        ></dx-load-indicator>
+        <ng-container *ngIf="!state.loading">
+            <!-- <app-peak-demand-detail-table
+                *ngIf="state.viewType === 'table'"
+            ></app-peak-demand-detail-table> -->
+            <app-peak-demand-detail-chart *ngIf="state.viewType === 'chart'">
+            </app-peak-demand-detail-chart>
+        </ng-container>
+    </div>
+
+    <div class="content-footer"></div>
+</div>

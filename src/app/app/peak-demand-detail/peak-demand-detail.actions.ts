@@ -12,7 +12,6 @@ export const getDetail = createAction('[Peak Demand Detail] Get Detail');
 export const getDetailSuccess = createAction(
     '[Peak Demand Detail] Get Detail Success',
     props<{
-        groupName: string;
         data1: PeakDemandDetailData;
         data2: PeakDemandDetailData | null;
     }>()
