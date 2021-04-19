@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { AppState } from './app/app-store.state';
 import { selectIsAuthenticated } from './app/auth/auth.selectors';
 import { AuthService } from './app/auth/auth.service';
+import { getUserGroupTree } from './app/groups/groups.actions';
 import {
     DataSourceClient,
     DBDataSourceClient,
@@ -42,22 +43,21 @@ export class AppComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (!environment.production) {
-            this.authService
-                .getIsAuthenticated()
-                .pipe(
-                    tap((isAuthenticated) => {
-                        if (!isAuthenticated) {
-                            void import('./dev-login').then((module) => {
-                                module.devLogin(
-                                    this.store,
-                                    this.actionsSubject
-                                );
-                            });
-                        }
-                    })
-                )
-                .subscribe();
-        }
+        this.authService
+            .getIsAuthenticated()
+            .pipe(
+                tap((isAuthenticated) => {
+                    if (isAuthenticated) {
+                        this.store.dispatch(getUserGroupTree());
+                        return;
+                    }
+                    if (!environment.production) {
+                        void import('./dev-login').then((module) => {
+                            module.devLogin(this.store, this.actionsSubject);
+                        });
+                    }
+                })
+            )
+            .subscribe();
     }
 }
