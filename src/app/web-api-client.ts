@@ -996,7 +996,7 @@ export class GroupsClient implements IGroupsClient {
 }
 
 export interface IPeakDemandClient {
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | undefined): Observable<PeakDemandOverviewDto>;
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PeakDemandOverviewDto>;
     getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: number | undefined): Observable<PeakDemandDetailDto>;
 }
 
@@ -1013,7 +1013,7 @@ export class PeakDemandClient implements IPeakDemandClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | undefined): Observable<PeakDemandOverviewDto> {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PeakDemandOverviewDto> {
         let url_ = this.baseUrl + "/api/PeakDemand/overview?";
         if (interval1_Start !== undefined && interval1_Start !== null)
             url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
@@ -1027,9 +1027,7 @@ export class PeakDemandClient implements IPeakDemandClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
-        if (maxGroups === null)
-            throw new Error("The parameter 'maxGroups' cannot be null.");
-        else if (maxGroups !== undefined)
+        if (maxGroups !== undefined && maxGroups !== null)
             url_ += "MaxGroups=" + encodeURIComponent("" + maxGroups) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1145,7 +1143,7 @@ export class PeakDemandClient implements IPeakDemandClient {
 }
 
 export interface IPowerFactorClient {
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto>;
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PowerFactorOverviewDto>;
     getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined): Observable<PowerFactorDistributionDto>;
 }
 
@@ -1162,7 +1160,7 @@ export class PowerFactorClient implements IPowerFactorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, groupIds: string[] | null | undefined): Observable<PowerFactorOverviewDto> {
+    getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PowerFactorOverviewDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/overview?";
         if (interval1_Start !== undefined && interval1_Start !== null)
             url_ += "Interval1.Start=" + encodeURIComponent(interval1_Start ? "" + interval1_Start.toJSON() : "") + "&";
@@ -1176,8 +1174,8 @@ export class PowerFactorClient implements IPowerFactorClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
-        if (groupIds !== undefined && groupIds !== null)
-            groupIds && groupIds.forEach(item => { url_ += "GroupIds=" + encodeURIComponent("" + item) + "&"; });
+        if (maxGroups !== undefined && maxGroups !== null)
+            url_ += "MaxGroups=" + encodeURIComponent("" + maxGroups) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
