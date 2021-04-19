@@ -8,7 +8,7 @@ import {
 import { PeakDemandDetailState } from './peak-demand-detail.model';
 
 export const initialState: PeakDemandDetailState = {
-    viewType: 'table',
+    viewType: 'chart',
     series1: null,
     series2: null,
     loading: false,

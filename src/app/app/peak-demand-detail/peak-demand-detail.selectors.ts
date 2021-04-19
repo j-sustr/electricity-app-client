@@ -108,7 +108,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
         arr.push({
             name: 'Main',
             valueField: 'valueMain_1',
-            unit: '%',
+            unit: 'kW',
             color: 'red',
             stack: 1
         });
@@ -117,7 +117,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
         arr.push({
             name: 'L1',
             valueField: 'valueL1_1',
-            unit: '%',
+            unit: 'kW',
             color: 'orange',
             stack: 1
         });
@@ -126,7 +126,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
         arr.push({
             name: 'L2',
             valueField: 'valueL2_1',
-            unit: '%',
+            unit: 'kW',
             color: 'blue',
             stack: 1
         });
@@ -135,7 +135,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
         arr.push({
             name: 'L3',
             valueField: 'valueL3_1',
-            unit: '%',
+            unit: 'kW',
             color: 'purple',
             stack: 1
         });
