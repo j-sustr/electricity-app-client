@@ -92,8 +92,8 @@ function createDemandSeries(
     if (!series?.timeRange) {
         throw new Error('does not have timeRange');
     }
-    if ((series?.timeStep ?? NaN) > 0) {
-        throw new Error('does not have timeStep');
+    if (!((series?.timeStep ?? NaN) > 0)) {
+        throw new Error('does not have valid timeStep');
     }
     let length = 0;
     length = series?.valuesMain?.length ?? length;
