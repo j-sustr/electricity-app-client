@@ -997,7 +997,7 @@ export class GroupsClient implements IGroupsClient {
 
 export interface IPeakDemandClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | undefined): Observable<PeakDemandOverviewDto>;
-    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandDetailDto>;
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: number | undefined): Observable<PeakDemandDetailDto>;
 }
 
 @Injectable({
@@ -1077,7 +1077,7 @@ export class PeakDemandClient implements IPeakDemandClient {
         return _observableOf<PeakDemandOverviewDto>(<any>null);
     }
 
-    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined): Observable<PeakDemandDetailDto> {
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: number | undefined): Observable<PeakDemandDetailDto> {
         let url_ = this.baseUrl + "/api/PeakDemand/detail?";
         if (groupId !== undefined && groupId !== null)
             url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
@@ -1093,6 +1093,10 @@ export class PeakDemandClient implements IPeakDemandClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        if (aggregation === null)
+            throw new Error("The parameter 'aggregation' cannot be null.");
+        else if (aggregation !== undefined)
+            url_ += "Aggregation=" + encodeURIComponent("" + aggregation) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2308,8 +2312,8 @@ export interface IPeakDemandItemDto {
 }
 
 export class PeakDemandDetailDto implements IPeakDemandDetailDto {
-    data1?: PeakDemandDetailData | null;
-    data2?: PeakDemandDetailData | null;
+    demandSeries1?: DemandSeriesDto | null;
+    demandSeries2?: DemandSeriesDto | null;
 
     constructor(data?: IPeakDemandDetailDto) {
         if (data) {
@@ -2322,8 +2326,8 @@ export class PeakDemandDetailDto implements IPeakDemandDetailDto {
 
     init(_data?: any) {
         if (_data) {
-            this.data1 = _data["data1"] ? PeakDemandDetailData.fromJS(_data["data1"]) : <any>null;
-            this.data2 = _data["data2"] ? PeakDemandDetailData.fromJS(_data["data2"]) : <any>null;
+            this.demandSeries1 = _data["demandSeries1"] ? DemandSeriesDto.fromJS(_data["demandSeries1"]) : <any>null;
+            this.demandSeries2 = _data["demandSeries2"] ? DemandSeriesDto.fromJS(_data["demandSeries2"]) : <any>null;
         }
     }
 
@@ -2336,21 +2340,26 @@ export class PeakDemandDetailDto implements IPeakDemandDetailDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["data1"] = this.data1 ? this.data1.toJSON() : <any>null;
-        data["data2"] = this.data2 ? this.data2.toJSON() : <any>null;
+        data["demandSeries1"] = this.demandSeries1 ? this.demandSeries1.toJSON() : <any>null;
+        data["demandSeries2"] = this.demandSeries2 ? this.demandSeries2.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface IPeakDemandDetailDto {
-    data1?: PeakDemandDetailData | null;
-    data2?: PeakDemandDetailData | null;
+    demandSeries1?: DemandSeriesDto | null;
+    demandSeries2?: DemandSeriesDto | null;
 }
 
-export class PeakDemandDetailData implements IPeakDemandDetailData {
-    demandSeries?: any[][] | null;
+export class DemandSeriesDto implements IDemandSeriesDto {
+    timeRange?: IntervalDto | null;
+    timeStep?: number;
+    valuesMain?: number[] | null;
+    valuesL1?: number[] | null;
+    valuesL2?: number[] | null;
+    valuesL3?: number[] | null;
 
-    constructor(data?: IPeakDemandDetailData) {
+    constructor(data?: IDemandSeriesDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2361,34 +2370,117 @@ export class PeakDemandDetailData implements IPeakDemandDetailData {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["demandSeries"])) {
-                this.demandSeries = [] as any;
-                for (let item of _data["demandSeries"])
-                    this.demandSeries!.push(item);
+            this.timeRange = _data["timeRange"] ? IntervalDto.fromJS(_data["timeRange"]) : <any>null;
+            this.timeStep = _data["timeStep"] !== undefined ? _data["timeStep"] : <any>null;
+            if (Array.isArray(_data["valuesMain"])) {
+                this.valuesMain = [] as any;
+                for (let item of _data["valuesMain"])
+                    this.valuesMain!.push(item);
+            }
+            if (Array.isArray(_data["valuesL1"])) {
+                this.valuesL1 = [] as any;
+                for (let item of _data["valuesL1"])
+                    this.valuesL1!.push(item);
+            }
+            if (Array.isArray(_data["valuesL2"])) {
+                this.valuesL2 = [] as any;
+                for (let item of _data["valuesL2"])
+                    this.valuesL2!.push(item);
+            }
+            if (Array.isArray(_data["valuesL3"])) {
+                this.valuesL3 = [] as any;
+                for (let item of _data["valuesL3"])
+                    this.valuesL3!.push(item);
             }
         }
     }
 
-    static fromJS(data: any): PeakDemandDetailData {
+    static fromJS(data: any): DemandSeriesDto {
         data = typeof data === 'object' ? data : {};
-        let result = new PeakDemandDetailData();
+        let result = new DemandSeriesDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.demandSeries)) {
-            data["demandSeries"] = [];
-            for (let item of this.demandSeries)
-                data["demandSeries"].push(item);
+        data["timeRange"] = this.timeRange ? this.timeRange.toJSON() : <any>null;
+        data["timeStep"] = this.timeStep !== undefined ? this.timeStep : <any>null;
+        if (Array.isArray(this.valuesMain)) {
+            data["valuesMain"] = [];
+            for (let item of this.valuesMain)
+                data["valuesMain"].push(item);
+        }
+        if (Array.isArray(this.valuesL1)) {
+            data["valuesL1"] = [];
+            for (let item of this.valuesL1)
+                data["valuesL1"].push(item);
+        }
+        if (Array.isArray(this.valuesL2)) {
+            data["valuesL2"] = [];
+            for (let item of this.valuesL2)
+                data["valuesL2"].push(item);
+        }
+        if (Array.isArray(this.valuesL3)) {
+            data["valuesL3"] = [];
+            for (let item of this.valuesL3)
+                data["valuesL3"].push(item);
         }
         return data; 
     }
 }
 
-export interface IPeakDemandDetailData {
-    demandSeries?: any[][] | null;
+export interface IDemandSeriesDto {
+    timeRange?: IntervalDto | null;
+    timeStep?: number;
+    valuesMain?: number[] | null;
+    valuesL1?: number[] | null;
+    valuesL2?: number[] | null;
+    valuesL3?: number[] | null;
+}
+
+export class IntervalDto implements IIntervalDto {
+    start?: Date | null;
+    end?: Date | null;
+    isInfinite?: boolean | null;
+
+    constructor(data?: IIntervalDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
+            this.isInfinite = _data["isInfinite"] !== undefined ? _data["isInfinite"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): IntervalDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IntervalDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start ? this.start.toISOString() : <any>null;
+        data["end"] = this.end ? this.end.toISOString() : <any>null;
+        data["isInfinite"] = this.isInfinite !== undefined ? this.isInfinite : <any>null;
+        return data; 
+    }
+}
+
+export interface IIntervalDto {
+    start?: Date | null;
+    end?: Date | null;
+    isInfinite?: boolean | null;
 }
 
 export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
@@ -2665,50 +2757,6 @@ export interface IPowerFactorDistributionItem {
     valueL1?: number | null;
     valueL2?: number | null;
     valueL3?: number | null;
-}
-
-export class IntervalDto implements IIntervalDto {
-    start?: Date | null;
-    end?: Date | null;
-    isInfinite?: boolean | null;
-
-    constructor(data?: IIntervalDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
-            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
-            this.isInfinite = _data["isInfinite"] !== undefined ? _data["isInfinite"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): IntervalDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new IntervalDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["start"] = this.start ? this.start.toISOString() : <any>null;
-        data["end"] = this.end ? this.end.toISOString() : <any>null;
-        data["isInfinite"] = this.isInfinite !== undefined ? this.isInfinite : <any>null;
-        return data; 
-    }
-}
-
-export interface IIntervalDto {
-    start?: Date | null;
-    end?: Date | null;
-    isInfinite?: boolean | null;
 }
 
 export class TimeSeriesDtoOfSingle implements ITimeSeriesDtoOfSingle {
