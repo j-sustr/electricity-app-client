@@ -13,6 +13,7 @@ import {
     PowerFactorOverviewItem
 } from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
+import { OVERVIEW_MAX_GROUPS } from '../app-constants';
 import { AppState } from '../app-store.state';
 import { selectIntervals } from '../data-source/data-source.selectors';
 import {
@@ -41,7 +42,7 @@ export class PowerFactorOverviewEffects {
                         dto2?.start,
                         dto2?.end,
                         dto2?.isInfinite,
-                        null
+                        OVERVIEW_MAX_GROUPS
                     )
                     .pipe(
                         map((dto) => {
