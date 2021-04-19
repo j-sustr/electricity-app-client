@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { PeakDemandDetailData } from 'src/app/web-api-client';
+import { DemandSeries } from './peak-demand-detail.model';
 
 export const setViewType = createAction(
     '[Peak Demand Detail] Set View Type',
@@ -12,8 +12,8 @@ export const getDetail = createAction('[Peak Demand Detail] Get Detail');
 export const getDetailSuccess = createAction(
     '[Peak Demand Detail] Get Detail Success',
     props<{
-        data1: PeakDemandDetailData;
-        data2: PeakDemandDetailData | null;
+        series1: DemandSeries;
+        series2: DemandSeries | null;
     }>()
 );
 

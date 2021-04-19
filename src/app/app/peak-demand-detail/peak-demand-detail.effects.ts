@@ -1,19 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { createEffect, ofType, Actions } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, of } from 'rxjs';
-import { withLatestFrom, switchMap, catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
     IntervalDto,
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
-import {
-    IPeakDemandClient,
-    PeakDemandDetailData
-} from 'src/app/web-api-client';
+import { DemandSeriesDto, IPeakDemandClient } from 'src/app/web-api-client';
 import { PEAK_DEMAND_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
+import { createIntervalFromDto } from '../common/dto-mapping';
 import { selectGroupId } from '../common/router/router.selectors';
 import {
     selectIntervals,
@@ -24,6 +22,7 @@ import {
     getDetailError,
     getDetailSuccess
 } from './peak-demand-detail.actions';
+import { DemandSeries } from './peak-demand-detail.model';
 
 @Injectable()
 export class PeakDemandDetailEffects {
@@ -52,18 +51,19 @@ export class PeakDemandDetailEffects {
                         dto1.isInfinite,
                         dto2?.start,
                         dto2?.end,
-                        dto2?.isInfinite
+                        dto2?.isInfinite,
+                        0
                     )
                     .pipe(
                         map((dto) => {
-                            validateData(dto.data1);
-                            if (dto.data2) {
-                                validateData(dto.data2);
+                            const s1 = createDemandSeries(dto.demandSeries1);
+                            let s2: DemandSeries | null = null;
+                            if (dto.demandSeries2) {
+                                s2 = createDemandSeries(dto.demandSeries2);
                             }
-
                             return getDetailSuccess({
-                                data1: dto.data1 as PeakDemandDetailData,
-                                data2: dto.data2 ?? null
+                                series1: s1,
+                                series2: s2
                             });
                         }),
                         catchError((error: HttpErrorResponse) =>
@@ -86,8 +86,28 @@ export class PeakDemandDetailEffects {
     ) {}
 }
 
-function validateData(
-    data: PeakDemandDetailData | null | undefined
-): data is PeakDemandDetailData {
-    return true;
+function createDemandSeries(
+    series: DemandSeriesDto | null | undefined
+): DemandSeries {
+    if (!series?.timeRange) {
+        throw new Error('does not have timeRange');
+    }
+    if ((series?.timeStep ?? NaN) > 0) {
+        throw new Error('does not have timeStep');
+    }
+    let length = 0;
+    length = series?.valuesMain?.length ?? length;
+    length = series?.valuesL1?.length ?? length;
+    length = series?.valuesL2?.length ?? length;
+    length = series?.valuesL3?.length ?? length;
+
+    return {
+        timeRange: createIntervalFromDto(series.timeRange),
+        timeStep: series.timeStep ?? NaN,
+        valuesMain: series.valuesMain ?? null,
+        valuesL1: series.valuesL1 ?? null,
+        valuesL2: series.valuesL2 ?? null,
+        valuesL3: series.valuesL3 ?? null,
+        length
+    };
 }

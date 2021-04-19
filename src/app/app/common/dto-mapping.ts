@@ -1,7 +1,8 @@
 import {
     ArchiveInfoDto,
     DateRangeDto,
-    GroupInfoDto
+    GroupInfoDto,
+    IntervalDto
 } from 'src/app/web-api-client';
 import { ArchiveInfo, GroupInfo } from '../groups/groups.model';
 
@@ -37,6 +38,13 @@ export function createIntervalFromDateRangeDto(dto: DateRangeDto): Interval {
     return {
         start: dto.dateMin ?? NaN,
         end: dto.dateMax ?? NaN
+    };
+}
+
+export function createIntervalFromDto(dto: IntervalDto): Interval {
+    return {
+        start: dto.start ?? NaN,
+        end: dto.end ?? NaN
     };
 }
 

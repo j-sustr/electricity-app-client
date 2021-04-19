@@ -9,8 +9,8 @@ import { PeakDemandDetailState } from './peak-demand-detail.model';
 
 export const initialState: PeakDemandDetailState = {
     viewType: 'table',
-    data1: null,
-    data2: null,
+    series1: null,
+    series2: null,
     loading: false,
     error: null
 };
@@ -23,15 +23,15 @@ const reducer = createReducer(
     })),
     on(getDetail, (state) => ({
         ...state,
-        data1: null,
-        data2: null,
+        series1: null,
+        series2: null,
         loading: true,
         error: null
     })),
-    on(getDetailSuccess, (state, { data1, data2 }) => ({
+    on(getDetailSuccess, (state, { series1, series2 }) => ({
         ...state,
-        data1,
-        data2,
+        series1,
+        series2,
         loading: false,
         error: null
     })),

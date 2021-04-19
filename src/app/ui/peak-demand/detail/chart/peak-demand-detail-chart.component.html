@@ -1,1 +1,45 @@
-<p>peak-demand-detail-chart works!</p>
+<ng-container *ngIf="chart$ | async as chart">
+    <dx-chart
+        [dataSource]="chart.items"
+        [title]="chart.title"
+        [customizePoint]="customizePoint"
+        [customizeLabel]="customizeLabel"
+    >
+        <dxo-common-series-settings argumentField="time" type="bar">
+        </dxo-common-series-settings>
+        <ng-container *ngFor="let s of chart.series">
+            <dxi-series
+                [valueField]="s.valueField"
+                [name]="s.name"
+                [color]="s.color"
+                [stack]="s.stack"
+            >
+            </dxi-series>
+        </ng-container>
+        <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip">
+        </dxo-tooltip>
+        <dxi-value-axis>
+            <dxo-label [customizeText]="customizeText"></dxo-label>
+            <dxi-constant-line
+                [width]="2"
+                [value]="lowAverage"
+                color="#8c8cff"
+                dashStyle="dash"
+            >
+                <dxo-label text="Low Average"></dxo-label>
+            </dxi-constant-line>
+            <dxi-constant-line
+                [width]="2"
+                [value]="highAverage"
+                color="#ff7c7c"
+                dashStyle="dash"
+            >
+                <dxo-label text="High Average"></dxo-label>
+            </dxi-constant-line>
+        </dxi-value-axis>
+        <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+            <dxo-margin [left]="50"></dxo-margin>
+        </dxo-legend>
+        <dxo-export [enabled]="true"></dxo-export>
+    </dx-chart>
+</ng-container>
