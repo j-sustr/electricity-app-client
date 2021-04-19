@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AppState } from './app/app-store.state';
 import { selectIsAuthenticated } from './app/auth/auth.selectors';
@@ -42,9 +43,21 @@ export class AppComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         if (!environment.production) {
-            void import('./dev-login').then((module) => {
-                module.devLogin(this.store, this.actionsSubject);
-            });
+            this.authService
+                .getIsAuthenticated()
+                .pipe(
+                    tap((isAuthenticated) => {
+                        if (!isAuthenticated) {
+                            void import('./dev-login').then((module) => {
+                                module.devLogin(
+                                    this.store,
+                                    this.actionsSubject
+                                );
+                            });
+                        }
+                    })
+                )
+                .subscribe();
         }
     }
 }
