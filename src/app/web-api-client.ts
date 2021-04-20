@@ -997,7 +997,7 @@ export class GroupsClient implements IGroupsClient {
 
 export interface IPeakDemandClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PeakDemandOverviewDto>;
-    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: number | undefined): Observable<PeakDemandDetailDto>;
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: DemandAggregation | undefined): Observable<PeakDemandDetailDto>;
 }
 
 @Injectable({
@@ -1075,7 +1075,7 @@ export class PeakDemandClient implements IPeakDemandClient {
         return _observableOf<PeakDemandOverviewDto>(<any>null);
     }
 
-    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: number | undefined): Observable<PeakDemandDetailDto> {
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: DemandAggregation | undefined): Observable<PeakDemandDetailDto> {
         let url_ = this.baseUrl + "/api/PeakDemand/detail?";
         if (groupId !== undefined && groupId !== null)
             url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
@@ -2479,6 +2479,15 @@ export interface IIntervalDto {
     start?: Date | null;
     end?: Date | null;
     isInfinite?: boolean | null;
+}
+
+export enum DemandAggregation {
+    None = 1,
+    OneHour = 4,
+    SixHours = 24,
+    TwelveHours = 48,
+    OneDay = 96,
+    OneWeek = 672,
 }
 
 export class PowerFactorOverviewDto implements IPowerFactorOverviewDto {
