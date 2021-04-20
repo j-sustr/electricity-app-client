@@ -20,61 +20,68 @@ import {
 import {
     getDetail,
     getDetailError,
-    getDetailSuccess
+    getDetailSuccess,
+    setAggregation
 } from './peak-demand-detail.actions';
 import { DemandSeries } from './peak-demand-detail.model';
+import { selectAggregation } from './peak-demand-detail.selectors';
 
 @Injectable()
 export class PeakDemandDetailEffects {
     getDetail$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getDetail),
+            ofType(getDetail, setAggregation),
             withLatestFrom(
                 combineLatest([
                     this.store.pipe(select(selectGroupId)),
                     this.store.pipe(select(selectIntervals)),
-                    this.store.pipe(select(selectPhases))
+                    this.store.pipe(select(selectPhases)),
+                    this.store.pipe(select(selectAggregation))
                 ]),
                 (v1, v2) => v2
             ),
-            switchMap(([groupId, { interval1, interval2 }, phases]) => {
-                const dto1 = intervalToDto(interval1);
-                let dto2: IntervalDto | undefined = undefined;
-                if (interval2) {
-                    dto2 = intervalToDto(interval2);
-                }
-                return this.client
-                    .getDetail(
-                        groupId,
-                        dto1.start,
-                        dto1.end,
-                        dto1.isInfinite,
-                        dto2?.start,
-                        dto2?.end,
-                        dto2?.isInfinite,
-                        0
-                    )
-                    .pipe(
-                        map((dto) => {
-                            const s1 = createDemandSeries(dto.demandSeries1);
-                            let s2: DemandSeries | null = null;
-                            if (dto.demandSeries2) {
-                                s2 = createDemandSeries(dto.demandSeries2);
-                            }
-                            return getDetailSuccess({
-                                series1: s1,
-                                series2: s2
-                            });
-                        }),
-                        catchError((error: HttpErrorResponse) =>
-                            of(
-                                getDetailError({
-                                    error
-                                })
-                            )
+            switchMap(
+                ([groupId, { interval1, interval2 }, phases, aggregation]) => {
+                    const dto1 = intervalToDto(interval1);
+                    let dto2: IntervalDto | undefined = undefined;
+                    if (interval2) {
+                        dto2 = intervalToDto(interval2);
+                    }
+                    return this.client
+                        .getDetail(
+                            groupId,
+                            dto1.start,
+                            dto1.end,
+                            dto1.isInfinite,
+                            dto2?.start,
+                            dto2?.end,
+                            dto2?.isInfinite,
+                            aggregation
                         )
-                    );
-            })
+                        .pipe(
+                            map((dto) => {
+                                const s1 = createDemandSeries(
+                                    dto.demandSeries1
+                                );
+                                let s2: DemandSeries | null = null;
+                                if (dto.demandSeries2) {
+                                    s2 = createDemandSeries(dto.demandSeries2);
+                                }
+                                return getDetailSuccess({
+                                    series1: s1,
+                                    series2: s2
+                                });
+                            }),
+                            catchError((error: HttpErrorResponse) =>
+                                of(
+                                    getDetailError({
+                                        error
+                                    })
+                                )
+                            )
+                        );
+                }
+            )
         );
     });
 

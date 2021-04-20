@@ -83,7 +83,7 @@ export function mapSectionPathToViewTypeSelector(
         case '/peak-demand/overview':
             return pdoSelectors.selectViewType;
         case '/peak-demand/detail/:groupId':
-            return pddSelectors.selectViewType;
+            throw new Error('does not have view type');
     }
     throw new Error('invalid section path');
 }
@@ -104,7 +104,7 @@ export function mapSectionPathToSetViewTypeAction(
         case '/peak-demand/overview':
             return pdoActions.setViewType;
         case '/peak-demand/detail/:groupId':
-            return pddActions.setViewType;
+            throw new Error('does not have view type');
     }
     throw new Error('invalid section path');
 }

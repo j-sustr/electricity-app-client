@@ -1,14 +1,16 @@
 import { Action, createReducer, on } from '@ngrx/store';
+import { DemandAggregation } from 'src/app/web-api-client';
 import {
     getDetail,
     getDetailError,
     getDetailSuccess,
-    setViewType
+    setAggregation
 } from './peak-demand-detail.actions';
 import { PeakDemandDetailState } from './peak-demand-detail.model';
 
 export const initialState: PeakDemandDetailState = {
     viewType: 'chart',
+    aggregation: DemandAggregation.None,
     series1: null,
     series2: null,
     loading: false,
@@ -17,9 +19,9 @@ export const initialState: PeakDemandDetailState = {
 
 const reducer = createReducer(
     initialState,
-    on(setViewType, (state, action) => ({
+    on(setAggregation, (state, action) => ({
         ...state,
-        viewType: action.viewType
+        aggregation: action.aggregation
     })),
     on(getDetail, (state) => ({
         ...state,

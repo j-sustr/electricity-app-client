@@ -1,10 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
+import { DemandAggregation } from 'src/app/web-api-client';
 import { DemandSeries } from './peak-demand-detail.model';
 
-export const setViewType = createAction(
-    '[Peak Demand Detail] Set View Type',
-    props<{ viewType: 'table' | 'chart' }>()
+export const setAggregation = createAction(
+    '[Peak Demand Detail] Set Aggregation',
+    props<{ aggregation: DemandAggregation }>()
 );
 
 export const getDetail = createAction('[Peak Demand Detail] Get Detail');

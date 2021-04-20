@@ -1,0 +1,9 @@
+<span>Aggregation:</span>
+<dx-select-box
+    [dataSource]="options"
+    displayExpr="name"
+    valueExpr="key"
+    [value]="value$ | async"
+    (onValueChanged)="handleValueChange($event)"
+>
+</dx-select-box>

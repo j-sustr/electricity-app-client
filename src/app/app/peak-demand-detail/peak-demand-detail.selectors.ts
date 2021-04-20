@@ -40,9 +40,9 @@ export const selectHasData = createSelector(
     (state) => state.series1 !== null
 );
 
-export const selectViewType = createSelector(
+export const selectAggregation = createSelector(
     selectDetail,
-    (state) => state.viewType
+    (state) => state.aggregation
 );
 
 export const selectDetailChartItems = createSelector(selectDetail, (state):

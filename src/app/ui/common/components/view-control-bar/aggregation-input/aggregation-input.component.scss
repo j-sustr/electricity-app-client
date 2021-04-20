@@ -1,0 +1,15 @@
+:host {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+:host > span {
+    // width: 50px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+:host > .dx-selectbox {
+    display: inline-block;
+    vertical-align: middle;
+}

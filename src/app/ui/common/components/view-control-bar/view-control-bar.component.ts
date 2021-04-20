@@ -47,6 +47,9 @@ export class ViewControlBarComponent implements OnInit {
     phases$: Observable<Phases>;
 
     @Input()
+    aggregationInput = false;
+
+    @Input()
     viewTypeControl = false;
 
     viewTypeSeletedItemKeys = ['table'];
