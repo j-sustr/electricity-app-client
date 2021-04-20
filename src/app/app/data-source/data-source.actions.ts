@@ -36,3 +36,17 @@ export const openDataSourceError = createAction(
     '[DataSource] Open DataSource Error',
     props<{ error: HttpErrorResponse }>()
 );
+
+export const getDataSourceInfo = createAction(
+    '[DataSource] Get DataSource Info'
+);
+
+export const getDataSourceInfoSuccess = createAction(
+    '[DataSource] Get DataSource Info Success',
+    props<{ name: string }>()
+);
+
+export const getDataSourceInfoError = createAction(
+    '[DataSource] Get DataSource Info Error',
+    props<{ error: HttpErrorResponse }>()
+);

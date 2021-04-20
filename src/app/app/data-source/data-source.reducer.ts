@@ -1,6 +1,9 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
 import {
+    getDataSourceInfo,
+    getDataSourceInfoError,
+    getDataSourceInfoSuccess,
     openDataSource,
     openDataSourceError,
     openDataSourceSuccess,
@@ -66,6 +69,28 @@ const reducer = createReducer(
         };
     }),
     on(openDataSourceError, (state, { error }) => {
+        return {
+            ...state,
+            loading: false,
+            error
+        };
+    }),
+    on(getDataSourceInfo, (state) => {
+        return {
+            ...state,
+            datasourceName: null,
+            loading: true,
+            error: undefined
+        };
+    }),
+    on(getDataSourceInfoSuccess, (state, { name }) => {
+        return {
+            ...state,
+            datasourceName: name,
+            loading: false
+        };
+    }),
+    on(getDataSourceInfoError, (state, { error }) => {
         return {
             ...state,
             loading: false,

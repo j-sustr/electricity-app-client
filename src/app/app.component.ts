@@ -1,11 +1,16 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { ofType } from '@ngrx/effects';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AppState } from './app/app-store.state';
 import { selectIsAuthenticated } from './app/auth/auth.selectors';
 import { AuthService } from './app/auth/auth.service';
+import {
+    getDataSourceInfo,
+    getDataSourceInfoSuccess
+} from './app/data-source/data-source.actions';
 import { getUserGroupTree } from './app/groups/groups.actions';
 import {
     DataSourceClient,
@@ -48,7 +53,16 @@ export class AppComponent implements AfterViewInit {
             .pipe(
                 tap((isAuthenticated) => {
                     if (isAuthenticated) {
-                        this.store.dispatch(getUserGroupTree());
+                        this.store.dispatch(getDataSourceInfo());
+                        this.actionsSubject
+                            .pipe(
+                                ofType(getDataSourceInfoSuccess),
+                                take(1),
+                                tap(() => {
+                                    this.store.dispatch(getUserGroupTree());
+                                })
+                            )
+                            .subscribe();
                         return;
                     }
                     if (!environment.production) {

@@ -27,6 +27,9 @@ import {
     mapSectionPathToHasDataSelector
 } from '../common/router/section-path-utils';
 import {
+    getDataSourceInfo,
+    getDataSourceInfoError,
+    getDataSourceInfoSuccess,
     openDataSource,
     openDataSourceError,
     openDataSourceSuccess,
@@ -37,7 +40,7 @@ import { selectIntervals } from './data-source.selectors';
 
 @Injectable()
 export class DataSourceEffects {
-    openDataSource$ = createEffect(() =>
+    open$ = createEffect(() =>
         this.actions$.pipe(
             ofType(openDataSource),
             switchMap(({ tenant }) =>
@@ -61,6 +64,28 @@ export class DataSourceEffects {
                             )
                         )
                     )
+            )
+        )
+    );
+
+    getInfo$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(getDataSourceInfo),
+            switchMap(() =>
+                this.client.getInfo().pipe(
+                    map((dto) => {
+                        return getDataSourceInfoSuccess({
+                            name: dto.name ?? '(no name)'
+                        });
+                    }),
+                    catchError((error: HttpErrorResponse) =>
+                        of(
+                            getDataSourceInfoError({
+                                error
+                            })
+                        )
+                    )
+                )
             )
         )
     );
