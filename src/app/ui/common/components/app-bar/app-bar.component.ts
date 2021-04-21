@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AppState } from 'src/app/app/app-store.state';
 import { logout } from 'src/app/app/auth/auth.actions';
-import { User } from 'src/app/app/auth/auth.model';
 import { selectCurrentUser } from 'src/app/app/auth/auth.selectors';
+import { selectDataSourceName } from 'src/app/app/data-source/data-source.selectors';
 
 type NavItem = {
     label: string;
@@ -36,10 +37,19 @@ export class AppBarComponent {
 
     isUserMenuOpen = false;
 
-    currentUser$: Observable<User | null>;
+    userBtnText$: Observable<string | null>;
 
     constructor(private store: Store<AppState>) {
-        this.currentUser$ = this.store.pipe(select(selectCurrentUser));
+        const currentUser$ = this.store.pipe(select(selectCurrentUser));
+        const dataSourceName$ = this.store.pipe(select(selectDataSourceName));
+        this.userBtnText$ = combineLatest([currentUser$, dataSourceName$]).pipe(
+            map(([user, dsName]) => {
+                if (user && dsName) {
+                    return user.username + ', ' + dsName;
+                }
+                return null;
+            })
+        );
     }
 
     handleLogoutClick(): void {
