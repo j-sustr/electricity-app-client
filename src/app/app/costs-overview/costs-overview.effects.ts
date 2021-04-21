@@ -13,6 +13,7 @@ import {
     ICostsClient
 } from 'src/app/web-api-client';
 import { COSTS_CLIENT } from 'src/app/web-api-client-di';
+import { OVERVIEW_MAX_GROUPS } from '../app-constants';
 import { AppState } from '../app-store.state';
 import { selectIntervals } from '../data-source/data-source.selectors';
 import {
@@ -44,7 +45,7 @@ export class CostsOverviewEffects {
                         dto2?.start,
                         dto2?.end,
                         dto2?.isInfinite,
-                        10
+                        OVERVIEW_MAX_GROUPS
                     )
                     .pipe(
                         map((dto) => {
