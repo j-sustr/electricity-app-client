@@ -1,0 +1,17 @@
+<dx-popup
+    [width]="600"
+    [height]="500"
+    [showTitle]="true"
+    title="Groups"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="false"
+    [visible]="visible"
+    (visibleChange)="visibleChange.next($event)"
+>
+    <ng-container *ngIf="groupTree$ | async as tree">
+        <dx-tree-view
+            [dataSource]="$any(tree.items)"
+            (onItemClick)="selectTreeItem($event)"
+        ></dx-tree-view>
+    </ng-container>
+</dx-popup>

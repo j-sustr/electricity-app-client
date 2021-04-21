@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DataSourcePickerModule } from '../data-source-picker/data-source-picker.module';
+import { GroupPickerModule } from '../group-picker/group-picker.module';
 import { PageTitleComponent } from './page-title.component';
 
 @NgModule({
-    imports: [CommonModule, DataSourcePickerModule],
+    imports: [CommonModule, GroupPickerModule],
     exports: [PageTitleComponent],
     declarations: [PageTitleComponent],
     providers: []
