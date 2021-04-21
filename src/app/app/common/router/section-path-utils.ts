@@ -14,16 +14,30 @@ import { Action, ActionCreator, Selector } from '@ngrx/store';
 import { AppState } from '../../app-store.state';
 import { ViewType } from '../models';
 
-export const SECTION_PATHS = [
+export const OVERVIEW_SECTION_PATHS = [
     '/costs/overview',
-    '/costs/detail/:groupId',
     '/power-factor/overview',
-    '/power-factor/detail/:groupId',
-    '/peak-demand/overview',
-    '/peak-demand/detail/:groupId'
+    '/peak-demand/overview'
 ] as const;
 
+export const DETAIL_SECTION_PATHS = [
+    '/costs/detail/:groupId',
+    '/power-factor/detail/:groupId',
+    '/peak-demand/detail/:groupId'
+];
+
+export const SECTION_PATHS = [
+    ...OVERVIEW_SECTION_PATHS,
+    ...DETAIL_SECTION_PATHS
+];
+
+export type OverviewSectionPath = typeof OVERVIEW_SECTION_PATHS[number];
+export type DetailSectionPath = typeof DETAIL_SECTION_PATHS[number];
 export type SectionPath = typeof SECTION_PATHS[number];
+
+export function isDetailSectionPath(path: string): path is DetailSectionPath {
+    return DETAIL_SECTION_PATHS.includes(path as never);
+}
 
 export function isSectionPath(path: string): path is SectionPath {
     return SECTION_PATHS.includes(path as never);
@@ -73,9 +87,7 @@ export function mapSectionPathToViewTypeSelector(
     switch (path) {
         case '/costs/overview':
         case '/costs/detail/:groupId':
-            throw new Error(
-                'not implemented (mapSectionPathToViewTypeSelector)'
-            );
+            throw new Error('does not have view type');
         case '/power-factor/overview':
             return pfoSelectors.selectViewType;
         case '/power-factor/detail/:groupId':

@@ -20,5 +20,11 @@ export const selectRouterPath = createSelector(
 
 export const selectGroupId = createSelector(
     selectRouterReducerState,
-    (router) => router?.state.params?.groupId as string | undefined
+    (router) => {
+        let id = router?.state.params?.groupId as string | undefined;
+        if (id) {
+            id = id.trim();
+        }
+        return id;
+    }
 );

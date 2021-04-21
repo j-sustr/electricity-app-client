@@ -13,6 +13,7 @@ export interface GroupInfoView {
     id: string;
     text: string;
     expanded?: boolean;
+    selected?: boolean;
     items?: GroupInfoView[];
 }
 
@@ -54,8 +55,9 @@ export const selectSelectedGroupName = createSelector(
 export const selectGroupTreeView = createSelector(
     selectGroups,
     selectUserGroupTree,
-    (state, tree): GroupTreeView => {
-        const root = tree ? createGroupInfoView(tree) : null;
+    selectGroupId,
+    (state, tree, selectedId): GroupTreeView => {
+        const root = tree ? createGroupInfoView(tree, selectedId) : null;
         return {
             items: root?.items ?? null,
             loading: state.loading
@@ -63,12 +65,16 @@ export const selectGroupTreeView = createSelector(
     }
 );
 
-function createGroupInfoView(info: GroupInfo): GroupInfoView {
+function createGroupInfoView(
+    info: GroupInfo,
+    selectedId?: string
+): GroupInfoView {
     return {
         id: info.id,
         text: info.name,
         expanded: true,
-        items: info.subgroups?.map((g) => createGroupInfoView(g))
+        selected: info.id === selectedId,
+        items: info.subgroups?.map((g) => createGroupInfoView(g, selectedId))
     };
 }
 

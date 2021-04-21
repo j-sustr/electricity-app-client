@@ -11,6 +11,7 @@
     <ng-container *ngIf="groupTree$ | async as tree">
         <dx-tree-view
             [dataSource]="$any(tree.items)"
+            selectionMode="single"
             (onItemClick)="selectTreeItem($event)"
         ></dx-tree-view>
     </ng-container>
