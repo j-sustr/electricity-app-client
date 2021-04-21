@@ -46,6 +46,11 @@ export const selectSelectedGroup = createSelector(
     }
 );
 
+export const selectSelectedGroupName = createSelector(
+    selectSelectedGroup,
+    (group) => group?.name ?? null
+);
+
 export const selectGroupTreeView = createSelector(
     selectGroups,
     selectUserGroupTree,
