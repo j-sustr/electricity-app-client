@@ -12,6 +12,7 @@ import {
     getDataSourceInfoSuccess
 } from './app/data-source/data-source.actions';
 import { getUserGroupTree } from './app/groups/groups.actions';
+import { devLogin } from './dev-login';
 import {
     ArchiveClient,
     DataSourceClient,
@@ -70,9 +71,7 @@ export class AppComponent implements AfterViewInit {
                         return;
                     }
                     if (!environment.production) {
-                        void import('./dev-login').then((module) => {
-                            module.devLogin(this.store, this.actionsSubject);
-                        });
+                        void devLogin(this.store, this.actionsSubject);
                     }
                 })
             )
