@@ -13,6 +13,7 @@ import {
 } from './app/data-source/data-source.actions';
 import { getUserGroupTree } from './app/groups/groups.actions';
 import {
+    ArchiveClient,
     DataSourceClient,
     DBDataSourceClient,
     GroupsClient
@@ -32,6 +33,7 @@ export class AppComponent implements AfterViewInit {
         private store: Store<AppState>,
         private actionsSubject: ActionsSubject,
         private authService: AuthService,
+        private archiveClient: ArchiveClient,
         private groupsClient: GroupsClient,
         private dataSourceClient: DataSourceClient,
         private dbDataSourceClient: DBDataSourceClient
@@ -39,6 +41,8 @@ export class AppComponent implements AfterViewInit {
         this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).authService = authService;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (window as any).archiveClient = archiveClient;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).groupsClient = groupsClient;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
