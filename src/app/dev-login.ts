@@ -14,13 +14,37 @@ import {
     TenantDto
 } from './web-api-client';
 
-export async function devLogin(
+const CREDENTIALS_KEY = 'dev-credentials';
+
+interface DevCredentials {
+    db: {
+        server: string;
+        dbName: string;
+        username: string;
+        password: string;
+    };
+    user: {
+        username: string;
+        password: string;
+    };
+}
+
+export function devLogin(
     store: Store<AppState>,
     actionsSubject: ActionsSubject
-): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const credentials = await import('./dev-login-credentials');
+): void {
+    const json = localStorage.getItem(CREDENTIALS_KEY);
+    if (!json) throw new Error('no dev credentials');
+
+    let credentials: DevCredentials;
+    try {
+        credentials = JSON.parse(json) as DevCredentials;
+    } catch (error) {
+        throw new Error('invalid dev credentials');
+    }
+    if (!credentials?.db?.server) throw new Error('no db dev credentials');
+    if (!credentials?.user?.username)
+        throw new Error('no user dev credentials');
 
     store.dispatch(
         openDataSource({
