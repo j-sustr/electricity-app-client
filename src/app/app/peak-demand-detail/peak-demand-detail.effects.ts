@@ -3,7 +3,13 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+    catchError,
+    map,
+    switchMap,
+    tap,
+    withLatestFrom
+} from 'rxjs/operators';
 import {
     IntervalDto,
     intervalToDto
@@ -28,9 +34,18 @@ import { selectAggregation } from './peak-demand-detail.selectors';
 
 @Injectable()
 export class PeakDemandDetailEffects {
+    setAggregation$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(setAggregation),
+                tap(() => this.store.dispatch(getDetail()))
+            ),
+        { dispatch: false }
+    );
+
     getDetail$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getDetail, setAggregation),
+            ofType(getDetail),
             withLatestFrom(
                 combineLatest([
                     this.store.pipe(select(selectGroupId)),
