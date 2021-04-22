@@ -16,6 +16,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IArchiveClient {
     getQuantities(groupId: string | undefined, arch: number | undefined): Observable<QuantitiesDto>;
+    getSeries(groupId: string | undefined, arch: number | undefined, range_Start: Date | null | undefined, range_End: Date | null | undefined, range_IsInfinite: boolean | null | undefined, propName: string | null | undefined, unit: string | null | undefined, aggregation: number | null | undefined, energyAggType: EEnergyAggType | null | undefined): Observable<QuantitySeriesDto>;
 }
 
 @Injectable({
@@ -85,6 +86,76 @@ export class ArchiveClient implements IArchiveClient {
             }));
         }
         return _observableOf<QuantitiesDto>(<any>null);
+    }
+
+    getSeries(groupId: string | undefined, arch: number | undefined, range_Start: Date | null | undefined, range_End: Date | null | undefined, range_IsInfinite: boolean | null | undefined, propName: string | null | undefined, unit: string | null | undefined, aggregation: number | null | undefined, energyAggType: EEnergyAggType | null | undefined): Observable<QuantitySeriesDto> {
+        let url_ = this.baseUrl + "/api/Archive/series?";
+        if (groupId === null)
+            throw new Error("The parameter 'groupId' cannot be null.");
+        else if (groupId !== undefined)
+            url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
+        if (arch === null)
+            throw new Error("The parameter 'arch' cannot be null.");
+        else if (arch !== undefined)
+            url_ += "Arch=" + encodeURIComponent("" + arch) + "&";
+        if (range_Start !== undefined && range_Start !== null)
+            url_ += "Range.Start=" + encodeURIComponent(range_Start ? "" + range_Start.toJSON() : "") + "&";
+        if (range_End !== undefined && range_End !== null)
+            url_ += "Range.End=" + encodeURIComponent(range_End ? "" + range_End.toJSON() : "") + "&";
+        if (range_IsInfinite !== undefined && range_IsInfinite !== null)
+            url_ += "Range.IsInfinite=" + encodeURIComponent("" + range_IsInfinite) + "&";
+        if (propName !== undefined && propName !== null)
+            url_ += "PropName=" + encodeURIComponent("" + propName) + "&";
+        if (unit !== undefined && unit !== null)
+            url_ += "Unit=" + encodeURIComponent("" + unit) + "&";
+        if (aggregation !== undefined && aggregation !== null)
+            url_ += "Aggregation=" + encodeURIComponent("" + aggregation) + "&";
+        if (energyAggType !== undefined && energyAggType !== null)
+            url_ += "EnergyAggType=" + encodeURIComponent("" + energyAggType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSeries(<any>response_);
+                } catch (e) {
+                    return <Observable<QuantitySeriesDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuantitySeriesDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSeries(response: HttpResponseBase): Observable<QuantitySeriesDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QuantitySeriesDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuantitySeriesDto>(<any>null);
     }
 }
 
@@ -1436,6 +1507,55 @@ export interface IQuantityDto {
     returnType?: string | null;
     prop?: string | null;
     value?: any | null;
+}
+
+export class QuantitySeriesDto implements IQuantitySeriesDto {
+    entries?: any[][] | null;
+
+    constructor(data?: IQuantitySeriesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["entries"])) {
+                this.entries = [] as any;
+                for (let item of _data["entries"])
+                    this.entries!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): QuantitySeriesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuantitySeriesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.entries)) {
+            data["entries"] = [];
+            for (let item of this.entries)
+                data["entries"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IQuantitySeriesDto {
+    entries?: any[][] | null;
+}
+
+export enum EEnergyAggType {
+    Cumulative = 0,
+    Profile = 1,
 }
 
 export class UserDto implements IUserDto {
