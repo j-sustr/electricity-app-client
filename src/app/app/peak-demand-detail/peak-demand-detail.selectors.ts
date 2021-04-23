@@ -14,10 +14,10 @@ import {
 
 export interface PeakDemandDetailChartItem {
     time: Date;
-    valueMain_1: number;
-    valueL1_1: number;
-    valueL2_1: number;
-    valueL3_1: number;
+    valueMain_1?: number;
+    valueL1_1?: number;
+    valueL2_1?: number;
+    valueL3_1?: number;
     valueMain_2?: number;
     valueL1_2?: number;
     valueL2_2?: number;
@@ -66,14 +66,14 @@ export const selectDetailChartItems = createSelector(selectDetail, (state):
         for (let i = 0; i < len; i++) {
             items.push({
                 time: new Date(timeStart + i * timeStep),
-                valueMain_1: series1.valuesMain?.[i] ?? NaN,
-                valueL1_1: series1.valuesL1?.[i] ?? NaN,
-                valueL2_1: series1.valuesL2?.[i] ?? NaN,
-                valueL3_1: series1.valuesL3?.[i] ?? NaN,
-                valueMain_2: series2?.valuesMain?.[i],
-                valueL1_2: series2?.valuesL1?.[i],
-                valueL2_2: series2?.valuesL2?.[i],
-                valueL3_2: series2?.valuesL3?.[i]
+                valueMain_1: series1.valuesMain?.[i] ?? undefined,
+                valueL1_1: series1.valuesL1?.[i] ?? undefined,
+                valueL2_1: series1.valuesL2?.[i] ?? undefined,
+                valueL3_1: series1.valuesL3?.[i] ?? undefined,
+                valueMain_2: series2?.valuesMain?.[i] ?? undefined,
+                valueL1_2: series2?.valuesL1?.[i] ?? undefined,
+                valueL2_2: series2?.valuesL2?.[i] ?? undefined,
+                valueL3_2: series2?.valuesL3?.[i ?? undefined]
             });
         }
         return items;

@@ -13,10 +13,10 @@ import { selectDetail } from './power-factor-detail.selectors';
 
 export interface PowerFactorDistributionChartItem {
     range: string;
-    valueMain_1: number;
-    valueL1_1: number;
-    valueL2_1: number;
-    valueL3_1: number;
+    valueMain_1?: number;
+    valueL1_1?: number;
+    valueL2_1?: number;
+    valueL3_1?: number;
     valueMain_2?: number;
     valueL1_2?: number;
     valueL2_2?: number;
@@ -33,10 +33,10 @@ export interface PowerFactorDistributionChart {
 export interface PowerFactorDistributionTableItem {
     intervalId?: number;
     range: string;
-    valueMain: number;
-    valueL1: number;
-    valueL2: number;
-    valueL3: number;
+    valueMain?: number;
+    valueL1?: number;
+    valueL2?: number;
+    valueL3?: number;
     isForComparison?: boolean;
 }
 
@@ -108,10 +108,10 @@ export const selectDistributionTableItems = createSelector(
             return {
                 intervalId: stack,
                 range: item.range ?? '(no range)',
-                valueMain: item.valueMain ?? NaN,
-                valueL1: item.valueL1 ?? NaN,
-                valueL2: item.valueL2 ?? NaN,
-                valueL3: item.valueL3 ?? NaN
+                valueMain: item.valueMain ?? undefined,
+                valueL1: item.valueL1 ?? undefined,
+                valueL2: item.valueL2 ?? undefined,
+                valueL3: item.valueL3 ?? undefined
             };
         }
     }
@@ -156,10 +156,10 @@ export const selectDistributionChartItems = createSelector(
         ): PowerFactorDistributionChartItem {
             return {
                 range: item1.range ?? '(unlabeled range)',
-                valueMain_1: item1.valueMain ?? NaN,
-                valueL1_1: item1.valueL1 ?? NaN,
-                valueL2_1: item1.valueL2 ?? NaN,
-                valueL3_1: item1.valueL3 ?? NaN,
+                valueMain_1: item1?.valueMain ?? undefined,
+                valueL1_1: item1?.valueL1 ?? undefined,
+                valueL2_1: item1?.valueL2 ?? undefined,
+                valueL3_1: item1?.valueL3 ?? undefined,
                 valueMain_2: item2?.valueMain ?? undefined,
                 valueL1_2: item2?.valueL1 ?? undefined,
                 valueL2_2: item2?.valueL2 ?? undefined,
