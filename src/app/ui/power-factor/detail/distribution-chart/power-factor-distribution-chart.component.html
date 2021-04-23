@@ -1,26 +1,27 @@
-<dx-button
-    class="back-button"
-    text="Back"
-    icon="chevronleft"
-    [visible]="!isFirstLevel"
-    (onClick)="handleBackClick()"
->
-</dx-button>
-
-<dx-button
-    class="reset-button"
-    text="Reset"
-    icon="chevronleft"
-    [visible]="!isFirstLevel"
-    (onClick)="handleResetClick()"
->
-</dx-button>
-
 <ng-container *ngIf="chart$ | async as chart">
+    <dx-button
+        class="back-button"
+        text="Back"
+        icon="chevronleft"
+        [visible]="chart.level > 1"
+        (onClick)="handleBackClick()"
+    >
+    </dx-button>
+
+    <dx-button
+        class="home-button"
+        text="Home"
+        icon="home"
+        [visible]="chart.level > 2"
+        (onClick)="handleHomeClick()"
+    >
+    </dx-button>
+
     <dx-chart
         id="power-factor-distribution-chart"
         class="pointer-on-bars"
         [dataSource]="chart.items"
+        (onPointClick)="handlePointClick($event)"
         [title]="chart.title"
         [customizePoint]="customizePoint"
     >
@@ -43,5 +44,6 @@
         <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
             <dxo-margin [left]="50"></dxo-margin>
         </dxo-legend>
+        <!-- <dxo-loading-indicator [enabled]="true"></dxo-loading-indicator> -->
     </dx-chart>
 </ng-container>

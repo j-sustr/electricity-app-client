@@ -21,9 +21,9 @@ import {
 export class PowerFactorDistributionChartComponent {
     colors = ['#6babac', '#e55253'];
 
-    level = 0;
+    private level = 0;
 
-    get isFirstLevel(): boolean {
+    private get isFirstLevel(): boolean {
         return this.level === 0;
     }
 
@@ -33,6 +33,7 @@ export class PowerFactorDistributionChartComponent {
         this.chart$ = store.pipe(
             select(selectDistributionChart),
             tap((chart) => {
+                console.log(chart);
                 this.level = chart?.level ?? NaN;
             })
         );
@@ -81,7 +82,7 @@ export class PowerFactorDistributionChartComponent {
         this.store.dispatch(popDistributionStack());
     }
 
-    handleResetClick(): void {
+    handleHomeClick(): void {
         this.store.dispatch(resetDistributionRange());
     }
 }

@@ -46,7 +46,7 @@ export interface PowerFactorDistributionTable {
 }
 
 export const selectDistributionLevel = createSelector(selectDetail, (state) => {
-    return state.distributionStack?.length ?? NaN;
+    return state.distributionStack?.length ?? null;
 });
 
 export const selectTopDistribution = createSelector(selectDetail, (state) => {

@@ -3,7 +3,13 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+    catchError,
+    map,
+    switchMap,
+    tap,
+    withLatestFrom
+} from 'rxjs/operators';
 import {
     IntervalDto,
     intervalToDto
@@ -23,12 +29,22 @@ import {
     getDistribution,
     getDistributionError,
     getDistributionSuccess,
-    getRangeDistribution
+    getRangeDistribution,
+    resetDistributionRange
 } from './power-factor-detail.actions';
 import { getDistributionRange } from './power-factor-distribution-utils';
 
 @Injectable()
 export class PowerFactorDistributionEffects {
+    resetDistributionRange$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(resetDistributionRange),
+                tap(() => this.store.dispatch(getDistribution()))
+            ),
+        { dispatch: false }
+    );
+
     getDistribution$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(getDistribution, getRangeDistribution),
