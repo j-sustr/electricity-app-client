@@ -1,8 +1,28 @@
+<dx-button
+    class="back-button"
+    text="Back"
+    icon="chevronleft"
+    [visible]="!isFirstLevel"
+    (onClick)="handleBackClick()"
+>
+</dx-button>
+
+<dx-button
+    class="reset-button"
+    text="Reset"
+    icon="chevronleft"
+    [visible]="!isFirstLevel"
+    (onClick)="handleResetClick()"
+>
+</dx-button>
+
 <ng-container *ngIf="chart$ | async as chart">
     <dx-chart
+        id="power-factor-distribution-chart"
+        class="pointer-on-bars"
         [dataSource]="chart.items"
-        [rotated]="false"
         [title]="chart.title"
+        [customizePoint]="customizePoint"
     >
         <dxo-common-series-settings argumentField="range" type="bar">
         </dxo-common-series-settings>

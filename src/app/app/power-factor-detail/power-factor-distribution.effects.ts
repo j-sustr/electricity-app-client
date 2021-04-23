@@ -14,31 +14,34 @@ import {
 } from 'src/app/web-api-client';
 import { POWER_FACTOR_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
+import { selectGroupId } from '../common/router/router.selectors';
 import {
     selectIntervals,
     selectPhases
 } from '../data-source/data-source.selectors';
-import { selectGroupId } from '../common/router/router.selectors';
 import {
     getDistribution,
     getDistributionError,
-    getDistributionSuccess
+    getDistributionSuccess,
+    getRangeDistribution
 } from './power-factor-detail.actions';
+import { getDistributionRange } from './power-factor-distribution-utils';
 
 @Injectable()
 export class PowerFactorDistributionEffects {
     getDistribution$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(getDistribution),
+            ofType(getDistribution, getRangeDistribution),
+            map(getDistributionRange),
             withLatestFrom(
                 combineLatest([
                     this.store.pipe(select(selectGroupId)),
                     this.store.pipe(select(selectIntervals)),
                     this.store.pipe(select(selectPhases))
                 ]),
-                (v1, v2) => v2
+                (v1, v2) => [...v2, v1] as const
             ),
-            switchMap(([groupId, { interval1, interval2 }, phases]) => {
+            switchMap(([groupId, { interval1, interval2 }, phases, range]) => {
                 const dto1 = intervalToDto(interval1);
                 let dto2: IntervalDto | undefined = undefined;
                 if (interval2) {

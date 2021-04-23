@@ -7,8 +7,9 @@ export const selectDetail = createFeatureSelector<
     PowerFactorDetailState
 >('powerFactorDetail');
 
-export const selectHasData = createSelector(selectDetail, (state) =>
-    Array.isArray(state.distribution)
+export const selectHasData = createSelector(
+    selectDetail,
+    (state) => (state.distributionStack?.length ?? NaN) > 0
 );
 
 export const selectViewType = createSelector(

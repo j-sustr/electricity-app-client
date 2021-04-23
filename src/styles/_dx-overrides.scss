@@ -1,3 +1,7 @@
 .dx-button-text {
     text-transform: none !important;
 }
+
+#power-factor-distribution-chart.pointer-on-bars .dxc-series rect {
+    cursor: pointer;
+}

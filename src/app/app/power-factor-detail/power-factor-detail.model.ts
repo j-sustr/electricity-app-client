@@ -5,16 +5,22 @@ import { ViewType } from '../common/models';
 const DETAIL_TYPES = ['distribution', 'time-series'] as const;
 export type DetailType = typeof DETAIL_TYPES[number];
 
+export interface DistributionRange {
+    start: number;
+    end: number;
+}
+
 export interface PowerFactorDistribution {
     items1: PowerFactorDistributionItem[] | null;
     items2: PowerFactorDistributionItem[] | null;
+    range: DistributionRange | null;
 }
 
 export interface PowerFactorDetailState {
     detailType: DetailType;
     viewType: ViewType;
     showEnergy: boolean;
-    distribution: PowerFactorDistribution | null;
+    distributionStack: PowerFactorDistribution[] | null;
     loading: boolean;
     error?: HttpErrorResponse | null;
 }

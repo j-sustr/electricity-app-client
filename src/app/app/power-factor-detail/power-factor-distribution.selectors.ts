@@ -27,6 +27,7 @@ export interface PowerFactorDistributionChart {
     title: string;
     items: PowerFactorDistributionChartItem[];
     series: SeriesParams[];
+    level: number;
 }
 
 export interface PowerFactorDistributionTableItem {
@@ -44,26 +45,39 @@ export interface PowerFactorDistributionTable {
     phases: Phases;
 }
 
-export const selectDistribution = createSelector(selectDetail, (state) => {
-    const dist = state.distribution;
-    if (!dist) {
-        return null;
-    }
-    let items1 = dist.items1
-        ? calculatePowerFactorDistribution(dist.items1)
-        : null;
-    let items2 = dist.items2
-        ? calculatePowerFactorDistribution(dist.items2)
-        : null;
-
-    items1 = items1?.filter((item) => item.range !== 'outlier') ?? null;
-    items2 = items2?.filter((item) => item.range !== 'outlier') ?? null;
-
-    return {
-        items1,
-        items2
-    };
+export const selectDistributionLevel = createSelector(selectDetail, (state) => {
+    return state.distributionStack?.length ?? NaN;
 });
+
+export const selectTopDistribution = createSelector(selectDetail, (state) => {
+    const stack = state.distributionStack;
+    if (stack && stack.length > 0) {
+        return stack[stack.length - 1];
+    }
+    return null;
+});
+
+export const selectDistribution = createSelector(
+    selectTopDistribution,
+    (dist) => {
+        if (!dist) return null;
+
+        let items1 = dist.items1
+            ? calculatePowerFactorDistribution(dist.items1)
+            : null;
+        let items2 = dist.items2
+            ? calculatePowerFactorDistribution(dist.items2)
+            : null;
+
+        items1 = items1?.filter((item) => item.range !== 'outlier') ?? null;
+        items2 = items2?.filter((item) => item.range !== 'outlier') ?? null;
+
+        return {
+            items1,
+            items2
+        };
+    }
+);
 
 export const selectDistributionTableItems = createSelector(
     selectDistribution,
@@ -164,14 +178,16 @@ export const selectSeriesParamsArray = createSelector(
 export const selectDistributionChart = createSelector(
     selectDistributionChartItems,
     selectSeriesParamsArray,
-    (items, series): PowerFactorDistributionChart | null => {
-        if (!items) {
+    selectDistributionLevel,
+    (items, series, level): PowerFactorDistributionChart | null => {
+        if (!items || !Number.isInteger(level)) {
             return null;
         }
         return {
             title: '',
             items,
-            series
+            series,
+            level: level ?? NaN
         };
     }
 );

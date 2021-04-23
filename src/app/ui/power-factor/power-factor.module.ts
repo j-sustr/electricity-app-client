@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DxTemplateModule } from 'devextreme-angular/core';
 import { DxBulletModule } from 'devextreme-angular/ui/bullet';
+import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxChartModule } from 'devextreme-angular/ui/chart';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
@@ -22,7 +23,8 @@ const DX = [
     DxLoadIndicatorModule,
     DxDataGridModule,
     DxBulletModule,
-    DxChartModule
+    DxChartModule,
+    DxButtonModule
 ];
 
 @NgModule({

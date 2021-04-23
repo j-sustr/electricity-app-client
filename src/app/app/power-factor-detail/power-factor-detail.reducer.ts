@@ -1,21 +1,22 @@
 import { Action, createReducer, on } from '@ngrx/store';
+import { last } from 'lodash-es';
 import {
+    popDistributionStack,
     getDistribution,
     getDistributionError,
     getDistributionSuccess,
+    getRangeDistribution,
     setViewType,
     toggleEnergy
 } from './power-factor-detail.actions';
 import { PowerFactorDetailState } from './power-factor-detail.model';
+import { getDistributionRange } from './power-factor-distribution-utils';
 
 export const initialState: PowerFactorDetailState = {
     detailType: 'distribution',
     viewType: 'table',
     showEnergy: false,
-    distribution: {
-        items1: null,
-        items2: null
-    },
+    distributionStack: null,
     loading: false,
     error: null
 };
@@ -32,24 +33,45 @@ const reducer = createReducer(
     })),
     on(getDistribution, (state) => ({
         ...state,
-        distribution: null,
+        distributionStack: null,
+        loading: true,
+        error: null
+    })),
+    on(getRangeDistribution, (state, action) => ({
+        ...state,
+        distributionStack: [
+            ...(state.distributionStack ?? []),
+            {
+                items1: null,
+                items2: null,
+                range: getDistributionRange(action)
+            }
+        ],
         loading: true,
         error: null
     })),
     on(getDistributionSuccess, (state, { items1, items2 }) => ({
         ...state,
-        distribution: {
-            items1,
-            items2
-        },
+        distributionStack: [
+            ...(state.distributionStack?.slice(0, -1) ?? []),
+            {
+                items1,
+                items2,
+                range: last(state.distributionStack)?.range ?? null
+            }
+        ],
         loading: false,
         error: null
     })),
     on(getDistributionError, (state, { error }) => ({
         ...state,
-        distribution: null,
+        distributionStack: null,
         loading: false,
         error
+    })),
+    on(popDistributionStack, (state) => ({
+        ...state,
+        distributionStack: [...(state.distributionStack?.slice(0, -1) ?? [])]
     }))
 );
 
