@@ -14,7 +14,7 @@ import { getDistributionRange } from './power-factor-distribution-utils';
 
 export const initialState: PowerFactorDetailState = {
     detailType: 'distribution',
-    viewType: 'table',
+    viewType: 'chart',
     showEnergy: false,
     distributionStack: null,
     loading: false,
