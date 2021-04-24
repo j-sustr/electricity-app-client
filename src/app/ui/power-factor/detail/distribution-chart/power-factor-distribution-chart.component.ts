@@ -10,6 +10,7 @@ import {
 } from 'src/app/app/power-factor-detail/power-factor-detail.actions';
 import {
     PowerFactorDistributionChart,
+    PowerFactorDistributionChartItem,
     selectDistributionChart
 } from 'src/app/app/power-factor-detail/power-factor-distribution.selectors';
 
@@ -65,17 +66,15 @@ export class PowerFactorDistributionChartComponent {
         return args.valueText + '%';
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    handlePointClick(e: any): void {
-        console.log('point', e);
-
+    handlePointClick(e: {
+        target: { data: PowerFactorDistributionChartItem };
+    }): void {
         this.store.dispatch(
             getRangeDistribution({
-                start: 0,
-                end: 1
+                start: e.target.data.range.start ?? -Infinity,
+                end: e.target.data.range.end ?? Infinity
             })
         );
-        // this.dataSource = this.service.filterData(e.target.originalArgument);
     }
 
     handleBackClick(): void {
