@@ -1264,7 +1264,7 @@ export class PeakDemandClient implements IPeakDemandClient {
 
 export interface IPowerFactorClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PowerFactorOverviewDto>;
-    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined): Observable<PowerFactorDistributionDto>;
+    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined, thresholds: number[] | null | undefined): Observable<PowerFactorDistributionDto>;
 }
 
 @Injectable({
@@ -1342,7 +1342,7 @@ export class PowerFactorClient implements IPowerFactorClient {
         return _observableOf<PowerFactorOverviewDto>(<any>null);
     }
 
-    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined): Observable<PowerFactorDistributionDto> {
+    getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined, thresholds: number[] | null | undefined): Observable<PowerFactorDistributionDto> {
         let url_ = this.baseUrl + "/api/PowerFactor/distribution?";
         if (groupId !== undefined && groupId !== null)
             url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
@@ -1366,6 +1366,8 @@ export class PowerFactorClient implements IPowerFactorClient {
             url_ += "Phases.L2=" + encodeURIComponent("" + phases_L2) + "&";
         if (phases_L3 !== undefined && phases_L3 !== null)
             url_ += "Phases.L3=" + encodeURIComponent("" + phases_L3) + "&";
+        if (thresholds !== undefined && thresholds !== null)
+            thresholds && thresholds.forEach(item => { url_ += "Thresholds=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2800,7 +2802,7 @@ export interface IPowerFactorDistributionDto {
 }
 
 export class PowerFactorDistributionItem implements IPowerFactorDistributionItem {
-    range?: string | null;
+    range?: BinRange | null;
     valueMain?: number | null;
     valueL1?: number | null;
     valueL2?: number | null;
@@ -2817,7 +2819,7 @@ export class PowerFactorDistributionItem implements IPowerFactorDistributionItem
 
     init(_data?: any) {
         if (_data) {
-            this.range = _data["range"] !== undefined ? _data["range"] : <any>null;
+            this.range = _data["range"] ? BinRange.fromJS(_data["range"]) : <any>null;
             this.valueMain = _data["valueMain"] !== undefined ? _data["valueMain"] : <any>null;
             this.valueL1 = _data["valueL1"] !== undefined ? _data["valueL1"] : <any>null;
             this.valueL2 = _data["valueL2"] !== undefined ? _data["valueL2"] : <any>null;
@@ -2834,7 +2836,7 @@ export class PowerFactorDistributionItem implements IPowerFactorDistributionItem
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["range"] = this.range !== undefined ? this.range : <any>null;
+        data["range"] = this.range ? this.range.toJSON() : <any>null;
         data["valueMain"] = this.valueMain !== undefined ? this.valueMain : <any>null;
         data["valueL1"] = this.valueL1 !== undefined ? this.valueL1 : <any>null;
         data["valueL2"] = this.valueL2 !== undefined ? this.valueL2 : <any>null;
@@ -2844,11 +2846,51 @@ export class PowerFactorDistributionItem implements IPowerFactorDistributionItem
 }
 
 export interface IPowerFactorDistributionItem {
-    range?: string | null;
+    range?: BinRange | null;
     valueMain?: number | null;
     valueL1?: number | null;
     valueL2?: number | null;
     valueL3?: number | null;
+}
+
+export class BinRange implements IBinRange {
+    start?: number | null;
+    end?: number | null;
+
+    constructor(data?: IBinRange) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] !== undefined ? _data["start"] : <any>null;
+            this.end = _data["end"] !== undefined ? _data["end"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): BinRange {
+        data = typeof data === 'object' ? data : {};
+        let result = new BinRange();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start !== undefined ? this.start : <any>null;
+        data["end"] = this.end !== undefined ? this.end : <any>null;
+        return data; 
+    }
+}
+
+export interface IBinRange {
+    start?: number | null;
+    end?: number | null;
 }
 
 export interface FileParameter {

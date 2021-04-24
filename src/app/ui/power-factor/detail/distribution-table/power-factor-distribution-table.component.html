@@ -40,7 +40,7 @@
             [ngClass]="{'for-comparison': item.data.isForComparison }"
             *dxTemplate="let item of 'rowTemplateName'"
         >
-            <td>{{item.data.range}}</td>
+            <td>{{item.data.rangeName}}</td>
             <td style="text-align: right" *ngIf="table.phases.main">
                 {{item.data.valueMain}}
             </td>

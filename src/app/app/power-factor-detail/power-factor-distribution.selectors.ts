@@ -1,18 +1,22 @@
 import { createSelector } from '@ngrx/store';
+import { sortBy } from 'lodash';
 import {
     calculatePowerFactorDistribution,
     PowerFactorDistributionCalculatedItem
 } from 'src/app/domain/power-factor/calculate-power-factor-distribution';
+import { BinRange } from 'src/app/web-api-client';
+import { SeriesParams } from '../common/models';
 import { Phases } from '../data-source/data-source.model';
 import {
     selectIsComparisonMode,
     selectPhases
 } from '../data-source/data-source.selectors';
-import { SeriesParams } from '../common/models';
 import { selectDetail } from './power-factor-detail.selectors';
+import { createBinRangeName } from './power-factor-distribution-utils';
 
 export interface PowerFactorDistributionChartItem {
-    range: string;
+    rangeName: string;
+    range: BinRange;
     valueMain_1?: number;
     valueL1_1?: number;
     valueL2_1?: number;
@@ -32,7 +36,8 @@ export interface PowerFactorDistributionChart {
 
 export interface PowerFactorDistributionTableItem {
     intervalId?: number;
-    range: string;
+    rangeName: string;
+    range: BinRange;
     valueMain?: number;
     valueL1?: number;
     valueL2?: number;
@@ -69,12 +74,26 @@ export const selectDistribution = createSelector(
             ? calculatePowerFactorDistribution(dist.items2)
             : null;
 
-        items1 = items1?.filter((item) => item.range !== 'outlier') ?? null;
-        items2 = items2?.filter((item) => item.range !== 'outlier') ?? null;
+        items1 = items1?.filter((item) => isFiniteBin(item.range)) ?? null;
+        items2 = items2?.filter((item) => isFiniteBin(item.range)) ?? null;
+
+        function isFiniteBin(range: BinRange): boolean {
+            return Number.isFinite(range.start) && Number.isFinite(range.end);
+        }
+
+        function sortItems(
+            items: PowerFactorDistributionCalculatedItem[]
+        ): PowerFactorDistributionCalculatedItem[] {
+            return items.sort((a, b) => {
+                return (
+                    (b.range.start ?? Infinity) - (a.range.start ?? Infinity)
+                );
+            });
+        }
 
         return {
-            items1,
-            items2
+            items1: items1 ? sortItems(items1) : null,
+            items2: items2 ? sortItems(items2) : null
         };
     }
 );
@@ -107,7 +126,8 @@ export const selectDistributionTableItems = createSelector(
         ): PowerFactorDistributionTableItem {
             return {
                 intervalId: stack,
-                range: item.range ?? '(no range)',
+                rangeName: createBinRangeName(item.range),
+                range: item.range,
                 valueMain: item.valueMain ?? undefined,
                 valueL1: item.valueL1 ?? undefined,
                 valueL2: item.valueL2 ?? undefined,
@@ -155,7 +175,8 @@ export const selectDistributionChartItems = createSelector(
             item2?: PowerFactorDistributionCalculatedItem
         ): PowerFactorDistributionChartItem {
             return {
-                range: item1.range ?? '(unlabeled range)',
+                rangeName: createBinRangeName(item1.range),
+                range: item1.range,
                 valueMain_1: item1?.valueMain ?? undefined,
                 valueL1_1: item1?.valueL1 ?? undefined,
                 valueL2_1: item1?.valueL2 ?? undefined,

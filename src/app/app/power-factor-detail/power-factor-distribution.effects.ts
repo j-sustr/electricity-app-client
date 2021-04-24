@@ -32,7 +32,10 @@ import {
     getRangeDistribution,
     resetDistributionRange
 } from './power-factor-detail.actions';
+import { DistributionRange } from './power-factor-detail.model';
 import { getDistributionRange } from './power-factor-distribution-utils';
+
+const BIN_COUNT = 10;
 
 @Injectable()
 export class PowerFactorDistributionEffects {
@@ -63,6 +66,10 @@ export class PowerFactorDistributionEffects {
                 if (interval2) {
                     dto2 = intervalToDto(interval2);
                 }
+                let thresholds: number[] | undefined = undefined;
+                if (range) {
+                    thresholds = createBinThresholds(range, BIN_COUNT);
+                }
                 return this.client
                     .getDistribution(
                         groupId,
@@ -75,7 +82,8 @@ export class PowerFactorDistributionEffects {
                         phases.main,
                         phases.l1,
                         phases.l2,
-                        phases.l3
+                        phases.l3,
+                        thresholds
                     )
                     .pipe(
                         map((dto) => {
@@ -114,4 +122,16 @@ function validateItems(
     items: PowerFactorDistributionItem[] | null | undefined
 ): items is PowerFactorDistributionItem[] {
     return true;
+}
+
+function createBinThresholds(
+    range: DistributionRange,
+    binCount: number
+): number[] {
+    const length = range.end - range.start;
+    const binSize = length / binCount;
+    return Array.from(
+        { length: binCount + 1 },
+        (_, i) => range.start + binSize * i
+    );
 }

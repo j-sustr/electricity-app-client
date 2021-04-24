@@ -1,3 +1,4 @@
+import { BinRange } from 'src/app/web-api-client';
 import { DistributionRange } from './power-factor-detail.model';
 
 export function getDistributionRange(
@@ -23,4 +24,12 @@ export function isDistributionRange(
         return false;
     }
     return true;
+}
+
+export function createBinRangeName(range: BinRange): string {
+    return (
+        (range.start?.toFixed(3) ?? '...') +
+        '-' +
+        (range.end?.toFixed(3) ?? '...')
+    );
 }

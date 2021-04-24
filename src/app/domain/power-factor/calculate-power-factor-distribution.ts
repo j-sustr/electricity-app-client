@@ -1,11 +1,11 @@
-import { PowerFactorDistributionItem } from 'src/app/web-api-client';
+import { BinRange, PowerFactorDistributionItem } from 'src/app/web-api-client';
 
 export interface PowerFactorDistributionCalculatedItem {
-    range: string | null;
-    valueMain: number | null;
-    valueL1: number | null;
-    valueL2: number | null;
-    valueL3: number | null;
+    range: BinRange;
+    valueMain?: number;
+    valueL1?: number;
+    valueL2?: number;
+    valueL3?: number;
 }
 
 export function calculatePowerFactorDistribution(
@@ -23,22 +23,27 @@ export function calculatePowerFactorDistribution(
     }
 
     return items.map((item) => ({
-        range: item.range ?? '(no range)',
+        range:
+            item.range ??
+            ({
+                start: NaN,
+                end: NaN
+            } as BinRange),
         valueMain:
             typeof item.valueMain === 'number'
                 ? (100 * item.valueMain) / valuesMainSum
-                : null,
+                : undefined,
         valueL1:
             typeof item.valueL1 === 'number'
                 ? (100 * item.valueL1) / valuesL1Sum
-                : null,
+                : undefined,
         valueL2:
             typeof item.valueL2 === 'number'
                 ? (100 * item.valueL2) / valuesL2Sum
-                : null,
+                : undefined,
         valueL3:
             typeof item.valueL3 === 'number'
                 ? (100 * item.valueL3) / valuesL3Sum
-                : null
+                : undefined
     }));
 }
