@@ -10,6 +10,7 @@ import {
     first,
     map,
     pairwise,
+    startWith,
     switchMap,
     tap,
     withLatestFrom
@@ -36,7 +37,7 @@ import {
     setIntervals,
     setPhases
 } from './data-source.actions';
-import { selectIntervals } from './data-source.selectors';
+import { selectIntervals, selectPhases } from './data-source.selectors';
 
 @Injectable()
 export class DataSourceEffects {
@@ -101,16 +102,23 @@ export class DataSourceEffects {
                             pairwise(),
                             map(([prev, curr]) => !isEqual(prev, curr))
                         ),
+                        this.store.pipe(
+                            select(selectPhases),
+                            startWith(null),
+                            pairwise(),
+                            map(([prev, curr]) => !isEqual(prev, curr))
+                        ),
                         this.store.pipe(select(selectRouterPath))
                     ]),
                     (v1, v2) => v2
                 ),
-                filter(([, routerPath]) => {
+                filter(([, , routerPath]) => {
                     return isSectionPath(routerPath);
                 }),
-                map(([intervalsChanged, routerPath]) => {
+                map(([intervalsChanged, phasesChanged, routerPath]) => {
                     return {
                         intervalsChanged,
+                        phasesChanged,
                         hasDataSelector: mapSectionPathToHasDataSelector(
                             routerPath as never
                         ),
@@ -120,22 +128,35 @@ export class DataSourceEffects {
                     };
                 }),
                 switchMap(
-                    ({ intervalsChanged, hasDataSelector, getDataAction }) =>
+                    ({
+                        intervalsChanged,
+                        phasesChanged,
+                        hasDataSelector,
+                        getDataAction
+                    }) =>
                         this.store.pipe(
                             select(hasDataSelector),
                             first(),
                             map((hasData) => ({
                                 intervalsChanged,
+                                phasesChanged,
                                 hasData,
                                 getDataAction
                             }))
                         )
                 ),
-                tap(({ intervalsChanged, hasData, getDataAction }) => {
-                    if (intervalsChanged || !hasData) {
-                        this.store.dispatch(getDataAction);
+                tap(
+                    ({
+                        intervalsChanged,
+                        phasesChanged,
+                        hasData,
+                        getDataAction
+                    }) => {
+                        if (intervalsChanged || phasesChanged || !hasData) {
+                            this.store.dispatch(getDataAction);
+                        }
                     }
-                })
+                )
             );
         },
         { dispatch: false }
