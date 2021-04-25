@@ -42,16 +42,16 @@
         >
             <td>{{item.data.rangeName}}</td>
             <td style="text-align: right" *ngIf="table.phases.main">
-                {{item.data.valueMain}}
+                {{item.data.valueMain | number: '1.3-3'}}
             </td>
             <td style="text-align: right" *ngIf="table.phases.l1">
-                {{item.data.valueL1}}
+                {{item.data.valueL1 | number: '1.3-3'}}
             </td>
             <td style="text-align: right" *ngIf="table.phases.l2">
-                {{item.data.valueL2}}
+                {{item.data.valueL2 | number: '1.3-3'}}
             </td>
             <td style="text-align: right" *ngIf="table.phases.l3">
-                {{item.data.valueL3}}
+                {{item.data.valueL3 | number: '1.3-3'}}
             </td>
         </tr>
     </dx-data-grid>
