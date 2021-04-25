@@ -4,6 +4,7 @@
 @import './styles/general';
 @import './styles/container';
 @import './styles/dx-overrides';
+@import './styles/dx-datagrid';
 // import './styles/debug';
 
 .app-content-header {
@@ -19,18 +20,6 @@
 
     .right {
         flex-basis: 400px;
-    }
-}
-
-.data-table-row {
-    cursor: pointer;
-
-    &:hover {
-        background-color: map-get($theme, base1);
-    }
-
-    &.for-comparison {
-        background-color: gray;
     }
 }
 

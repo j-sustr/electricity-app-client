@@ -18,11 +18,16 @@ export interface CostsDetailTableItem {
     currency?: string;
     costPerUnit?: number;
     cost?: number;
-    isForComparison?: boolean;
+
+    quantity2?: string;
+    costPerUnit2?: number;
+    cost2?: number;
+    // isForComparison?: boolean;
 }
 
 export interface CostsDetailTable {
     items: CostsDetailTableItem[];
+    comparison: boolean;
 }
 
 export const selectDetail = createFeatureSelector<AppState, CostsDetailState>(
@@ -31,6 +36,10 @@ export const selectDetail = createFeatureSelector<AppState, CostsDetailState>(
 
 export const selectHasData = createSelector(selectDetail, (state) =>
     Array.isArray(state.items1)
+);
+
+export const selectIsComparison = createSelector(selectDetail, (state) =>
+    Array.isArray(state.items2)
 );
 
 export const selectComputedDetailItems = createSelector<
@@ -81,11 +90,16 @@ export const selectDetailTableItems = createSelector(
             const length = items1.length;
             const result = [];
             for (let i = 0; i < length; i++) {
-                const tableItem1 = mapToTableItem(items1[i], 1);
-                const tableItem2 = mapToTableItem(items2[i], 2);
-                tableItem2.isForComparison = true;
-                result.push(tableItem1);
-                result.push(tableItem2);
+                const tableItem = mapToTableItem(items1[i]);
+                // const tableItem2 = mapToTableItem(items2[i], 2);
+                // tableItem2.isForComparison = true;
+
+                tableItem.quantity2 = items2[i].quantity;
+                tableItem.costPerUnit2 = items2[i].costPerUnit;
+                tableItem.cost2 = items2[i].cost;
+
+                result.push(tableItem);
+                // result.push(tableItem2);
             }
             return result;
         }
@@ -106,12 +120,14 @@ export const selectDetailTableItems = createSelector(
 
 export const selectDetailTable = createSelector(
     selectDetailTableItems,
-    (items): CostsDetailTable | null => {
+    selectIsComparison,
+    (items, isComparison): CostsDetailTable | null => {
         if (!Array.isArray(items)) {
             return null;
         }
         return {
-            items
+            items,
+            comparison: isComparison
         };
     }
 );

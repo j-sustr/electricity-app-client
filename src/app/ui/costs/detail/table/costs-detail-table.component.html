@@ -2,10 +2,11 @@
     <dx-data-grid
         *ngIf="table"
         [dataSource]="table.items"
+        [columnAutoWidth]="true"
         [rowAlternationEnabled]="false"
         [showBorders]="true"
-        rowTemplate="rowTemplateName"
     >
+        <!-- rowTemplate="rowTemplateName" -->
         <dxi-column dataField="year" [groupIndex]="0"></dxi-column>
         <dxi-column dataField="month" [groupIndex]="1"></dxi-column>
         <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>
@@ -19,6 +20,13 @@
             dataField="quantity"
             caption="Quantity"
             dataType="string"
+        ></dxi-column>
+        <dxi-column
+            *ngIf="table.comparison"
+            dataField="quantity2"
+            caption="Quantity 2"
+            dataType="string"
+            cssClass="cell-comparison"
         ></dxi-column>
         <dxi-column
             dataField="unit"
@@ -36,12 +44,25 @@
             dataType="number"
         ></dxi-column>
         <dxi-column
+            *ngIf="table.comparison"
+            dataField="costPerUnit2"
+            caption="Cost Per Unit 2"
+            dataType="string"
+        ></dxi-column>
+        <dxi-column
             dataField="cost"
             caption="Cost"
             dataType="number"
         ></dxi-column>
+        <dxi-column
+            *ngIf="table.comparison"
+            dataField="cost2"
+            caption="Cost 2"
+            dataType="number"
+            cssClass="cell-comparison"
+        ></dxi-column>
 
-        <tr
+        <!-- <tr
             class="dx-row data-table-row"
             [ngClass]="{'for-comparison': item.data.isForComparison }"
             *dxTemplate="let item of 'rowTemplateName'"
@@ -58,6 +79,6 @@
             <td style="text-align: right">
                 {{item.data.cost | number: '1.2-2'}}
             </td>
-        </tr>
+        </tr> -->
     </dx-data-grid>
 </ng-container>

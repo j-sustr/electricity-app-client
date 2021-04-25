@@ -7,6 +7,7 @@ import {
     CostsDetailTable,
     selectDetailTable
 } from 'src/app/app/costs-detail/costs-detail.selectors';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-costs-detail-table',
@@ -21,7 +22,10 @@ export class CostsDetailTableComponent {
         private calculatorFactory: ERUCalculatorFactory
     ) {
         this.table$ = this.store.pipe(
-            select(selectDetailTable, { calculatorFactory })
+            select(selectDetailTable, { calculatorFactory }),
+            tap((table) => {
+                console.log('costs-detail-table', table);
+            })
         );
     }
 }
