@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AfterViewInit, Component } from '@angular/core';
 import { ofType } from '@ngrx/effects';
 import { ActionsSubject, select, Store } from '@ngrx/store';
@@ -12,6 +14,7 @@ import {
     getDataSourceInfoSuccess
 } from './app/data-source/data-source.actions';
 import { getUserGroupTree } from './app/groups/groups.actions';
+import { selectUserRecordGroupsInterval } from './app/groups/groups.selectors';
 import { devLogin } from './dev-login';
 import {
     ArchiveClient,
@@ -40,16 +43,19 @@ export class AppComponent implements AfterViewInit {
         private dbDataSourceClient: DBDataSourceClient
     ) {
         this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).authService = authService;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).archiveClient = archiveClient;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).groupsClient = groupsClient;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).dataSourceClient = dataSourceClient;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (window as any).dbDataSourceClient = dbDataSourceClient;
+
+        this.store.pipe(
+            select(selectUserRecordGroupsInterval),
+            tap((interval) => {
+                console.log('selectUserRecordGroupsInterval');
+                (window as any).userRecordGroupsInterval = interval;
+            })
+        );
     }
 
     ngAfterViewInit(): void {
