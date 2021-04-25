@@ -154,7 +154,7 @@ export default class ERUCalculator {
 
     powerFactorSurcharge(cosFi: number): number {
         const tbl = this._tables.getTable('4.52.');
-        const zones = Array.from({ length: 5 }).map((_, i) =>
+        const zones = Array.from({ length: 6 }).map((_, i) =>
             (i + 1).toString()
         );
         for (const zone of zones) {
