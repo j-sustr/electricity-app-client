@@ -17,6 +17,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 export interface IArchiveClient {
     getQuantities(groupId: string | undefined, arch: number | undefined): Observable<QuantitiesDto>;
     getSeries(groupId: string | undefined, arch: number | undefined, range_Start: Date | null | undefined, range_End: Date | null | undefined, range_IsInfinite: boolean | null | undefined, propName: string | null | undefined, unit: string | null | undefined, aggregation: number | null | undefined, energyAggType: EEnergyAggType | null | undefined): Observable<QuantitySeriesDto>;
+    getQueryRecords(): Observable<ArchiveQueryRecord[]>;
 }
 
 @Injectable({
@@ -156,6 +157,58 @@ export class ArchiveClient implements IArchiveClient {
             }));
         }
         return _observableOf<QuantitySeriesDto>(<any>null);
+    }
+
+    getQueryRecords(): Observable<ArchiveQueryRecord[]> {
+        let url_ = this.baseUrl + "/api/Archive/query-records";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetQueryRecords(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetQueryRecords(<any>response_);
+                } catch (e) {
+                    return <Observable<ArchiveQueryRecord[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArchiveQueryRecord[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetQueryRecords(response: HttpResponseBase): Observable<ArchiveQueryRecord[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ArchiveQueryRecord.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArchiveQueryRecord[]>(<any>null);
     }
 }
 
@@ -1560,6 +1613,159 @@ export enum EEnergyAggType {
     Profile = 1,
 }
 
+export class ArchiveQueryRecord implements IArchiveQueryRecord {
+    groupId?: string | null;
+    arch?: Arch;
+    range?: IntervalDto | null;
+    quantities?: TupleOfStringAndString[] | null;
+    aggregation?: number;
+    energyAggType?: EEnergyAggType;
+
+    constructor(data?: IArchiveQueryRecord) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
+            this.arch = _data["arch"] !== undefined ? _data["arch"] : <any>null;
+            this.range = _data["range"] ? IntervalDto.fromJS(_data["range"]) : <any>null;
+            if (Array.isArray(_data["quantities"])) {
+                this.quantities = [] as any;
+                for (let item of _data["quantities"])
+                    this.quantities!.push(TupleOfStringAndString.fromJS(item));
+            }
+            this.aggregation = _data["aggregation"] !== undefined ? _data["aggregation"] : <any>null;
+            this.energyAggType = _data["energyAggType"] !== undefined ? _data["energyAggType"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ArchiveQueryRecord {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArchiveQueryRecord();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
+        data["arch"] = this.arch !== undefined ? this.arch : <any>null;
+        data["range"] = this.range ? this.range.toJSON() : <any>null;
+        if (Array.isArray(this.quantities)) {
+            data["quantities"] = [];
+            for (let item of this.quantities)
+                data["quantities"].push(item.toJSON());
+        }
+        data["aggregation"] = this.aggregation !== undefined ? this.aggregation : <any>null;
+        data["energyAggType"] = this.energyAggType !== undefined ? this.energyAggType : <any>null;
+        return data; 
+    }
+}
+
+export interface IArchiveQueryRecord {
+    groupId?: string | null;
+    arch?: Arch;
+    range?: IntervalDto | null;
+    quantities?: TupleOfStringAndString[] | null;
+    aggregation?: number;
+    energyAggType?: EEnergyAggType;
+}
+
+export enum Arch {
+    Main = 0,
+    ElectricityMeter = 6,
+}
+
+export class IntervalDto implements IIntervalDto {
+    start?: Date | null;
+    end?: Date | null;
+    isInfinite?: boolean | null;
+
+    constructor(data?: IIntervalDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
+            this.isInfinite = _data["isInfinite"] !== undefined ? _data["isInfinite"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): IntervalDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IntervalDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start ? this.start.toISOString() : <any>null;
+        data["end"] = this.end ? this.end.toISOString() : <any>null;
+        data["isInfinite"] = this.isInfinite !== undefined ? this.isInfinite : <any>null;
+        return data; 
+    }
+}
+
+export interface IIntervalDto {
+    start?: Date | null;
+    end?: Date | null;
+    isInfinite?: boolean | null;
+}
+
+export class TupleOfStringAndString implements ITupleOfStringAndString {
+    item1?: string;
+    item2?: string;
+
+    constructor(data?: ITupleOfStringAndString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.item1 = _data["item1"] !== undefined ? _data["item1"] : <any>null;
+            this.item2 = _data["item2"] !== undefined ? _data["item2"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TupleOfStringAndString {
+        data = typeof data === 'object' ? data : {};
+        let result = new TupleOfStringAndString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["item1"] = this.item1 !== undefined ? this.item1 : <any>null;
+        data["item2"] = this.item2 !== undefined ? this.item2 : <any>null;
+        return data; 
+    }
+}
+
+export interface ITupleOfStringAndString {
+    item1?: string;
+    item2?: string;
+}
+
 export class UserDto implements IUserDto {
     username?: string | null;
 
@@ -2522,50 +2728,6 @@ export interface IDemandSeriesDto {
     valuesL1?: number[] | null;
     valuesL2?: number[] | null;
     valuesL3?: number[] | null;
-}
-
-export class IntervalDto implements IIntervalDto {
-    start?: Date | null;
-    end?: Date | null;
-    isInfinite?: boolean | null;
-
-    constructor(data?: IIntervalDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
-            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
-            this.isInfinite = _data["isInfinite"] !== undefined ? _data["isInfinite"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): IntervalDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new IntervalDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["start"] = this.start ? this.start.toISOString() : <any>null;
-        data["end"] = this.end ? this.end.toISOString() : <any>null;
-        data["isInfinite"] = this.isInfinite !== undefined ? this.isInfinite : <any>null;
-        return data; 
-    }
-}
-
-export interface IIntervalDto {
-    start?: Date | null;
-    end?: Date | null;
-    isInfinite?: boolean | null;
 }
 
 export enum DemandAggregation {
