@@ -1318,6 +1318,8 @@ export class PeakDemandClient implements IPeakDemandClient {
 export interface IPowerFactorClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PowerFactorOverviewDto>;
     getDistribution(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined, thresholds: number[] | null | undefined): Observable<PowerFactorDistributionDto>;
+    getEnergySeries(groupId: string | undefined, phases: Phase[] | null | undefined, aggregation: number | undefined, energyAggType: EEnergyAggType | undefined): Observable<TupleOfStringOfAndObjectOfOf>;
+    getCosFiSeries(groupId: string | undefined, phase: Phase | undefined, aggregation: number | undefined, energyAggType: EEnergyAggType | undefined): Observable<number[]>;
 }
 
 @Injectable({
@@ -1465,6 +1467,136 @@ export class PowerFactorClient implements IPowerFactorClient {
             }));
         }
         return _observableOf<PowerFactorDistributionDto>(<any>null);
+    }
+
+    getEnergySeries(groupId: string | undefined, phases: Phase[] | null | undefined, aggregation: number | undefined, energyAggType: EEnergyAggType | undefined): Observable<TupleOfStringOfAndObjectOfOf> {
+        let url_ = this.baseUrl + "/api/PowerFactor/energy-series?";
+        if (groupId === null)
+            throw new Error("The parameter 'groupId' cannot be null.");
+        else if (groupId !== undefined)
+            url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
+        if (phases !== undefined && phases !== null)
+            phases && phases.forEach(item => { url_ += "phases=" + encodeURIComponent("" + item) + "&"; });
+        if (aggregation === null)
+            throw new Error("The parameter 'aggregation' cannot be null.");
+        else if (aggregation !== undefined)
+            url_ += "aggregation=" + encodeURIComponent("" + aggregation) + "&";
+        if (energyAggType === null)
+            throw new Error("The parameter 'energyAggType' cannot be null.");
+        else if (energyAggType !== undefined)
+            url_ += "EnergyAggType=" + encodeURIComponent("" + energyAggType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetEnergySeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetEnergySeries(<any>response_);
+                } catch (e) {
+                    return <Observable<TupleOfStringOfAndObjectOfOf>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TupleOfStringOfAndObjectOfOf>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetEnergySeries(response: HttpResponseBase): Observable<TupleOfStringOfAndObjectOfOf> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TupleOfStringOfAndObjectOfOf.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TupleOfStringOfAndObjectOfOf>(<any>null);
+    }
+
+    getCosFiSeries(groupId: string | undefined, phase: Phase | undefined, aggregation: number | undefined, energyAggType: EEnergyAggType | undefined): Observable<number[]> {
+        let url_ = this.baseUrl + "/api/PowerFactor/cos-fi-series?";
+        if (groupId === null)
+            throw new Error("The parameter 'groupId' cannot be null.");
+        else if (groupId !== undefined)
+            url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
+        if (phase === null)
+            throw new Error("The parameter 'phase' cannot be null.");
+        else if (phase !== undefined)
+            url_ += "phase=" + encodeURIComponent("" + phase) + "&";
+        if (aggregation === null)
+            throw new Error("The parameter 'aggregation' cannot be null.");
+        else if (aggregation !== undefined)
+            url_ += "aggregation=" + encodeURIComponent("" + aggregation) + "&";
+        if (energyAggType === null)
+            throw new Error("The parameter 'energyAggType' cannot be null.");
+        else if (energyAggType !== undefined)
+            url_ += "EnergyAggType=" + encodeURIComponent("" + energyAggType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCosFiSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCosFiSeries(<any>response_);
+                } catch (e) {
+                    return <Observable<number[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCosFiSeries(response: HttpResponseBase): Observable<number[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number[]>(<any>null);
     }
 }
 
@@ -3053,6 +3185,69 @@ export class BinRange implements IBinRange {
 export interface IBinRange {
     start?: number | null;
     end?: number | null;
+}
+
+export class TupleOfStringOfAndObjectOfOf implements ITupleOfStringOfAndObjectOfOf {
+    item1?: string[];
+    item2?: any[][];
+
+    constructor(data?: ITupleOfStringOfAndObjectOfOf) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["item1"])) {
+                this.item1 = [] as any;
+                for (let item of _data["item1"])
+                    this.item1!.push(item);
+            }
+            if (Array.isArray(_data["item2"])) {
+                this.item2 = [] as any;
+                for (let item of _data["item2"])
+                    this.item2!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): TupleOfStringOfAndObjectOfOf {
+        data = typeof data === 'object' ? data : {};
+        let result = new TupleOfStringOfAndObjectOfOf();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.item1)) {
+            data["item1"] = [];
+            for (let item of this.item1)
+                data["item1"].push(item);
+        }
+        if (Array.isArray(this.item2)) {
+            data["item2"] = [];
+            for (let item of this.item2)
+                data["item2"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface ITupleOfStringOfAndObjectOfOf {
+    item1?: string[];
+    item2?: any[][];
+}
+
+export enum Phase {
+    Main = 0,
+    L1 = 1,
+    L2 = 2,
+    L3 = 3,
 }
 
 export interface FileParameter {
