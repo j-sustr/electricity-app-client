@@ -205,7 +205,7 @@ export const selectDistributionChart = createSelector(
             return null;
         }
         return {
-            title: '',
+            title: 'Power Factor Distribution',
             items,
             series,
             level: level ?? NaN
