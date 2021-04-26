@@ -20,7 +20,8 @@ import {
     ArchiveClient,
     DataSourceClient,
     DBDataSourceClient,
-    GroupsClient
+    GroupsClient,
+    PowerFactorClient
 } from './web-api-client';
 
 @Component({
@@ -40,7 +41,8 @@ export class AppComponent implements AfterViewInit {
         private archiveClient: ArchiveClient,
         private groupsClient: GroupsClient,
         private dataSourceClient: DataSourceClient,
-        private dbDataSourceClient: DBDataSourceClient
+        private dbDataSourceClient: DBDataSourceClient,
+        private powerFactorClient: PowerFactorClient
     ) {
         this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
         (window as any).authService = authService;
@@ -48,6 +50,7 @@ export class AppComponent implements AfterViewInit {
         (window as any).groupsClient = groupsClient;
         (window as any).dataSourceClient = dataSourceClient;
         (window as any).dbDataSourceClient = dbDataSourceClient;
+        (window as any).powerFactorClient = powerFactorClient;
 
         this.store.pipe(
             select(selectUserRecordGroupsInterval),
