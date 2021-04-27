@@ -71,6 +71,10 @@ export class PeakDemandDetailEffects {
                             dto2?.start,
                             dto2?.end,
                             dto2?.isInfinite,
+                            phases.main,
+                            phases.l1,
+                            phases.l2,
+                            phases.l3,
                             aggregation
                         )
                         .pipe(

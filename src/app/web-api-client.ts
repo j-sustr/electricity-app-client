@@ -1170,7 +1170,7 @@ export class GroupsClient implements IGroupsClient {
 
 export interface IPeakDemandClient {
     getOverview(interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, maxGroups: number | null | undefined): Observable<PeakDemandOverviewDto>;
-    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: DemandAggregation | undefined): Observable<PeakDemandDetailDto>;
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined, aggregation: DemandAggregation | undefined): Observable<PeakDemandDetailDto>;
 }
 
 @Injectable({
@@ -1248,7 +1248,7 @@ export class PeakDemandClient implements IPeakDemandClient {
         return _observableOf<PeakDemandOverviewDto>(<any>null);
     }
 
-    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, aggregation: DemandAggregation | undefined): Observable<PeakDemandDetailDto> {
+    getDetail(groupId: string | null | undefined, interval1_Start: Date | null | undefined, interval1_End: Date | null | undefined, interval1_IsInfinite: boolean | null | undefined, interval2_Start: Date | null | undefined, interval2_End: Date | null | undefined, interval2_IsInfinite: boolean | null | undefined, phases_Main: boolean | null | undefined, phases_L1: boolean | null | undefined, phases_L2: boolean | null | undefined, phases_L3: boolean | null | undefined, aggregation: DemandAggregation | undefined): Observable<PeakDemandDetailDto> {
         let url_ = this.baseUrl + "/api/PeakDemand/detail?";
         if (groupId !== undefined && groupId !== null)
             url_ += "GroupId=" + encodeURIComponent("" + groupId) + "&";
@@ -1264,6 +1264,14 @@ export class PeakDemandClient implements IPeakDemandClient {
             url_ += "Interval2.End=" + encodeURIComponent(interval2_End ? "" + interval2_End.toJSON() : "") + "&";
         if (interval2_IsInfinite !== undefined && interval2_IsInfinite !== null)
             url_ += "Interval2.IsInfinite=" + encodeURIComponent("" + interval2_IsInfinite) + "&";
+        if (phases_Main !== undefined && phases_Main !== null)
+            url_ += "Phases.Main=" + encodeURIComponent("" + phases_Main) + "&";
+        if (phases_L1 !== undefined && phases_L1 !== null)
+            url_ += "Phases.L1=" + encodeURIComponent("" + phases_L1) + "&";
+        if (phases_L2 !== undefined && phases_L2 !== null)
+            url_ += "Phases.L2=" + encodeURIComponent("" + phases_L2) + "&";
+        if (phases_L3 !== undefined && phases_L3 !== null)
+            url_ += "Phases.L3=" + encodeURIComponent("" + phases_L3) + "&";
         if (aggregation === null)
             throw new Error("The parameter 'aggregation' cannot be null.");
         else if (aggregation !== undefined)
