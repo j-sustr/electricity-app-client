@@ -15,50 +15,59 @@
             dataField="itemName"
             caption="Item Name"
             dataType="string"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             dataField="quantity"
             caption="Quantity"
             dataType="string"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             *ngIf="table.comparison"
             dataField="quantity2"
             caption="Quantity 2"
             dataType="string"
+            [allowSorting]="false"
             cssClass="cell-comparison"
         ></dxi-column>
         <dxi-column
             dataField="unit"
             caption="Unit"
             dataType="string"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             dataField="currency"
             caption="Currency"
             dataType="string"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             dataField="costPerUnit"
             caption="Cost Per Unit"
             dataType="number"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             *ngIf="table.comparison"
             dataField="costPerUnit2"
             caption="Cost Per Unit 2"
             dataType="string"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             dataField="cost"
             caption="Cost"
             dataType="number"
+            [allowSorting]="false"
         ></dxi-column>
         <dxi-column
             *ngIf="table.comparison"
             dataField="cost2"
             caption="Cost 2"
             dataType="number"
+            [allowSorting]="false"
             cssClass="cell-comparison"
         ></dxi-column>
 
