@@ -1,10 +1,11 @@
 import { createSelector } from '@ngrx/store';
-import { sortBy } from 'lodash';
+import { shiftColorHue } from 'src/app/common/color/color-utils';
 import {
     calculatePowerFactorDistribution,
     PowerFactorDistributionCalculatedItem
 } from 'src/app/domain/power-factor/calculate-power-factor-distribution';
 import { BinRange } from 'src/app/web-api-client';
+import * as colors from '../../ui/common/colors/colors';
 import { SeriesParams } from '../common/models';
 import { Phases } from '../data-source/data-source.model';
 import {
@@ -205,7 +206,7 @@ export const selectDistributionChart = createSelector(
             return null;
         }
         return {
-            title: 'Power Factor Distribution',
+            title: 'Cosφ Distribution',
             items,
             series,
             level: level ?? NaN
@@ -221,7 +222,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'Main',
             valueField: 'valueMain_1',
             unit: '%',
-            color: 'red',
+            color: colors.cosFiMain,
             stack: 1
         });
     }
@@ -230,7 +231,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'L1',
             valueField: 'valueL1_1',
             unit: '%',
-            color: 'orange',
+            color: colors.cosFiL1,
             stack: 1
         });
     }
@@ -239,7 +240,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'L2',
             valueField: 'valueL2_1',
             unit: '%',
-            color: 'blue',
+            color: colors.cosFiL2,
             stack: 1
         });
     }
@@ -248,7 +249,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'L3',
             valueField: 'valueL3_1',
             unit: '%',
-            color: 'purple',
+            color: colors.cosFiL3,
             stack: 1
         });
     }
@@ -264,6 +265,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
     arr2.forEach((item) => {
         item.name += ' (2)';
         item.valueField = item.valueField.replace(/_1$/, '_2');
+        item.color = shiftColorHue(item.color, -60);
         item.stack = 2;
     });
 

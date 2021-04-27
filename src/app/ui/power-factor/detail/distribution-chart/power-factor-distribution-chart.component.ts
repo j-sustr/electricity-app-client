@@ -43,7 +43,7 @@ export class PowerFactorDistributionChartComponent {
     customizePoint = (): unknown => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const pointSettings: any = {
-            color: this.colors[Number(this.isFirstLevel)]
+            // color: this.colors[Number(this.isFirstLevel)]
         };
 
         if (!this.isFirstLevel) {
@@ -58,7 +58,7 @@ export class PowerFactorDistributionChartComponent {
 
     customizeTooltip = (args: { valueText: string }): { text: string } => {
         return {
-            text: args.valueText
+            text: parseFloat(args.valueText).toFixed(3) + '%'
         };
     };
 

@@ -196,7 +196,7 @@ function createSeriesParamsArray(isComparison: boolean) {
             name: 'cos FI',
             valueField: 'cosFi_1',
             unit: '',
-            color: colors.cosFi,
+            color: colors.cosFiMain,
             stack: 1,
             axis: 'cosFi',
             type: 'spline'
