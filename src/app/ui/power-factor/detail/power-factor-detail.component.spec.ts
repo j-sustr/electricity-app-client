@@ -18,11 +18,8 @@ describe('PowerFactorDetailComponent', () => {
         store = TestBed.inject<MockStore<unknown>>(MockStore);
         store.overrideSelector(selectDetail, {
             detailType: 'distribution',
-            viewType: 'table',
-            distribution: {
-                items1: [],
-                items2: []
-            },
+            viewType: 'chart',
+            distributionStack: [],
             showEnergy: true,
             loading: false
         });

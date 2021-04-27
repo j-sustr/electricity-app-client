@@ -16,7 +16,8 @@ describe('CostsDetailTableComponent', () => {
 
         store = TestBed.inject<MockStore<unknown>>(MockStore);
         store.overrideSelector(selectDetailTable, {
-            items: []
+            items: [],
+            comparison: false
         });
     });
 

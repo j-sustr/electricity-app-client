@@ -18,7 +18,8 @@ describe('PowerFactorDistributionChartComponent', () => {
         store.overrideSelector(selectDistributionChart, {
             title: 'test-title',
             items: [],
-            series: []
+            series: [],
+            level: 0
         });
     });
 
