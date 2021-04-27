@@ -11,6 +11,8 @@ import {
     DemandSeries,
     PeakDemandDetailState
 } from './peak-demand-detail.model';
+import * as colors from '../../ui/common/colors/colors';
+import { shiftColorHue } from 'src/app/common/color/color-utils';
 
 export interface PeakDemandDetailChartItem {
     time: Date;
@@ -109,7 +111,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'Main',
             valueField: 'valueMain_1',
             unit: 'kW',
-            color: 'red',
+            color: colors.activePowerMain,
             stack: 1
         });
     }
@@ -118,7 +120,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'L1',
             valueField: 'valueL1_1',
             unit: 'kW',
-            color: 'orange',
+            color: colors.activePowerL1,
             stack: 1
         });
     }
@@ -127,7 +129,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'L2',
             valueField: 'valueL2_1',
             unit: 'kW',
-            color: 'blue',
+            color: colors.activePowerL2,
             stack: 1
         });
     }
@@ -136,7 +138,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
             name: 'L3',
             valueField: 'valueL3_1',
             unit: 'kW',
-            color: 'purple',
+            color: colors.activePowerL3,
             stack: 1
         });
     }
@@ -152,6 +154,7 @@ function createSeriesParamsArray(phases: Phases, isComparison: boolean) {
     arr2.forEach((item) => {
         item.name += ' (2)';
         item.valueField = item.valueField.replace(/_1$/, '_2');
+        item.color = shiftColorHue(item.color, -60);
         item.stack = 2;
     });
 
