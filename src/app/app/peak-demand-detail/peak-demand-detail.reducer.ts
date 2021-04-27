@@ -10,7 +10,7 @@ import { PeakDemandDetailState } from './peak-demand-detail.model';
 
 export const initialState: PeakDemandDetailState = {
     viewType: 'chart',
-    aggregation: DemandAggregation.None,
+    aggregation: DemandAggregation.OneHour,
     series1: null,
     series2: null,
     loading: false,

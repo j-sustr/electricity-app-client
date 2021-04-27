@@ -96,7 +96,7 @@ export const selectDetailChart = createSelector(
             return null;
         }
         return {
-            title: '',
+            title: 'Active Power Demand',
             items,
             series
         };

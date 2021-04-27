@@ -28,12 +28,12 @@ type ViewTypeOption = {
 export class ViewControlBarComponent implements OnInit {
     viewTypeOptions: ViewTypeOption[] = [
         {
-            text: 'Table',
-            key: 'table'
-        },
-        {
             text: 'Chart',
             key: 'chart'
+        },
+        {
+            text: 'Table',
+            key: 'table'
         }
     ];
 
