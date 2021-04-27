@@ -24,7 +24,7 @@ export class CostsDetailTableComponent {
         this.table$ = this.store.pipe(
             select(selectDetailTable, { calculatorFactory }),
             tap((table) => {
-                console.log('costs-detail-table', table);
+                // console.log('costs-detail-table', table);
             })
         );
     }
