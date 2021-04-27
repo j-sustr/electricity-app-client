@@ -1,7 +1,13 @@
+@import 'variables';
+
 .dx-button-text {
     text-transform: none !important;
 }
 
 #power-factor-distribution-chart.pointer-on-bars .dxc-series rect {
     cursor: pointer;
+}
+
+.dx-datagrid-rowsview .dx-row.dx-group-row {
+    background-color: map-get($theme, base2) !important;
 }
