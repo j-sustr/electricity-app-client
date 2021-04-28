@@ -2044,6 +2044,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;
+    cosFiInMonths?: number[] | null;
     message?: string | null;
 
     constructor(data?: ICostlyQuantitiesOverviewItem) {
@@ -2073,6 +2074,11 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
                 this.peakDemandInMonths = [] as any;
                 for (let item of _data["peakDemandInMonths"])
                     this.peakDemandInMonths!.push(item);
+            }
+            if (Array.isArray(_data["cosFiInMonths"])) {
+                this.cosFiInMonths = [] as any;
+                for (let item of _data["cosFiInMonths"])
+                    this.cosFiInMonths!.push(item);
             }
             this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
         }
@@ -2104,6 +2110,11 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
             for (let item of this.peakDemandInMonths)
                 data["peakDemandInMonths"].push(item);
         }
+        if (Array.isArray(this.cosFiInMonths)) {
+            data["cosFiInMonths"] = [];
+            for (let item of this.cosFiInMonths)
+                data["cosFiInMonths"].push(item);
+        }
         data["message"] = this.message !== undefined ? this.message : <any>null;
         return data; 
     }
@@ -2115,6 +2126,7 @@ export interface ICostlyQuantitiesOverviewItem {
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;
+    cosFiInMonths?: number[] | null;
     message?: string | null;
 }
 

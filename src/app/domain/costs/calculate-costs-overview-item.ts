@@ -18,11 +18,6 @@ export function calculateCostsOverviewItem(
     source: CostlyQuantitiesOverviewItem,
     calc: ERUCalculator | null
 ): CostsOverviewItem {
-    const cosFiInMonths = zip(
-        source.activeEnergyInMonths ?? [],
-        source.reactiveEnergyInMonths ?? []
-    ).map(([ae, re]) => calcCosFi(ae, re));
-
     const cost = calc !== null ? calcCost(source, calc) : null;
 
     return {
@@ -31,7 +26,7 @@ export function calculateCostsOverviewItem(
         activeEnergy: sum(source.activeEnergyInMonths ?? []),
         reactiveEnergy: sum(source.reactiveEnergyInMonths ?? []),
         peakDemand: Math.max(...(source.peakDemandInMonths ?? [])),
-        cosFi: Math.min(...cosFiInMonths),
+        cosFi: Math.min(...(source.cosFiInMonths ?? [])),
         cost
     };
 }

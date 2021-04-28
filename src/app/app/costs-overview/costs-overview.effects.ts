@@ -10,6 +10,7 @@ import {
 } from 'src/app/common/temporal/interval/interval-dto';
 import {
     CostlyQuantitiesDetailItem,
+    CostlyQuantitiesOverviewItem,
     ICostsClient
 } from 'src/app/web-api-client';
 import { COSTS_CLIENT } from 'src/app/web-api-client-di';
@@ -55,7 +56,7 @@ export class CostsOverviewEffects {
                             }
 
                             return getOverviewSuccess({
-                                items1: dto.items1 as CostlyQuantitiesDetailItem[],
+                                items1: dto.items1 as CostlyQuantitiesOverviewItem[],
                                 items2: dto.items2 ?? null
                             });
                         }),
