@@ -48,19 +48,14 @@
             caption="Cost Per Unit"
             dataType="number"
             [allowSorting]="false"
-        ></dxi-column>
-        <dxi-column
-            *ngIf="table.comparison"
-            dataField="costPerUnit2"
-            caption="Cost Per Unit 2"
-            dataType="string"
-            [allowSorting]="false"
+            format="#0.00"
         ></dxi-column>
         <dxi-column
             dataField="cost"
             caption="Cost"
             dataType="number"
             [allowSorting]="false"
+            format="#0.00"
         ></dxi-column>
         <dxi-column
             *ngIf="table.comparison"
@@ -69,6 +64,7 @@
             dataType="number"
             [allowSorting]="false"
             cssClass="cell-comparison"
+            format="#0.00"
         ></dxi-column>
 
         <!-- <tr
