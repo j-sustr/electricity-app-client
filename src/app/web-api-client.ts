@@ -2710,6 +2710,7 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
     peakDemands?: PeakDemandItemDto[] | null;
+    message?: string | null;
 
     constructor(data?: IPeakDemandOverviewItem) {
         if (data) {
@@ -2729,6 +2730,7 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
                 for (let item of _data["peakDemands"])
                     this.peakDemands!.push(PeakDemandItemDto.fromJS(item));
             }
+            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
         }
     }
 
@@ -2748,6 +2750,7 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
             for (let item of this.peakDemands)
                 data["peakDemands"].push(item.toJSON());
         }
+        data["message"] = this.message !== undefined ? this.message : <any>null;
         return data; 
     }
 }
@@ -2756,6 +2759,7 @@ export interface IPeakDemandOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
     peakDemands?: PeakDemandItemDto[] | null;
+    message?: string | null;
 }
 
 export class PeakDemandItemDto implements IPeakDemandItemDto {
