@@ -2999,6 +2999,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
     reactiveEnergyC?: number;
     cosFi?: number;
     interval?: Interval | null;
+    message?: string | null;
 
     constructor(data?: IPowerFactorOverviewItem) {
         if (data) {
@@ -3018,6 +3019,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
             this.reactiveEnergyC = _data["reactiveEnergyC"] !== undefined ? _data["reactiveEnergyC"] : <any>null;
             this.cosFi = _data["cosFi"] !== undefined ? _data["cosFi"] : <any>null;
             this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>null;
+            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
         }
     }
 
@@ -3037,6 +3039,7 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
         data["reactiveEnergyC"] = this.reactiveEnergyC !== undefined ? this.reactiveEnergyC : <any>null;
         data["cosFi"] = this.cosFi !== undefined ? this.cosFi : <any>null;
         data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
+        data["message"] = this.message !== undefined ? this.message : <any>null;
         return data; 
     }
 }
@@ -3049,6 +3052,7 @@ export interface IPowerFactorOverviewItem {
     reactiveEnergyC?: number;
     cosFi?: number;
     interval?: Interval | null;
+    message?: string | null;
 }
 
 export class Interval implements IInterval {
