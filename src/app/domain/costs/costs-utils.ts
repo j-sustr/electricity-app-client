@@ -1,9 +1,5 @@
-export function calcCosFi(ep: number, eq: number): number {
-    return ep / Math.hypot(ep, eq);
-}
-
-export function calcTanFi(ep: number, eq: number): number {
-    return eq / ep;
+export function calcTanFiFromCosFi(cosFi: number): number {
+    return Math.tan(Math.acos(cosFi));
 }
 
 export function calcTanFiOverrunPercent(tanFi: number): number {

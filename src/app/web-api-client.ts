@@ -2196,6 +2196,7 @@ export class CostlyQuantitiesDetailItem implements ICostlyQuantitiesDetailItem {
     activeEnergy?: number;
     reactiveEnergy?: number;
     peakDemand?: number;
+    cosFi?: number;
 
     constructor(data?: ICostlyQuantitiesDetailItem) {
         if (data) {
@@ -2213,6 +2214,7 @@ export class CostlyQuantitiesDetailItem implements ICostlyQuantitiesDetailItem {
             this.activeEnergy = _data["activeEnergy"] !== undefined ? _data["activeEnergy"] : <any>null;
             this.reactiveEnergy = _data["reactiveEnergy"] !== undefined ? _data["reactiveEnergy"] : <any>null;
             this.peakDemand = _data["peakDemand"] !== undefined ? _data["peakDemand"] : <any>null;
+            this.cosFi = _data["cosFi"] !== undefined ? _data["cosFi"] : <any>null;
         }
     }
 
@@ -2230,6 +2232,7 @@ export class CostlyQuantitiesDetailItem implements ICostlyQuantitiesDetailItem {
         data["activeEnergy"] = this.activeEnergy !== undefined ? this.activeEnergy : <any>null;
         data["reactiveEnergy"] = this.reactiveEnergy !== undefined ? this.reactiveEnergy : <any>null;
         data["peakDemand"] = this.peakDemand !== undefined ? this.peakDemand : <any>null;
+        data["cosFi"] = this.cosFi !== undefined ? this.cosFi : <any>null;
         return data; 
     }
 }
@@ -2240,6 +2243,7 @@ export interface ICostlyQuantitiesDetailItem {
     activeEnergy?: number;
     reactiveEnergy?: number;
     peakDemand?: number;
+    cosFi?: number;
 }
 
 export class DataSourceInfoDto implements IDataSourceInfoDto {

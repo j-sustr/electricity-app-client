@@ -1,7 +1,6 @@
 import { sum, zip } from 'src/app/common/array/array-utils';
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
 import { CostlyQuantitiesOverviewItem } from 'src/app/web-api-client';
-import { calcCosFi } from './costs-utils';
 import ERUCalculator from './ERUCalculator';
 
 export interface CostsOverviewItem {
@@ -35,8 +34,9 @@ function calcCost(source: CostlyQuantitiesOverviewItem, calc: ERUCalculator) {
     const costInMonths = zip(
         source.activeEnergyInMonths ?? [],
         source.reactiveEnergyInMonths ?? [],
-        source.peakDemandInMonths ?? []
-    ).map(([ep, eq, pmax]) => {
+        source.peakDemandInMonths ?? [],
+        source.cosFiInMonths ?? []
+    ).map(([ep, eq, pmax, cosFi]) => {
         const rpo = calc.reservedPowerOverrun(toKilo(pmax));
         const rpoCost = calc.reservedPowerOverrunCost(rpo);
 
@@ -48,7 +48,6 @@ function calcCost(source: CostlyQuantitiesOverviewItem, calc: ERUCalculator) {
         const mrcCost = calc.monthlyReservedCapacityCost();
         const yrcCost = calc.yearlyReservedCapacityCost();
 
-        const cosFi = calcCosFi(ep, eq);
         const u = calc.powerFactorSurcharge(cosFi);
         const pfPenalty = calc.powerFactorPenalty(toMega(pmax), u, toMega(ep));
 

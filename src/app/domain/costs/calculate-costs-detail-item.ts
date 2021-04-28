@@ -1,7 +1,7 @@
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
 import { getMonthName } from 'src/app/common/temporal/temporal-utils';
 import { ICostlyQuantitiesDetailItem } from 'src/app/web-api-client';
-import { calcCosFi, calcTanFi, calcTanFiOverrunPercent } from './costs-utils';
+import { calcTanFiFromCosFi, calcTanFiOverrunPercent } from './costs-utils';
 import ERUCalculator from './ERUCalculator';
 
 export interface CostsDetailItem {
@@ -47,8 +47,8 @@ export function calculateCostsItemsForMonth(
     const rcoKilo = calc?.reservedCapacityOverrun(pmaxKilo);
     const rcoMega = (rcoKilo ?? NaN) / 1000;
 
-    const cosFi = calcCosFi(eq, eq);
-    const tgFi = calcTanFi(ep, eq);
+    const cosFi = src.cosFi ?? NaN;
+    const tgFi = calcTanFiFromCosFi(cosFi);
     const tgFiOverrunPerc = calcTanFiOverrunPercent(tgFi);
     const u = calc?.powerFactorSurcharge(cosFi) ?? NaN;
     const pfPenalty = calc?.powerFactorPenalty(pmaxMega, u, epMega);
