@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { IAuthClient } from 'src/app/web-api-client';
+import { IAuthClient, LoginCredentials } from 'src/app/web-api-client';
 import { AUTH_CLIENT } from 'src/app/web-api-client-di';
 import {
     getCurrentUser,
@@ -51,23 +51,30 @@ export class AuthEffects {
         this.actions$.pipe(
             ofType(login),
             switchMap(({ username, password }) =>
-                this.authClient.login(username, password).pipe(
-                    map((userDto) => {
-                        void this.router.navigate(['']);
-                        return loginSuccess({
-                            user: {
-                                username: userDto.username ?? '(no name)'
-                            }
-                        });
-                    }),
-                    catchError((error: HttpErrorResponse) =>
-                        of(
-                            loginError({
-                                error
-                            })
+                this.authClient
+                    .login(
+                        new LoginCredentials({
+                            username,
+                            password
+                        })
+                    )
+                    .pipe(
+                        map((userDto) => {
+                            void this.router.navigate(['']);
+                            return loginSuccess({
+                                user: {
+                                    username: userDto.username ?? '(no name)'
+                                }
+                            });
+                        }),
+                        catchError((error: HttpErrorResponse) =>
+                            of(
+                                loginError({
+                                    error
+                                })
+                            )
                         )
                     )
-                )
             )
         )
     );

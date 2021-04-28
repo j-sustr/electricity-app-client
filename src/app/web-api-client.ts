@@ -213,7 +213,7 @@ export class ArchiveClient implements IArchiveClient {
 }
 
 export interface IAuthClient {
-    login(username: string | null | undefined, password: string | null | undefined): Observable<UserDto>;
+    login(credentials: LoginCredentials): Observable<UserDto>;
     logout(): Observable<FileResponse>;
     getCurrentUser(): Observable<UserDto | null>;
 }
@@ -231,18 +231,18 @@ export class AuthClient implements IAuthClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    login(username: string | null | undefined, password: string | null | undefined): Observable<UserDto> {
-        let url_ = this.baseUrl + "/api/Auth/login?";
-        if (username !== undefined && username !== null)
-            url_ += "username=" + encodeURIComponent("" + username) + "&";
-        if (password !== undefined && password !== null)
-            url_ += "password=" + encodeURIComponent("" + password) + "&";
+    login(credentials: LoginCredentials): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/Auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(credentials);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
@@ -1940,6 +1940,46 @@ export class UserDto implements IUserDto {
 
 export interface IUserDto {
     username?: string | null;
+}
+
+export class LoginCredentials implements ILoginCredentials {
+    username?: string | null;
+    password?: string | null;
+
+    constructor(data?: ILoginCredentials) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LoginCredentials {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginCredentials();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data; 
+    }
+}
+
+export interface ILoginCredentials {
+    username?: string | null;
+    password?: string | null;
 }
 
 export class CostsOverviewDto implements ICostsOverviewDto {
