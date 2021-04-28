@@ -107,7 +107,7 @@ export function calculateCostsItemsForMonth(
             ...yearMonth,
             itemName: 'Reserved capacity exceed cost',
             quantity: rcoMega.toFixed(3),
-            unit: `${unitPrefix}W'`,
+            unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc.reservedCapacityOverrunCostPerUnit(),
             cost: calc.reservedCapacityOverrunCost(pmaxKilo)
@@ -127,7 +127,7 @@ export function calculateCostsItemsForMonth(
             ...yearMonth,
             itemName: 'Monthly reserved capacity cost',
             quantity: toMega(calc.monthlyReservedCapacity).toFixed(3),
-            unit: `${unitPrefix}W'`,
+            unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc.monthlyReservedCapacityCostPerUnit(),
             cost: calc.monthlyReservedCapacityCost()
