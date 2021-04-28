@@ -1,6 +1,6 @@
 import { toKilo, toMega } from 'src/app/common/number/number-utils';
 import { getMonthName } from 'src/app/common/temporal/temporal-utils';
-import { CostlyQuantitiesDetailItem } from 'src/app/web-api-client';
+import { ICostlyQuantitiesDetailItem } from 'src/app/web-api-client';
 import { calcCosFi, calcTanFi, calcTanFiOverrunPercent } from './costs-utils';
 import ERUCalculator from './ERUCalculator';
 
@@ -16,7 +16,7 @@ export interface CostsDetailItem {
 }
 
 export function calculateCostsDetailItems(
-    source: CostlyQuantitiesDetailItem[],
+    source: ICostlyQuantitiesDetailItem[],
     calc: ERUCalculator | null
 ): CostsDetailItem[] {
     const items: CostsDetailItem[] = [];
@@ -30,7 +30,7 @@ export function calculateCostsDetailItems(
 }
 
 export function calculateCostsItemsForMonth(
-    src: CostlyQuantitiesDetailItem,
+    src: ICostlyQuantitiesDetailItem,
     calc: ERUCalculator | null
 ): CostsDetailItem[] {
     const ep = src?.activeEnergy ?? NaN;
@@ -57,6 +57,7 @@ export function calculateCostsItemsForMonth(
         year: src.year ?? NaN,
         month: getMonthName((src.month ?? NaN) - 1)
     };
+    const unitPrefix = 'M';
     const currency = 'CZK';
 
     const ds: CostsDetailItem[] = [];
@@ -64,7 +65,7 @@ export function calculateCostsItemsForMonth(
         ...yearMonth,
         itemName: 'Active Energy',
         quantity: epMega.toFixed(3),
-        unit: 'MWh'
+        unit: `${unitPrefix}Wh`
     });
 
     ds.push({
@@ -78,14 +79,14 @@ export function calculateCostsItemsForMonth(
         ...yearMonth,
         itemName: 'Maximum Demand',
         quantity: toMega(src?.peakDemand ?? NaN).toFixed(3),
-        unit: 'MW'
+        unit: `${unitPrefix}W`
     });
 
     ds.push({
         ...yearMonth,
         itemName: 'Reactive Energy',
         quantity: eqMega.toFixed(3),
-        unit: 'MVArh',
+        unit: `${unitPrefix}VArh`,
         currency,
         costPerUnit: calc?.reactiveEnergySupplyCostPerUnit(),
         cost: calc?.reactiveEnergySupplyCost(eqMega)
@@ -96,7 +97,7 @@ export function calculateCostsItemsForMonth(
             ...yearMonth,
             itemName: 'Reserved power exceed cost',
             quantity: rpoMega?.toFixed(3),
-            unit: 'MW',
+            unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc?.reservedPowerOverrunCostPerUnit(),
             cost: calc?.reservedCapacityOverrunCost(rcoMega)
@@ -106,7 +107,7 @@ export function calculateCostsItemsForMonth(
             ...yearMonth,
             itemName: 'Reserved capacity exceed cost',
             quantity: rcoMega.toFixed(3),
-            unit: 'MW',
+            unit: `${unitPrefix}W'`,
             currency,
             costPerUnit: calc.reservedCapacityOverrunCostPerUnit(),
             cost: calc.reservedCapacityOverrunCost(pmaxKilo)
@@ -116,7 +117,7 @@ export function calculateCostsItemsForMonth(
             ...yearMonth,
             itemName: 'Yearly reserved capacity cost',
             quantity: toMega(calc.yearlyReservedCapacity).toFixed(3),
-            unit: 'MW',
+            unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc.yearlyReservedCapacityCostPerUnit(),
             cost: calc.yearlyReservedCapacityCost()
@@ -126,7 +127,7 @@ export function calculateCostsItemsForMonth(
             ...yearMonth,
             itemName: 'Monthly reserved capacity cost',
             quantity: toMega(calc.monthlyReservedCapacity).toFixed(3),
-            unit: 'MW',
+            unit: `${unitPrefix}W'`,
             currency,
             costPerUnit: calc.monthlyReservedCapacityCostPerUnit(),
             cost: calc.monthlyReservedCapacityCost()
