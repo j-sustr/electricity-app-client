@@ -1,5 +1,5 @@
 import { sum, zip } from 'src/app/common/array/array-utils';
-import { toKilo, toMega } from 'src/app/common/number/number-utils';
+import { toUnitPrefix } from 'src/app/common/number/number-utils';
 import { CostlyQuantitiesOverviewItem } from 'src/app/web-api-client';
 import ERUCalculator from './ERUCalculator';
 
@@ -19,13 +19,18 @@ export function calculateCostsOverviewItem(
 ): CostsOverviewItem {
     const cost = calc !== null ? calcCost(source, calc) : null;
 
+    const activeEnergy = sum(source.activeEnergyInMonths ?? []);
+    const reactiveEnergy = sum(source.reactiveEnergyInMonths ?? []);
+    const peakDemand = Math.max(...(source.peakDemandInMonths ?? []));
+    const cosFi = Math.min(...(source.cosFiInMonths ?? []));
+
     return {
         groupId: source.groupId ?? '(no id)',
         groupName: source.groupName ?? '(no name)',
-        activeEnergy: sum(source.activeEnergyInMonths ?? []),
-        reactiveEnergy: sum(source.reactiveEnergyInMonths ?? []),
-        peakDemand: Math.max(...(source.peakDemandInMonths ?? [])),
-        cosFi: Math.min(...(source.cosFiInMonths ?? [])),
+        activeEnergy: toUnitPrefix(activeEnergy, 'Kilo'),
+        reactiveEnergy: toUnitPrefix(reactiveEnergy, 'Kilo'),
+        peakDemand: toUnitPrefix(peakDemand, 'Kilo'),
+        cosFi: cosFi,
         cost
     };
 }
@@ -37,19 +42,23 @@ function calcCost(source: CostlyQuantitiesOverviewItem, calc: ERUCalculator) {
         source.peakDemandInMonths ?? [],
         source.cosFiInMonths ?? []
     ).map(([ep, eq, pmax, cosFi]) => {
-        const rpo = calc.reservedPowerOverrun(toKilo(pmax));
+        const rpo = calc.reservedPowerOverrun(toUnitPrefix(pmax, 'Kilo'));
         const rpoCost = calc.reservedPowerOverrunCost(rpo);
 
-        const rco = calc.reservedCapacityOverrun(pmax);
+        const rco = calc.reservedCapacityOverrun(toUnitPrefix(pmax, 'Kilo'));
         const rcoCost = calc.reservedCapacityOverrunCost(rco);
 
-        const resCost = calc.reactiveEnergySupplyCost(toMega(eq));
+        const resCost = calc.reactiveEnergySupplyCost(toUnitPrefix(eq, 'Mega'));
 
         const mrcCost = calc.monthlyReservedCapacityCost();
         const yrcCost = calc.yearlyReservedCapacityCost();
 
         const u = calc.powerFactorSurcharge(cosFi);
-        const pfPenalty = calc.powerFactorPenalty(toMega(pmax), u, toMega(ep));
+        const pfPenalty = calc.powerFactorPenalty(
+            toUnitPrefix(pmax, 'Mega'),
+            u,
+            toUnitPrefix(ep, 'Mega')
+        );
 
         return rpoCost + rcoCost + resCost + mrcCost + yrcCost + pfPenalty;
     });

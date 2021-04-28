@@ -1,4 +1,4 @@
-import { toKilo, toMega } from 'src/app/common/number/number-utils';
+import { toUnitPrefix } from 'src/app/common/number/number-utils';
 import { getMonthName } from 'src/app/common/temporal/temporal-utils';
 import { ICostlyQuantitiesDetailItem } from 'src/app/web-api-client';
 import { calcTanFiFromCosFi, calcTanFiOverrunPercent } from './costs-utils';
@@ -35,10 +35,10 @@ export function calculateCostsItemsForMonth(
 ): CostsDetailItem[] {
     const ep = src?.activeEnergy ?? NaN;
     const eq = src?.reactiveEnergy ?? NaN;
-    const epMega = toMega(ep);
-    const eqMega = toMega(eq);
+    const epMega = toUnitPrefix(ep, 'Mega');
+    const eqMega = toUnitPrefix(eq, 'Mega');
 
-    const pmaxKilo = toKilo(src?.peakDemand ?? NaN);
+    const pmaxKilo = toUnitPrefix(src?.peakDemand ?? NaN, 'Kilo');
     const pmaxMega = pmaxKilo / 1000;
 
     const rpoKilo = calc?.reservedPowerOverrun(pmaxKilo);
@@ -78,7 +78,7 @@ export function calculateCostsItemsForMonth(
     ds.push({
         ...yearMonth,
         itemName: 'Maximum Demand',
-        quantity: toMega(src?.peakDemand ?? NaN).toFixed(3),
+        quantity: pmaxMega.toFixed(3),
         unit: `${unitPrefix}W`
     });
 
@@ -116,7 +116,9 @@ export function calculateCostsItemsForMonth(
         ds.push({
             ...yearMonth,
             itemName: 'Yearly reserved capacity cost',
-            quantity: toMega(calc.yearlyReservedCapacity).toFixed(3),
+            quantity: toUnitPrefix(calc.yearlyReservedCapacity, 'Kilo').toFixed(
+                3
+            ),
             unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc.yearlyReservedCapacityCostPerUnit(),
@@ -126,7 +128,10 @@ export function calculateCostsItemsForMonth(
         ds.push({
             ...yearMonth,
             itemName: 'Monthly reserved capacity cost',
-            quantity: toMega(calc.monthlyReservedCapacity).toFixed(3),
+            quantity: toUnitPrefix(
+                calc.monthlyReservedCapacity,
+                'Kilo'
+            ).toFixed(3),
             unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc.monthlyReservedCapacityCostPerUnit(),

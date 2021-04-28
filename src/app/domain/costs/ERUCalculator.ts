@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
     compareDecimalPlaces,
-    toMega
+    toUnitPrefix
 } from 'src/app/common/number/number-utils';
 import { CustomerParams, DSOperator, VoltageLevel } from './costs';
 import { ERUTableCollection } from './ERUTables';
@@ -55,12 +55,12 @@ export default class ERUCalculator {
 
     yearlyReservedCapacityCost(): number {
         const costPerUnit = this.yearlyReservedCapacityCostPerUnit();
-        return costPerUnit * toMega(this.yearlyReservedCapacity);
+        return costPerUnit * toUnitPrefix(this.yearlyReservedCapacity, 'Mega');
     }
 
     monthlyReservedCapacityCost(): number {
         const costPerUnit = this.monthlyReservedCapacityCostPerUnit();
-        return costPerUnit * toMega(this.monthlyReservedCapacity);
+        return costPerUnit * toUnitPrefix(this.monthlyReservedCapacity, 'Mega');
     }
 
     /**
