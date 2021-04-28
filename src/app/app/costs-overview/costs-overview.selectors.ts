@@ -50,8 +50,8 @@ export const selectComputedOverviewItems = createSelector<
                 ? calculatorFactory.create(customerParams)
                 : null;
         return {
-            items1: items1 ? computeItems(items1, calculator) : null,
-            items2: items2 ? computeItems(items2, calculator) : null
+            items1: items1 ? createItems(items1, calculator) : null,
+            items2: items2 ? createItems(items2, calculator) : null
         };
     }
 );
@@ -102,7 +102,7 @@ export const selectOverviewTable = createSelector(
     }
 );
 
-function computeItems(
+function createItems(
     items: CostlyQuantitiesOverviewItem[],
     calculator: ERUCalculator | null
 ): CostsOverviewItem[] {
