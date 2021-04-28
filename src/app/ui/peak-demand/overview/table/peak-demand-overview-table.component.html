@@ -28,8 +28,12 @@
             routerLink="/peak-demand/detail/{{item.data.groupId}}"
         >
             <td>{{item.data.groupName}}</td>
-            <td style="text-align: right">{{item.data.peakDemandTime}}</td>
-            <td style="text-align: right">{{item.data.peakDemandValue}}</td>
+            <td style="text-align: right">
+                {{item.data.peakDemandTime | date:'medium'}}
+            </td>
+            <td style="text-align: right">
+                {{item.data.peakDemandValue | number: '1.3-3'}}
+            </td>
         </tr>
     </dx-data-grid>
 </ng-container>
