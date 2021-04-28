@@ -49,6 +49,19 @@ export const selectComputedOverviewItems = createSelector<
             customerParams !== null && calculatorFactory
                 ? calculatorFactory.create(customerParams)
                 : null;
+
+        function createItems(
+            items: CostlyQuantitiesOverviewItem[],
+            calculator: ERUCalculator | null
+        ): CostsOverviewItem[] {
+            const resultItems: CostsOverviewItem[] = [];
+            for (const srcItem of items) {
+                const item = calculateCostsOverviewItem(srcItem, calculator);
+                resultItems.push(item);
+            }
+            return resultItems;
+        }
+
         return {
             items1: items1 ? createItems(items1, calculator) : null,
             items2: items2 ? createItems(items2, calculator) : null
@@ -101,15 +114,3 @@ export const selectOverviewTable = createSelector(
         };
     }
 );
-
-function createItems(
-    items: CostlyQuantitiesOverviewItem[],
-    calculator: ERUCalculator | null
-): CostsOverviewItem[] {
-    const resultItems: CostsOverviewItem[] = [];
-    for (const srcItem of items) {
-        const item = calculateCostsOverviewItem(srcItem, calculator);
-        resultItems.push(item);
-    }
-    return resultItems;
-}
