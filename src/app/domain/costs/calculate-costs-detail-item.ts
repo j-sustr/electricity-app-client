@@ -100,7 +100,7 @@ export function calculateCostsItemsForMonth(
             unit: `${unitPrefix}W`,
             currency,
             costPerUnit: calc?.reservedPowerOverrunCostPerUnit(),
-            cost: calc?.reservedCapacityOverrunCost(rcoMega)
+            cost: calc?.reservedPowerOverrunCost(rcoMega)
         });
 
         ds.push({
