@@ -13,6 +13,16 @@
             dataType="string"
         ></dxi-column>
         <dxi-column
+            dataField="intervalStart"
+            caption="Start"
+            dataType="datatime"
+        ></dxi-column>
+        <dxi-column
+            dataField="intervalEnd"
+            caption="End"
+            dataType="datatime"
+        ></dxi-column>
+        <dxi-column
             dataField="activeEnergy"
             caption="Active Energy [kWh]"
             dataType="number"
@@ -45,6 +55,12 @@
             routerLink="/costs/detail/{{item.data.groupId}}"
         >
             <td>{{item.data.groupName}}</td>
+            <td style="text-align: right">
+                {{item.data.intervalStart | date: 'medium'}}
+            </td>
+            <td style="text-align: right">
+                {{item.data.intervalEnd | date: 'medium' }}
+            </td>
             <td style="text-align: right">
                 {{item.data.activeEnergy | number: '1.3-3'}}
             </td>

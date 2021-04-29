@@ -2041,6 +2041,7 @@ export interface ICostsOverviewDto {
 export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
+    interval?: IntervalDto | null;
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;
@@ -2060,6 +2061,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
         if (_data) {
             this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
             this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            this.interval = _data["interval"] ? IntervalDto.fromJS(_data["interval"]) : <any>null;
             if (Array.isArray(_data["activeEnergyInMonths"])) {
                 this.activeEnergyInMonths = [] as any;
                 for (let item of _data["activeEnergyInMonths"])
@@ -2095,6 +2097,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
         data = typeof data === 'object' ? data : {};
         data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
         data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         if (Array.isArray(this.activeEnergyInMonths)) {
             data["activeEnergyInMonths"] = [];
             for (let item of this.activeEnergyInMonths)
@@ -2123,6 +2126,7 @@ export class CostlyQuantitiesOverviewItem implements ICostlyQuantitiesOverviewIt
 export interface ICostlyQuantitiesOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
+    interval?: IntervalDto | null;
     activeEnergyInMonths?: number[] | null;
     reactiveEnergyInMonths?: number[] | null;
     peakDemandInMonths?: number[] | null;

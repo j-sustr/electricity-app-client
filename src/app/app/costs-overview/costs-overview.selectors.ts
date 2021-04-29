@@ -14,6 +14,8 @@ import { CostsOverviewState } from './costs-overview.model';
 export interface CostsOverviewTableItem {
     groupId: string;
     groupName: string;
+    intervalStart: Date;
+    intervalEnd: Date;
     activeEnergy: number;
     reactiveEnergy: number;
     cosFi: number;

@@ -6,6 +6,8 @@ import ERUCalculator from './ERUCalculator';
 export interface CostsOverviewItem {
     groupId: string;
     groupName: string;
+    intervalStart: Date;
+    intervalEnd: Date;
     activeEnergy: number;
     reactiveEnergy: number;
     cosFi: number;
@@ -27,6 +29,8 @@ export function calculateCostsOverviewItem(
     return {
         groupId: source.groupId ?? '(no id)',
         groupName: source.groupName ?? '(no name)',
+        intervalStart: source.interval?.start ?? new Date(NaN),
+        intervalEnd: source.interval?.end ?? new Date(NaN),
         activeEnergy: toUnitPrefix(activeEnergy, 'Kilo'),
         reactiveEnergy: toUnitPrefix(reactiveEnergy, 'Kilo'),
         peakDemand: toUnitPrefix(peakDemand, 'Kilo'),
