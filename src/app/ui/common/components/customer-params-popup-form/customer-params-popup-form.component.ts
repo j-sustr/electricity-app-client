@@ -27,11 +27,7 @@ import {
 export class CustomerParamsPopupFormComponent implements OnDestroy {
     private destroy$ = new Subject();
 
-    // @Input()
     visible = false;
-
-    // @Output()
-    // submitted = new EventEmitter<void>();
 
     voltageLevelOptions = VOLTAGE_LEVELS;
     dsOperatorOptions = DS_OPERATORS;
@@ -89,7 +85,11 @@ export class CustomerParamsPopupFormComponent implements OnDestroy {
             return;
         }
         this.save();
-        // this.submitted.next();
+        this.store.dispatch(
+            setIsCustomerParamsPopupFormOpen({
+                open: false
+            })
+        );
     }
 
     reset(): void {

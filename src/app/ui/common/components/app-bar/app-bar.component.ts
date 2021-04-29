@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { AppState } from 'src/app/app/app-store.state';
 import { logout } from 'src/app/app/auth/auth.actions';
 import { selectCurrentUser } from 'src/app/app/auth/auth.selectors';
+import { setIsCustomerParamsPopupFormOpen } from 'src/app/app/costs/costs.actions';
 import { selectDataSourceName } from 'src/app/app/data-source/data-source.selectors';
 
 type NavItem = {
@@ -52,8 +53,16 @@ export class AppBarComponent {
         );
     }
 
-    handleLogoutClick(): void {
+    handleLogoutBtnClick(): void {
         this.store.dispatch(logout());
+    }
+
+    handleCustomerParamsBtnClick(): void {
+        this.store.dispatch(
+            setIsCustomerParamsPopupFormOpen({
+                open: true
+            })
+        );
     }
 
     handleUserMenuOutsideClick(): void {
