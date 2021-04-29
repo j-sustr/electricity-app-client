@@ -12,6 +12,19 @@
     </div>
 
     <div class="content-body">
+        <div
+            class="prompt-container"
+            *ngIf="(hasCustomerParams$ | async) !== true"
+        >
+            <dx-button
+                stylingMode="contained"
+                text="Fill out Customer Params"
+                type="success"
+                [width]="300"
+                (onClick)="handleCustomerParamsBtnClick()"
+            >
+            </dx-button>
+        </div>
         <app-view-control-bar></app-view-control-bar>
         <dx-load-indicator
             *ngIf="state.loading"
