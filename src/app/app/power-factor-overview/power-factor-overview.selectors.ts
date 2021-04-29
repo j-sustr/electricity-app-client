@@ -6,6 +6,7 @@ import { AppState } from '../app-store.state';
 import { selectIsComparisonMode } from '../data-source/data-source.selectors';
 import { SeriesParams } from '../common/models';
 import { PowerFactorOverviewState } from './power-factor-overview.model';
+import { toUnitPrefix } from 'src/app/common/number/number-utils';
 
 export interface PowerFactorOverviewChartItem {
     groupId: string;
@@ -86,9 +87,15 @@ export const selectOverviewTableItems = createSelector(
             return {
                 groupId: item.groupId ?? '(no id)',
                 groupName: (item.groupName ?? '(no name)') + suffix,
-                activeEnergy: item.activeEnergy ?? NaN,
-                reactiveEnergyL: item.reactiveEnergyL ?? NaN,
-                reactiveEnergyC: item.reactiveEnergyC ?? NaN,
+                activeEnergy: toUnitPrefix(item.activeEnergy ?? NaN, 'Kilo'),
+                reactiveEnergyL: toUnitPrefix(
+                    item.reactiveEnergyL ?? NaN,
+                    'Kilo'
+                ),
+                reactiveEnergyC: toUnitPrefix(
+                    item.reactiveEnergyC ?? NaN,
+                    'Kilo'
+                ),
                 cosFi: item.cosFi ?? NaN
             };
         }
