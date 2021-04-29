@@ -13,6 +13,7 @@ import {
 } from './peak-demand-detail.model';
 import * as colors from '../../ui/common/colors/colors';
 import { shiftColorHue } from 'src/app/common/color/color-utils';
+import { toUnitPrefix, UnitPrefix } from 'src/app/common/number/number-utils';
 
 export interface PeakDemandDetailChartItem {
     time: Date;
@@ -65,20 +66,31 @@ export const selectDetailChartItems = createSelector(selectDetail, (state):
         const items: PeakDemandDetailChartItem[] = [];
         const timeStart = getTime(series1.timeRange.start);
         const timeStep = series1.timeStep;
+        const u: UnitPrefix = 'Kilo';
         for (let i = 0; i < len; i++) {
             items.push({
                 time: new Date(timeStart + i * timeStep),
-                valueMain_1: series1.valuesMain?.[i] ?? undefined,
-                valueL1_1: series1.valuesL1?.[i] ?? undefined,
-                valueL2_1: series1.valuesL2?.[i] ?? undefined,
-                valueL3_1: series1.valuesL3?.[i] ?? undefined,
-                valueMain_2: series2?.valuesMain?.[i] ?? undefined,
-                valueL1_2: series2?.valuesL1?.[i] ?? undefined,
-                valueL2_2: series2?.valuesL2?.[i] ?? undefined,
-                valueL3_2: series2?.valuesL3?.[i ?? undefined]
+                valueMain_1: toUnitPrefixIfNumber(series1.valuesMain?.[i], u),
+                valueL1_1: toUnitPrefixIfNumber(series1.valuesL1?.[i], u),
+                valueL2_1: toUnitPrefixIfNumber(series1.valuesL2?.[i], u),
+                valueL3_1: toUnitPrefixIfNumber(series1.valuesL3?.[i], u),
+                valueMain_2: toUnitPrefixIfNumber(series2?.valuesMain?.[i], u),
+                valueL1_2: toUnitPrefixIfNumber(series2?.valuesL1?.[i], u),
+                valueL2_2: toUnitPrefixIfNumber(series2?.valuesL2?.[i], u),
+                valueL3_2: toUnitPrefixIfNumber(series2?.valuesL3?.[i], u)
             });
         }
         return items;
+    }
+
+    function toUnitPrefixIfNumber(
+        value: number | undefined,
+        u: UnitPrefix
+    ): number | undefined {
+        if (typeof value === 'number') {
+            return toUnitPrefix(value, u);
+        }
+        return undefined;
     }
 });
 
