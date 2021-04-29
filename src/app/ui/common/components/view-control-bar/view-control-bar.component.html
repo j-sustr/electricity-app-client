@@ -9,7 +9,10 @@
             (onClick)="phasesPickerOpen = !phasesPickerOpen"
         >
         </dx-button>
-        <app-aggregation-input *ngIf="aggregationInput"></app-aggregation-input>
+        <app-aggregation-input
+            *ngIf="aggregationInput"
+            class="aggregation-input"
+        ></app-aggregation-input>
     </div>
 </div>
 <div class="right-group">
