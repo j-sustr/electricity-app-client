@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { toUnitPrefix } from 'src/app/common/number/number-utils';
 import { PeakDemandOverviewItem } from 'src/app/web-api-client';
 import { AppState } from '../app-store.state';
 import { PeakDemandOverviewState } from './peak-demand-overview.model';
@@ -60,7 +61,10 @@ export const selectOverviewTableItems = createSelector(
                 groupId: item.groupId ?? '(no id)',
                 groupName: (item.groupName ?? '(no name)') + suffix,
                 peakDemandTime: item.peakDemands?.[0]?.start ?? new Date(NaN),
-                peakDemandValue: item.peakDemands?.[0]?.value ?? NaN
+                peakDemandValue: toUnitPrefix(
+                    item.peakDemands?.[0]?.value ?? NaN,
+                    'Kilo'
+                )
             };
         }
     }
