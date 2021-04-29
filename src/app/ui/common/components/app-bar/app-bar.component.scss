@@ -39,7 +39,7 @@
 }
 
 .user-menu {
-    width: 100px;
+    width: 200px;
     border: solid 1px #ccc;
     border-radius: 5px;
     background: #fff;
@@ -50,10 +50,9 @@
 
 .user-menu > li {
     list-style-type: none;
-    border-bottom: solid 1px #8b8b8b;
-    padding: 8px 0;
-}
+    padding: 5px 0;
 
-.user-menu > li:last-child {
-    border-bottom: none;
+    & > * {
+        width: 100%;
+    }
 }
