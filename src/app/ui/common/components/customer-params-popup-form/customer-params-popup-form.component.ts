@@ -1,31 +1,37 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { take, takeUntil, tap } from 'rxjs/operators';
+import { AppState } from 'src/app/app/app-store.state';
+import {
+    setCustomerParams,
+    setIsCustomerParamsPopupFormOpen
+} from 'src/app/app/costs/costs.actions';
+import {
+    selectCustomerParams,
+    selectIsCustomerParamsPopupFormOpen
+} from 'src/app/app/costs/costs.selectors';
 import {
     CustomerParams,
     DS_OPERATORS,
     VOLTAGE_LEVELS
 } from 'src/app/domain/costs/costs';
-import { AppState } from 'src/app/app/app-store.state';
-import { setCustomerParams } from 'src/app/app/costs/costs.actions';
-import { selectCustomerParams } from 'src/app/app/costs/costs.selectors';
 
 @Component({
     selector: 'app-customer-params-popup-form',
     templateUrl: './customer-params-popup-form.component.html',
     styleUrls: ['./customer-params-popup-form.component.scss']
 })
-export class CustomerParamsPopupFormComponent {
-    @Input()
+export class CustomerParamsPopupFormComponent implements OnDestroy {
+    private destroy$ = new Subject();
+
+    // @Input()
     visible = false;
 
-    @Output()
-    submitted = new EventEmitter<void>();
-
-    @Output()
-    visibleChanged = new EventEmitter<boolean>();
+    // @Output()
+    // submitted = new EventEmitter<void>();
 
     voltageLevelOptions = VOLTAGE_LEVELS;
     dsOperatorOptions = DS_OPERATORS;
@@ -46,6 +52,16 @@ export class CustomerParamsPopupFormComponent {
 
     constructor(private fb: FormBuilder, private store: Store<AppState>) {
         this.store
+            .pipe(
+                select(selectIsCustomerParamsPopupFormOpen),
+                takeUntil(this.destroy$),
+                tap((isOpen) => {
+                    this.visible = isOpen;
+                })
+            )
+            .subscribe();
+
+        this.store
             .pipe(select(selectCustomerParams), take(1))
             .subscribe((params) => {
                 if (params === null) {
@@ -54,6 +70,11 @@ export class CustomerParamsPopupFormComponent {
                 }
                 this.form.patchValue(params);
             });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.unsubscribe();
     }
 
     save(): void {
@@ -68,7 +89,7 @@ export class CustomerParamsPopupFormComponent {
             return;
         }
         this.save();
-        this.submitted.next();
+        // this.submitted.next();
     }
 
     reset(): void {
@@ -83,6 +104,10 @@ export class CustomerParamsPopupFormComponent {
     }
 
     handleVisibleChange(event: boolean): void {
-        this.visibleChanged.next(event);
+        this.store.dispatch(
+            setIsCustomerParamsPopupFormOpen({
+                open: event
+            })
+        );
     }
 }

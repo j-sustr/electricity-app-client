@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppState } from 'src/app/app/app-store.state';
 import { CostsOverviewState } from 'src/app/app/costs-overview/costs-overview.model';
 import { selectOverview } from 'src/app/app/costs-overview/costs-overview.selectors';
+import { setIsCustomerParamsPopupFormOpen } from 'src/app/app/costs/costs.actions';
 import { selectHasCustomerParams } from 'src/app/app/costs/costs.selectors';
 
 @Component({
@@ -12,8 +13,6 @@ import { selectHasCustomerParams } from 'src/app/app/costs/costs.selectors';
     styleUrls: ['./costs-overview.component.scss']
 })
 export class CostsOverviewComponent {
-    popupVisible = false;
-
     hasCustomerParams$: Observable<boolean>;
     state$: Observable<CostsOverviewState | null>;
 
@@ -24,11 +23,11 @@ export class CostsOverviewComponent {
         );
     }
 
-    handlePopupVisibleChanged(event: boolean): void {
-        this.popupVisible = event;
-    }
-
-    handleFormSubmitted(): void {
-        this.popupVisible = false;
+    handleCustomerParamsBtnClick(): void {
+        this.store.dispatch(
+            setIsCustomerParamsPopupFormOpen({
+                open: true
+            })
+        );
     }
 }

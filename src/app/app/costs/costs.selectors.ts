@@ -4,6 +4,11 @@ import { CostsState } from './costs.model';
 
 export const selectCosts = createFeatureSelector<AppState, CostsState>('costs');
 
+export const selectIsCustomerParamsPopupFormOpen = createSelector(
+    selectCosts,
+    (state: CostsState) => state.isCustomerParamsPopupFormOpen
+);
+
 export const selectCustomerParams = createSelector(
     selectCosts,
     (state: CostsState) => state.customerParams

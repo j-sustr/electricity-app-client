@@ -97,6 +97,7 @@ export class DatetimeRangeComparisonInputContainerComponent
 
     ngOnDestroy(): void {
         this.destroy$.next();
+        this.destroy$.unsubscribe();
     }
 }
 
