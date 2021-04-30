@@ -6,6 +6,8 @@ export const initialState: CostsDetailState = {
     groupName: null,
     items1: null,
     items2: null,
+    interval1: null,
+    interval2: null,
     loading: false,
     error: null
 };
@@ -19,11 +21,13 @@ const reducer = createReducer(
         loading: true,
         error: null
     })),
-    on(actions.getDetailSuccess, (state, { groupName, items1, items2 }) => ({
+    on(actions.getDetailSuccess, (state, action) => ({
         ...state,
-        groupName,
-        items1,
-        items2,
+        groupName: action.groupName,
+        items1: action.items1,
+        items2: action.items2,
+        interval1: action.interval1,
+        interval2: action.interval2,
         loading: false,
         error: null
     })),

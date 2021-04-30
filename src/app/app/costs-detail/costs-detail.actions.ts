@@ -10,6 +10,8 @@ export const getDetailSuccess = createAction(
         groupName: string;
         items1: CostlyQuantitiesDetailItem[];
         items2: CostlyQuantitiesDetailItem[] | null;
+        interval1: Interval;
+        interval2: Interval | null;
     }>()
 );
 

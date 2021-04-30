@@ -2138,6 +2138,8 @@ export class CostsDetailDto implements ICostsDetailDto {
     groupName?: string | null;
     items1?: CostlyQuantitiesDetailItem[] | null;
     items2?: CostlyQuantitiesDetailItem[] | null;
+    interval1?: IntervalDto | null;
+    interval2?: IntervalDto | null;
 
     constructor(data?: ICostsDetailDto) {
         if (data) {
@@ -2161,6 +2163,8 @@ export class CostsDetailDto implements ICostsDetailDto {
                 for (let item of _data["items2"])
                     this.items2!.push(CostlyQuantitiesDetailItem.fromJS(item));
             }
+            this.interval1 = _data["interval1"] ? IntervalDto.fromJS(_data["interval1"]) : <any>null;
+            this.interval2 = _data["interval2"] ? IntervalDto.fromJS(_data["interval2"]) : <any>null;
         }
     }
 
@@ -2184,6 +2188,8 @@ export class CostsDetailDto implements ICostsDetailDto {
             for (let item of this.items2)
                 data["items2"].push(item.toJSON());
         }
+        data["interval1"] = this.interval1 ? this.interval1.toJSON() : <any>null;
+        data["interval2"] = this.interval2 ? this.interval2.toJSON() : <any>null;
         return data; 
     }
 }
@@ -2192,6 +2198,8 @@ export interface ICostsDetailDto {
     groupName?: string | null;
     items1?: CostlyQuantitiesDetailItem[] | null;
     items2?: CostlyQuantitiesDetailItem[] | null;
+    interval1?: IntervalDto | null;
+    interval2?: IntervalDto | null;
 }
 
 export class CostlyQuantitiesDetailItem implements ICostlyQuantitiesDetailItem {

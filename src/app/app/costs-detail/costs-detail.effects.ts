@@ -5,12 +5,13 @@ import { select, Store } from '@ngrx/store';
 import { combineLatest, of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
-    IntervalDto,
+    intervalFromDto,
     intervalToDto
 } from 'src/app/common/temporal/interval/interval-dto';
 import {
     CostlyQuantitiesDetailItem,
-    ICostsClient
+    ICostsClient,
+    IntervalDto
 } from 'src/app/web-api-client';
 import { COSTS_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
@@ -59,7 +60,11 @@ export class CostsDetailEffects {
                             return getDetailSuccess({
                                 groupName: dto.groupName ?? '(no name)',
                                 items1: dto.items1 as CostlyQuantitiesDetailItem[],
-                                items2: dto.items2 ?? null
+                                items2: dto.items2 ?? null,
+                                interval1: intervalFromDto(dto?.interval1),
+                                interval2: dto.interval2
+                                    ? intervalFromDto(dto?.interval2)
+                                    : null
                             });
                         }),
                         catchError((error: HttpErrorResponse) =>
