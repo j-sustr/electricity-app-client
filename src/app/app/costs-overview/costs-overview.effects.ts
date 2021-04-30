@@ -4,14 +4,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import {
-    IntervalDto,
-    intervalToDto
-} from 'src/app/common/temporal/interval/interval-dto';
+import { intervalToDto } from 'src/app/common/temporal/interval/interval-dto';
 import {
     CostlyQuantitiesDetailItem,
     CostlyQuantitiesOverviewItem,
-    ICostsClient
+    ICostsClient,
+    IntervalDto
 } from 'src/app/web-api-client';
 import { COSTS_CLIENT } from 'src/app/web-api-client-di';
 import { OVERVIEW_MAX_GROUPS } from '../app-constants';

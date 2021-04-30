@@ -10,11 +10,12 @@ import {
     tap,
     withLatestFrom
 } from 'rxjs/operators';
+import { intervalToDto } from 'src/app/common/temporal/interval/interval-dto';
 import {
+    DemandSeriesDto,
     IntervalDto,
-    intervalToDto
-} from 'src/app/common/temporal/interval/interval-dto';
-import { DemandSeriesDto, IPeakDemandClient } from 'src/app/web-api-client';
+    IPeakDemandClient
+} from 'src/app/web-api-client';
 import { PEAK_DEMAND_CLIENT } from 'src/app/web-api-client-di';
 import { AppState } from '../app-store.state';
 import { createIntervalFromDto } from '../common/dto-mapping';

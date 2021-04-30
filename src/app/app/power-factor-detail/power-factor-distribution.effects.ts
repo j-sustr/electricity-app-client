@@ -10,11 +10,9 @@ import {
     tap,
     withLatestFrom
 } from 'rxjs/operators';
+import { intervalToDto } from 'src/app/common/temporal/interval/interval-dto';
 import {
     IntervalDto,
-    intervalToDto
-} from 'src/app/common/temporal/interval/interval-dto';
-import {
     IPowerFactorClient,
     PowerFactorDistributionItem
 } from 'src/app/web-api-client';
