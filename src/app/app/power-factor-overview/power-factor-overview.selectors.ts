@@ -30,6 +30,8 @@ export interface PowerFactorOverviewChart {
 export interface PowerFactorOverviewTableItem {
     groupId: string;
     groupName: string;
+    intervalStart: Date;
+    intervalEnd: Date;
     activeEnergy: number;
     reactiveEnergyL: number;
     reactiveEnergyC: number;
@@ -87,6 +89,8 @@ export const selectOverviewTableItems = createSelector(
             return {
                 groupId: item.groupId ?? '(no id)',
                 groupName: (item.groupName ?? '(no name)') + suffix,
+                intervalStart: item.interval?.start ?? new Date(NaN),
+                intervalEnd: item.interval?.end ?? new Date(NaN),
                 activeEnergy: toUnitPrefix(item.activeEnergy ?? NaN, 'Kilo'),
                 reactiveEnergyL: toUnitPrefix(
                     item.reactiveEnergyL ?? NaN,

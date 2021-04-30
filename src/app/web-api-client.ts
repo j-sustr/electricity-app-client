@@ -2713,6 +2713,7 @@ export interface IPeakDemandOverviewDto {
 export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
+    interval?: IntervalDto | null;
     peakDemands?: PeakDemandItemDto[] | null;
     message?: string | null;
 
@@ -2729,6 +2730,7 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
         if (_data) {
             this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
             this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            this.interval = _data["interval"] ? IntervalDto.fromJS(_data["interval"]) : <any>null;
             if (Array.isArray(_data["peakDemands"])) {
                 this.peakDemands = [] as any;
                 for (let item of _data["peakDemands"])
@@ -2749,6 +2751,7 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
         data = typeof data === 'object' ? data : {};
         data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
         data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         if (Array.isArray(this.peakDemands)) {
             data["peakDemands"] = [];
             for (let item of this.peakDemands)
@@ -2762,6 +2765,7 @@ export class PeakDemandOverviewItem implements IPeakDemandOverviewItem {
 export interface IPeakDemandOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
+    interval?: IntervalDto | null;
     peakDemands?: PeakDemandItemDto[] | null;
     message?: string | null;
 }
@@ -3002,11 +3006,11 @@ export interface IPowerFactorOverviewDto {
 export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
+    interval?: IntervalDto | null;
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
     cosFi?: number;
-    interval?: Interval | null;
     message?: string | null;
 
     constructor(data?: IPowerFactorOverviewItem) {
@@ -3022,11 +3026,11 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
         if (_data) {
             this.groupId = _data["groupId"] !== undefined ? _data["groupId"] : <any>null;
             this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
+            this.interval = _data["interval"] ? IntervalDto.fromJS(_data["interval"]) : <any>null;
             this.activeEnergy = _data["activeEnergy"] !== undefined ? _data["activeEnergy"] : <any>null;
             this.reactiveEnergyL = _data["reactiveEnergyL"] !== undefined ? _data["reactiveEnergyL"] : <any>null;
             this.reactiveEnergyC = _data["reactiveEnergyC"] !== undefined ? _data["reactiveEnergyC"] : <any>null;
             this.cosFi = _data["cosFi"] !== undefined ? _data["cosFi"] : <any>null;
-            this.interval = _data["interval"] ? Interval.fromJS(_data["interval"]) : <any>null;
             this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
         }
     }
@@ -3042,11 +3046,11 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
         data = typeof data === 'object' ? data : {};
         data["groupId"] = this.groupId !== undefined ? this.groupId : <any>null;
         data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
+        data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         data["activeEnergy"] = this.activeEnergy !== undefined ? this.activeEnergy : <any>null;
         data["reactiveEnergyL"] = this.reactiveEnergyL !== undefined ? this.reactiveEnergyL : <any>null;
         data["reactiveEnergyC"] = this.reactiveEnergyC !== undefined ? this.reactiveEnergyC : <any>null;
         data["cosFi"] = this.cosFi !== undefined ? this.cosFi : <any>null;
-        data["interval"] = this.interval ? this.interval.toJSON() : <any>null;
         data["message"] = this.message !== undefined ? this.message : <any>null;
         return data; 
     }
@@ -3055,52 +3059,12 @@ export class PowerFactorOverviewItem implements IPowerFactorOverviewItem {
 export interface IPowerFactorOverviewItem {
     groupId?: string | null;
     groupName?: string | null;
+    interval?: IntervalDto | null;
     activeEnergy?: number;
     reactiveEnergyL?: number;
     reactiveEnergyC?: number;
     cosFi?: number;
-    interval?: Interval | null;
     message?: string | null;
-}
-
-export class Interval implements IInterval {
-    start?: Date | null;
-    end?: Date | null;
-
-    constructor(data?: IInterval) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>null;
-            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>null;
-        }
-    }
-
-    static fromJS(data: any): Interval {
-        data = typeof data === 'object' ? data : {};
-        let result = new Interval();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["start"] = this.start ? this.start.toISOString() : <any>null;
-        data["end"] = this.end ? this.end.toISOString() : <any>null;
-        return data; 
-    }
-}
-
-export interface IInterval {
-    start?: Date | null;
-    end?: Date | null;
 }
 
 export class PowerFactorDistributionDto implements IPowerFactorDistributionDto {

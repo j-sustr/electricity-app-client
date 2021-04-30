@@ -1,7 +1,7 @@
 <ng-container *ngIf="table$ | async as table">
     <dx-data-grid
         [dataSource]="table.items"
-        [columnAutoWidth]="true"
+        [columnAutoWidth]="false"
         [showBorders]="true"
         rowTemplate="rowTemplateName"
     >
@@ -9,6 +9,16 @@
             dataField="groupName"
             caption="Device Name"
             dataType="string"
+        ></dxi-column>
+        <dxi-column
+            dataField="intervalStart"
+            caption="From"
+            dataType="datetime"
+        ></dxi-column>
+        <dxi-column
+            dataField="intervalEnd"
+            caption="To"
+            dataType="datetime"
         ></dxi-column>
         <dxi-column
             dataField="peakDemandTime"
@@ -28,6 +38,12 @@
             routerLink="/peak-demand/detail/{{item.data.groupId}}"
         >
             <td>{{item.data.groupName}}</td>
+            <td style="text-align: right">
+                {{item.data.intervalStart | date: 'medium'}}
+            </td>
+            <td style="text-align: right">
+                {{item.data.intervalEnd | date: 'medium' }}
+            </td>
             <td style="text-align: right">
                 {{item.data.peakDemandTime | date:'medium'}}
             </td>
