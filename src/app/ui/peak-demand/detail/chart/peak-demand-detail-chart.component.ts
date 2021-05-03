@@ -30,7 +30,7 @@ export class PeakDemandDetailChartComponent {
 
     customizeTooltip = (args: { valueText: string }): unknown => {
         return {
-            text: args.valueText + ' kW'
+            text: parseFloat(args.valueText).toFixed(3) + ' kW'
         };
     };
 
@@ -57,6 +57,6 @@ export class PeakDemandDetailChartComponent {
     };
 
     customizeText = (arg: { valueText: string }): string => {
-        return arg.valueText + ' kW';
+        return parseFloat(arg.valueText).toFixed(3) + ' kW';
     };
 }
