@@ -10,7 +10,7 @@
     >
         <dxi-column
             dataField="groupName"
-            caption="Device Name"
+            caption="Group Name"
             dataType="string"
         ></dxi-column>
         <dxi-column
@@ -27,11 +27,13 @@
             dataField="activeEnergy"
             caption="Active Energy [MWh]"
             dataType="number"
+            [minWidth]="180"
         ></dxi-column>
         <dxi-column
             dataField="reactiveEnergy"
             caption="Reactive Energy [Mvarh]"
             dataType="number"
+            [minWidth]="180"
         ></dxi-column>
         <dxi-column
             dataField="cosFi"
