@@ -31,9 +31,9 @@ export function calculateCostsOverviewItem(
         groupName: source.groupName ?? '(no name)',
         intervalStart: source.interval?.start ?? new Date(NaN),
         intervalEnd: source.interval?.end ?? new Date(NaN),
-        activeEnergy: toUnitPrefix(activeEnergy, 'Kilo'),
-        reactiveEnergy: toUnitPrefix(reactiveEnergy, 'Kilo'),
-        peakDemand: toUnitPrefix(peakDemand, 'Kilo'),
+        activeEnergy: toUnitPrefix(activeEnergy, 'Mega'),
+        reactiveEnergy: toUnitPrefix(reactiveEnergy, 'Mega'),
+        peakDemand: toUnitPrefix(peakDemand, 'Mega'),
         cosFi: cosFi,
         cost
     };
