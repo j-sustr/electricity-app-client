@@ -44,8 +44,8 @@ async function runPerformanceTest(context: TestContext) {
     context.store.dispatch(
         setIntervals({
             interval1: {
-                start: new Date(),
-                end: new Date()
+                start: -Infinity,
+                end: Infinity
             }
         })
     );
@@ -63,16 +63,13 @@ function testGetOverview(
     actions: OverviewActions
 ): Promise<void> {
     return new Promise((resolve, reject) => {
-        context.store.dispatch(coActions.getOverview());
+        context.store.dispatch(actions.getOverview() as any);
         context.actionsSubject
             .pipe(
-                ofType(
-                    coActions.getOverviewSuccess,
-                    coActions.getOverviewError
-                ),
+                ofType(actions.getOverviewSuccess, actions.getOverviewError),
                 take(1),
                 tap((action) => {
-                    if (action.type.includes('Error')) {
+                    if ((action as { type: string }).type.includes('Error')) {
                         reject();
                         return;
                     }
@@ -88,13 +85,13 @@ function testGetDetail(
     actions: DetailActions
 ): Promise<void> {
     return new Promise((resolve, reject) => {
-        context.store.dispatch(cdActions.getDetail());
+        context.store.dispatch(actions.getDetail() as any);
         context.actionsSubject
             .pipe(
-                ofType(cdActions.getDetailSuccess, cdActions.getDetailError),
+                ofType(actions.getDetailSuccess, actions.getDetailError),
                 take(1),
                 tap((action) => {
-                    if (action.type.includes('Error')) {
+                    if ((action as { type: string }).type.includes('Error')) {
                         reject();
                         return;
                     }
