@@ -51,18 +51,24 @@ export const selectComputedDetailItems = createSelector<
 >(
     selectDetail,
     selectCustomerParams,
-    ({ items1, items2 }, customerParams, { calculatorFactory }) => {
+    (
+        { items1, items2, interval1, interval2 },
+        customerParams,
+        { calculatorFactory }
+    ) => {
         const calculator =
             customerParams !== null && calculatorFactory
                 ? calculatorFactory.create(customerParams)
                 : null;
 
-        const calculatedItems1 = items1
-            ? calculateCostsDetailItems(items1, calculator)
-            : null;
-        const calculatedItems2 = items2
-            ? calculateCostsDetailItems(items2, calculator)
-            : null;
+        const calculatedItems1 =
+            items1 && interval1
+                ? calculateCostsDetailItems(items1, interval1, calculator)
+                : null;
+        const calculatedItems2 =
+            items2 && interval2
+                ? calculateCostsDetailItems(items2, interval2, calculator)
+                : null;
 
         if (calculatedItems2 && calculatedItems1) {
             for (let i = 0; i < calculatedItems2.length; i++) {
