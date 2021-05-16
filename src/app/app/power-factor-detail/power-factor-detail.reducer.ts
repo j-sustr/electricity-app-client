@@ -50,16 +50,18 @@ const reducer = createReducer(
         loading: true,
         error: null
     })),
-    on(getDistributionSuccess, (state, { items1, items2 }) => ({
+    on(getDistributionSuccess, (state, action) => ({
         ...state,
         distributionStack: [
             ...(state.distributionStack?.slice(0, -1) ?? []),
             {
-                items1,
-                items2,
+                items1: action.items1,
+                items2: action.items2,
                 range: last(state.distributionStack)?.range ?? null
             }
         ],
+        interval1: action.interval1,
+        interval2: action.interval2,
         loading: false,
         error: null
     })),

@@ -27,6 +27,8 @@ export const getDistributionSuccess = createAction(
         groupName: string;
         items1: PowerFactorDistributionItem[];
         items2: PowerFactorDistributionItem[] | null;
+        interval1: Interval;
+        interval2: Interval | null;
     }>()
 );
 

@@ -21,3 +21,8 @@ export const selectDetailType = createSelector(
     selectDetail,
     (state) => state.detailType
 );
+
+export const selectIntervals = createSelector(selectDetail, (state) => ({
+    interval1: state.interval1,
+    interval2: state.interval2
+}));

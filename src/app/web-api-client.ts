@@ -2819,8 +2819,11 @@ export interface IPeakDemandItemDto {
 }
 
 export class PeakDemandDetailDto implements IPeakDemandDetailDto {
+    groupName?: string | null;
     demandSeries1?: DemandSeriesDto | null;
     demandSeries2?: DemandSeriesDto | null;
+    interval1?: IntervalDto | null;
+    interval2?: IntervalDto | null;
 
     constructor(data?: IPeakDemandDetailDto) {
         if (data) {
@@ -2833,8 +2836,11 @@ export class PeakDemandDetailDto implements IPeakDemandDetailDto {
 
     init(_data?: any) {
         if (_data) {
+            this.groupName = _data["groupName"] !== undefined ? _data["groupName"] : <any>null;
             this.demandSeries1 = _data["demandSeries1"] ? DemandSeriesDto.fromJS(_data["demandSeries1"]) : <any>null;
             this.demandSeries2 = _data["demandSeries2"] ? DemandSeriesDto.fromJS(_data["demandSeries2"]) : <any>null;
+            this.interval1 = _data["interval1"] ? IntervalDto.fromJS(_data["interval1"]) : <any>null;
+            this.interval2 = _data["interval2"] ? IntervalDto.fromJS(_data["interval2"]) : <any>null;
         }
     }
 
@@ -2847,15 +2853,21 @@ export class PeakDemandDetailDto implements IPeakDemandDetailDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["groupName"] = this.groupName !== undefined ? this.groupName : <any>null;
         data["demandSeries1"] = this.demandSeries1 ? this.demandSeries1.toJSON() : <any>null;
         data["demandSeries2"] = this.demandSeries2 ? this.demandSeries2.toJSON() : <any>null;
+        data["interval1"] = this.interval1 ? this.interval1.toJSON() : <any>null;
+        data["interval2"] = this.interval2 ? this.interval2.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface IPeakDemandDetailDto {
+    groupName?: string | null;
     demandSeries1?: DemandSeriesDto | null;
     demandSeries2?: DemandSeriesDto | null;
+    interval1?: IntervalDto | null;
+    interval2?: IntervalDto | null;
 }
 
 export class DemandSeriesDto implements IDemandSeriesDto {

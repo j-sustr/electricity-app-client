@@ -21,6 +21,8 @@ export interface PowerFactorDetailState {
     viewType: ViewType;
     showEnergy: boolean;
     distributionStack: PowerFactorDistribution[] | null;
+    interval1: Interval | null;
+    interval2: Interval | null;
     loading: boolean;
     error?: HttpErrorResponse | null;
 }

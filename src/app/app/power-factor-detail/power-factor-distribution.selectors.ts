@@ -1,5 +1,6 @@
 import { createSelector } from '@ngrx/store';
 import { shiftColorHue } from 'src/app/common/color/color-utils';
+import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 import {
     calculatePowerFactorDistribution,
     PowerFactorDistributionCalculatedItem
@@ -12,7 +13,7 @@ import {
     selectIsComparisonMode,
     selectPhases
 } from '../data-source/data-source.selectors';
-import { selectDetail } from './power-factor-detail.selectors';
+import { selectDetail, selectIntervals } from './power-factor-detail.selectors';
 import { createBinRangeName } from './power-factor-distribution-utils';
 
 export interface PowerFactorDistributionChartItem {
@@ -198,15 +199,19 @@ export const selectSeriesParamsArray = createSelector(
 );
 
 export const selectDistributionChart = createSelector(
+    selectIntervals,
     selectDistributionChartItems,
     selectSeriesParamsArray,
     selectDistributionLevel,
-    (items, series, level): PowerFactorDistributionChart | null => {
+    (intervals, items, series, level): PowerFactorDistributionChart | null => {
         if (!items || !Number.isInteger(level)) {
             return null;
         }
+        const formatedInterval = intervals.interval1
+            ? formatInterval(intervals.interval1)
+            : 'no interval';
         return {
-            title: 'Cosφ Distribution',
+            title: `Cosφ Distribution (${formatedInterval})`,
             items,
             series,
             level: level ?? NaN

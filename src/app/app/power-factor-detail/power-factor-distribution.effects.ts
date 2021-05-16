@@ -10,7 +10,10 @@ import {
     tap,
     withLatestFrom
 } from 'rxjs/operators';
-import { intervalToDto } from 'src/app/common/temporal/interval/interval-dto';
+import {
+    intervalFromDto,
+    intervalToDto
+} from 'src/app/common/temporal/interval/interval-dto';
 import {
     IntervalDto,
     IPowerFactorClient,
@@ -93,7 +96,11 @@ export class PowerFactorDistributionEffects {
                             return getDistributionSuccess({
                                 groupName: dto.groupName ?? '(no name)',
                                 items1: dto.distribution1 as PowerFactorDistributionItem[],
-                                items2: dto.distribution2 ?? null
+                                items2: dto.distribution2 ?? null,
+                                interval1: intervalFromDto(dto?.interval1),
+                                interval2: dto.interval2
+                                    ? intervalFromDto(dto?.interval2)
+                                    : null
                             });
                         }),
                         catchError((error: HttpErrorResponse) =>
