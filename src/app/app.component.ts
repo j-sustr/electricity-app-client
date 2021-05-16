@@ -15,6 +15,7 @@ import {
 } from './app/data-source/data-source.actions';
 import { getUserGroupTree } from './app/groups/groups.actions';
 import { selectUserRecordGroupsInterval } from './app/groups/groups.selectors';
+import { formatInterval } from './common/temporal/interval/format-interval';
 import { devLogin } from './dev-login';
 import {
     ArchiveClient,
@@ -51,6 +52,7 @@ export class AppComponent implements AfterViewInit {
         (window as any).dataSourceClient = dataSourceClient;
         (window as any).dbDataSourceClient = dbDataSourceClient;
         (window as any).powerFactorClient = powerFactorClient;
+        (window as any).formatInterval = formatInterval;
 
         this.store.pipe(
             select(selectUserRecordGroupsInterval),
