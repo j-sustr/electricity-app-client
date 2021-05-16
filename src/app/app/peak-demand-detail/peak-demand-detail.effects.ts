@@ -10,7 +10,10 @@ import {
     tap,
     withLatestFrom
 } from 'rxjs/operators';
-import { intervalToDto } from 'src/app/common/temporal/interval/interval-dto';
+import {
+    intervalFromDto,
+    intervalToDto
+} from 'src/app/common/temporal/interval/interval-dto';
 import {
     DemandSeriesDto,
     IntervalDto,
@@ -89,7 +92,11 @@ export class PeakDemandDetailEffects {
                                 }
                                 return getDetailSuccess({
                                     series1: s1,
-                                    series2: s2
+                                    series2: s2,
+                                    interval1: intervalFromDto(dto?.interval1),
+                                    interval2: dto.interval2
+                                        ? intervalFromDto(dto?.interval2)
+                                        : null
                                 });
                             }),
                             catchError((error: HttpErrorResponse) =>

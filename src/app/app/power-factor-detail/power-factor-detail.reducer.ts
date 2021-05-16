@@ -17,6 +17,8 @@ export const initialState: PowerFactorDetailState = {
     viewType: 'chart',
     showEnergy: false,
     distributionStack: null,
+    interval1: null,
+    interval2: null,
     loading: false,
     error: null
 };

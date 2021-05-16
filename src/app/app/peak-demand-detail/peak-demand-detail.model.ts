@@ -16,6 +16,8 @@ export interface PeakDemandDetailState {
     aggregation: DemandAggregation;
     series1: DemandSeries | null;
     series2: DemandSeries | null;
+    interval1: Interval | null;
+    interval2: Interval | null;
     loading: boolean;
     error?: HttpErrorResponse | null;
 }

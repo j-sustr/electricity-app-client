@@ -15,6 +15,8 @@ export const getDetailSuccess = createAction(
     props<{
         series1: DemandSeries;
         series2: DemandSeries | null;
+        interval1: Interval;
+        interval2: Interval | null;
     }>()
 );
 

@@ -14,6 +14,7 @@ import {
 import * as colors from '../../ui/common/colors/colors';
 import { shiftColorHue } from 'src/app/common/color/color-utils';
 import { toUnitPrefix, UnitPrefix } from 'src/app/common/number/number-utils';
+import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 
 export interface PeakDemandDetailChartItem {
     time: Date;
@@ -42,6 +43,11 @@ export const selectHasData = createSelector(
     selectDetail,
     (state) => state.series1 !== null
 );
+
+export const selectIntervals = createSelector(selectDetail, (state) => ({
+    interval1: state.interval1,
+    interval2: state.interval2
+}));
 
 export const selectAggregation = createSelector(
     selectDetail,
@@ -101,14 +107,18 @@ export const selectSeriesParamsArray = createSelector(
 );
 
 export const selectDetailChart = createSelector(
+    selectIntervals,
     selectDetailChartItems,
     selectSeriesParamsArray,
-    (items, series): PeakDemandDetailChart | null => {
+    (intervals, items, series): PeakDemandDetailChart | null => {
         if (!items) {
             return null;
         }
+        const formatedInterval = intervals.interval1
+            ? formatInterval(intervals.interval1)
+            : 'no interval';
         return {
-            title: 'Active Power Demand',
+            title: `Active Power Demand (${formatedInterval})`,
             items,
             series
         };

@@ -13,6 +13,8 @@ export const initialState: PeakDemandDetailState = {
     aggregation: DemandAggregation.OneHour,
     series1: null,
     series2: null,
+    interval1: null,
+    interval2: null,
     loading: false,
     error: null
 };
@@ -30,10 +32,12 @@ const reducer = createReducer(
         loading: true,
         error: null
     })),
-    on(getDetailSuccess, (state, { series1, series2 }) => ({
+    on(getDetailSuccess, (state, action) => ({
         ...state,
-        series1,
-        series2,
+        series1: action.series1,
+        series2: action.series2,
+        interval1: action.interval1,
+        interval2: action.interval2,
         loading: false,
         error: null
     })),
