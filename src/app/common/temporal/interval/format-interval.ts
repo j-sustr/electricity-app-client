@@ -8,6 +8,10 @@ import {
 import { isDay, isHour, isMonth, isYear } from '../temporal-utils';
 import { isNiceInterval } from './is-nice-interval';
 
+interface DateTimeFormat {
+    formatRange(date1: Date, date2: Date): string;
+}
+
 export function formatInterval(interval: Interval): string {
     if (compareAsc(interval.start, interval.end) === 1) {
         throw new Error('start is after end');
@@ -23,7 +27,19 @@ export function formatInterval(interval: Interval): string {
         return formatNiceInterval(interval);
     }
 
-    throw new Error('not implemented (formatInterval)');
+    const format = new Intl.DateTimeFormat('en', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: false
+    });
+    return ((format as unknown) as DateTimeFormat).formatRange(
+        toDate(interval.start),
+        toDate(interval.end)
+    );
 }
 
 function isUnboundedInterval(interval: Interval): boolean {
