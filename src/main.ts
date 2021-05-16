@@ -4,7 +4,7 @@ import '@formatjs/intl-getcanonicallocales/polyfill';
 import '@formatjs/intl-locale/polyfill';
 import '@formatjs/intl-datetimeformat/polyfill';
 import '@formatjs/intl-datetimeformat/locale-data/en'; // locale-data for en
-import '@formatjs/intl-datetimeformat/add-all-tz'; // Add ALL tz data
+import '@formatjs/intl-datetimeformat/add-golden-tz'; // Add ALL tz data
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
