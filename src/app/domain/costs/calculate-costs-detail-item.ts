@@ -1,5 +1,4 @@
 import { toUnitPrefix } from 'src/app/common/number/number-utils';
-import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 import { getMonthName } from 'src/app/common/temporal/temporal-utils';
 import { ICostlyQuantitiesDetailItem } from 'src/app/web-api-client';
 import { calcTanFiFromCosFi, calcTanFiOverrunPercent } from './costs-utils';
@@ -8,6 +7,7 @@ import ERUCalculator from './ERUCalculator';
 export interface CostsDetailItem {
     year: number;
     month: string;
+    interval: Interval;
     itemName: string;
     quantity: string;
     unit?: string;
@@ -35,10 +35,9 @@ export function calculateCostsDetailItems(
             monthInterval.end = interval.end;
         }
 
-        const formatedInterval = formatInterval(monthInterval);
         const item = calculateCostsItemsForMonth(
             source[i],
-            formatedInterval,
+            monthInterval,
             calc
         );
         items.push(...item);
@@ -49,7 +48,7 @@ export function calculateCostsDetailItems(
 
 export function calculateCostsItemsForMonth(
     src: ICostlyQuantitiesDetailItem,
-    formatedInterval: string,
+    interval: Interval,
     calc: ERUCalculator | null
 ): CostsDetailItem[] {
     const ep = src?.activeEnergy ?? NaN;
@@ -74,7 +73,8 @@ export function calculateCostsItemsForMonth(
 
     const yearMonth = {
         year: src.year ?? NaN,
-        month: getMonthName((src.month ?? NaN) - 1) + ` (${formatedInterval})`
+        month: getMonthName((src.month ?? NaN) - 1),
+        interval
     };
     const unitPrefix = 'M';
     const currency = 'CZK';

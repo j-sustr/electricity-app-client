@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 import {
     calculateCostsDetailItems,
     CostsDetailItem
@@ -6,6 +7,7 @@ import {
 import { CustomerParams } from 'src/app/domain/costs/costs';
 import ERUCalculatorFactory from 'src/app/domain/costs/ERUCalculatorFactory';
 import { AppState } from '../app-store.state';
+import { formatIntervalVsInterval } from '../common/format-intervals';
 import { selectCustomerParams } from '../costs/costs.selectors';
 import { CostsDetailState } from './costs-detail.model';
 
@@ -70,12 +72,27 @@ export const selectComputedDetailItems = createSelector<
                 ? calculateCostsDetailItems(items2, interval2, calculator)
                 : null;
 
+        if (!calculatedItems2 && calculatedItems1) {
+            for (let i = 0; i < calculatedItems1.length; i++) {
+                const item1 = calculatedItems1[i];
+                item1.month =
+                    item1.month + ` (${formatInterval(item1.interval)})`;
+            }
+        }
+
         if (calculatedItems2 && calculatedItems1) {
             for (let i = 0; i < calculatedItems2.length; i++) {
                 const item2 = calculatedItems2[i];
                 const item1 = calculatedItems1[i];
                 item2.year = item1.year;
-                item2.month = item1.month;
+                // item2.month = item1.month;
+                const formatedIntervals = formatIntervalVsInterval({
+                    interval1: item1.interval,
+                    interval2: item2.interval
+                });
+                const monthLabel = item1.month + ` (${formatedIntervals})`;
+                item1.month = monthLabel;
+                item2.month = monthLabel;
             }
         }
 

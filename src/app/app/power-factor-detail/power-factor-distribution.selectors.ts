@@ -1,12 +1,12 @@
 import { createSelector } from '@ngrx/store';
 import { shiftColorHue } from 'src/app/common/color/color-utils';
-import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 import {
     calculatePowerFactorDistribution,
     PowerFactorDistributionCalculatedItem
 } from 'src/app/domain/power-factor/calculate-power-factor-distribution';
 import { BinRange } from 'src/app/web-api-client';
 import * as colors from '../../ui/common/colors/colors';
+import { formatIntervalVsInterval } from '../common/format-intervals';
 import { SeriesParams } from '../common/models';
 import { Phases } from '../data-source/data-source.model';
 import {
@@ -207,9 +207,7 @@ export const selectDistributionChart = createSelector(
         if (!items || !Number.isInteger(level)) {
             return null;
         }
-        const formatedInterval = intervals.interval1
-            ? formatInterval(intervals.interval1)
-            : 'no interval';
+        const formatedInterval = formatIntervalVsInterval(intervals);
         return {
             title: `Cosφ Distribution (${formatedInterval})`,
             items,

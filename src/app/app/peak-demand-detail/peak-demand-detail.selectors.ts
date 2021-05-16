@@ -1,6 +1,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { getTime } from 'date-fns';
+import { shiftColorHue } from 'src/app/common/color/color-utils';
+import { toUnitPrefix, UnitPrefix } from 'src/app/common/number/number-utils';
+import * as colors from '../../ui/common/colors/colors';
 import { AppState } from '../app-store.state';
+import { formatIntervalVsInterval } from '../common/format-intervals';
 import { SeriesParams } from '../common/models';
 import { Phases } from '../data-source/data-source.model';
 import {
@@ -11,10 +15,6 @@ import {
     DemandSeries,
     PeakDemandDetailState
 } from './peak-demand-detail.model';
-import * as colors from '../../ui/common/colors/colors';
-import { shiftColorHue } from 'src/app/common/color/color-utils';
-import { toUnitPrefix, UnitPrefix } from 'src/app/common/number/number-utils';
-import { formatInterval } from 'src/app/common/temporal/interval/format-interval';
 
 export interface PeakDemandDetailChartItem {
     time: Date;
@@ -114,11 +114,9 @@ export const selectDetailChart = createSelector(
         if (!items) {
             return null;
         }
-        const formatedInterval = intervals.interval1
-            ? formatInterval(intervals.interval1)
-            : 'no interval';
+        const formattedIntervals = formatIntervalVsInterval(intervals);
         return {
-            title: `Active Power Demand (${formatedInterval})`,
+            title: `Active Power Demand (${formattedIntervals})`,
             items,
             series
         };
